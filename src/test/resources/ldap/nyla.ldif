@@ -1,0 +1,9 @@
+dn: uid=nyla,ou=system
+objectClass: inetOrgPerson
+objectClass: top
+objectClass: person 
+objectClass: organizationalPerson
+cn: nyla 
+uid: nyla 
+sn: administrator
+userPassword: nyla

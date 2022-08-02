@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<cache xmlns="http://schema.pivotal.io/gemfire/cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.pivotal.io/gemfire/cache http://schema.pivotal.io/gemfire/cache/cache-8.1.xsd" lock-lease="120" lock-timeout="60" search-timeout="300" is-server="false" copy-on-read="false" version="8.1">
+	<pdx persistent="true">
+		<pdx-serializer>
+			<class-name>com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer </class-name>
+			<parameter name="classes">
+				<string>com.wyndham.domain.*</string>
+			</parameter>
+		</pdx-serializer>
+	</pdx>
+	<region name="InventoriesByDestinationXref">
+		<region-attributes scope="distributed-ack" data-policy="replicate" />
+	</region>
+	<region name="Brands">
+		<region-attributes scope="distributed-ack" data-policy="replicate" />
+	</region>
+	<region name="Inventories">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<partition-attributes />
+		</region-attributes>
+		<index name="inventoryDestination" key-index="false" type="range" from-clause="/Inventories index_iter1" expression="index_iter1.destination" />
+		<index name="inventoryPropertyId" key-index="false" type="range" from-clause="/Inventories index_iter1" expression="index_iter1.propertyId" />
+	</region>
+	<region name="Availabilities">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<partition-attributes colocated-with="Inventories">
+				<partition-resolver name="AvailabilityPartitionResolver">
+					<class-name> io.pivotal.data.AvailabilityPartitionResolver </class-name>
+				</partition-resolver>
+			</partition-attributes>
+			<cache-listener>
+				<class-name>com.wyndham.gemfire.listeners.AvailabilitiesCacheListener </class-name>
+				<parameter name="filename">
+					<string>cachelistener.log</string>
+				</parameter>
+				<parameter name="loglevel">
+					<string>INFO</string>
+				</parameter>
+			</cache-listener>
+		</region-attributes>
+		<index name="availDate" key-index="false" type="range" from-clause="/Availabilities" expression="availabilityDate" />
+		<index name="availPropertyId" key-index="false" type="range" from-clause="/Availabilities" expression="propertyId" />
+	</region>
+	<region name="BaseRates">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<partition-attributes colocated-with="Inventories" />
+			<cache-writer>
+				<class-name>com.wyndham.gemfire.writers.BaseRatesWriter</class-name>
+			</cache-writer>
+			<cache-listener>
+				<class-name>com.wyndham.gemfire.listeners.BaseRatesCacheListener </class-name>
+				<parameter name="filename">
+					<string>ratesCachelistener.log</string>
+				</parameter>
+				<parameter name="loglevel">
+					<string>INFO</string>
+				</parameter>
+			</cache-listener>
+		</region-attributes>
+	</region>
+	<region name="ChannelRates">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<partition-attributes colocated-with="Inventories" />
+			<cache-writer>
+				<class-name>com.wyndham.gemfire.writers.ChannelRatesWriter</class-name>
+			</cache-writer>
+			<cache-listener>
+				<class-name>com.wyndham.gemfire.listeners.ChannelRatesCacheListener </class-name>
+				<parameter name="filename">
+					<string>channelRatesCachelistener.log</string>
+				</parameter>
+				<parameter name="loglevel">
+					<string>INFO</string>
+				</parameter>
+			</cache-listener>
+		</region-attributes>
+	</region>
+	<region name="DurationsToUpdate">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<partition-attributes colocated-with="Inventories" />
+		</region-attributes>
+	</region>
+	<region name="RatesToUpdate">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<partition-attributes colocated-with="Inventories" />
+		</region-attributes>
+	</region>
+	<region name="InventoriesByDateDestinationXref">
+		<region-attributes refid="REPLICATE" />
+<!-- 		<region-attributes refid="PARTITION_REDUNDANT"> -->
+<!-- 			<partition-attributes colocated-with="Inventories"> -->
+<!-- 				<partition-resolver name="DateDestinationPartitionResolver"> -->
+<!-- 					<class-name>io.pivotal.data.DateDestinationPartitionResolver </class-name> -->
+<!-- 				</partition-resolver> -->
+<!-- 			</partition-attributes> -->
+<!-- 		</region-attributes> -->
+	</region>
+	<region name="InventoriesByPriceRangeXref">
+		<region-attributes refid="LOCAL" />
+	</region>
+	<region name="Promotions">
+		<region-attributes data-policy="partition">
+			<partition-attributes redundant-copies="1" />
+			<cache-listener>
+				<class-name>com.wyndham.gemfire.listeners.PromotionsCacheListener</class-name>
+				<parameter name="filename">
+					<string>promosCachelistener.log</string>
+				</parameter>
+				<parameter name="loglevel">
+					<string>FINE</string>
+				</parameter>
+			</cache-listener>
+		</region-attributes>
+		<index name="promoPromoCode" key-index="false" type="range" from-clause="/Promotions" expression="promoCode" />
+		<index name="promoDestination" key-index="false" type="range" from-clause="/Promotions" expression="destination" />
+	</region>
+	<region name="PromotionsByDestinationXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="PromotionsByPropertyIdXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByDestinationXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByPropertyIdXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByEffectiveStartDateXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByEffectiveEndDateXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByCheckinStartDateXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByCheckinEndDateXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByMinLosXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+	<region name="ChannelRatesByMaxLosXref">
+		<region-attributes refid="LOCAL">
+		</region-attributes>
+	</region>
+</cache>
