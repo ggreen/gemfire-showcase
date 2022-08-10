@@ -6,7 +6,7 @@ import com.vmware.data.services.gemfire.io.QuerierMgr;
 import com.vmware.data.services.gemfire.io.QuerierService;
 import com.vmware.data.services.gemfire.io.function.FuncExe;
 import com.vmware.data.services.gemfire.client.listeners.CacheListenerBridge;
-import com.vmware.data.services.gemfire.lucene.GeodeLuceneSearch;
+import com.vmware.data.services.gemfire.lucene.GemFireLuceneSearch;
 import com.vmware.data.services.gemfire.lucene.TextPageCriteria;
 import com.vmware.data.services.gemfire.lucene.function.LuceneSearchFunction;
 import com.vmware.data.services.gemfire.serialization.EnhancedReflectionSerializer;
@@ -52,7 +52,7 @@ import java.util.function.Consumer;
  * @author Gregory Green
  *
  */
-public class GeodeClient
+public class GemFireClient
 {
 	
 	/**
@@ -62,7 +62,7 @@ public class GeodeClient
 	private boolean cachingProxy;
 	private final ClientRegionFactory<?, ?> proxyRegionfactory;
 	private final ClientRegionFactory<?, ?> cachingRegionfactory;
-	private static GeodeClient geodeClient = null;
+	private static GemFireClient gemFireClient = null;
 	private Map<String,CacheListenerBridge<?, ?>> listenerMap = new Hashtable<>();
 	private final QuerierService querier;
 
@@ -70,7 +70,7 @@ public class GeodeClient
 	 *
 	 * @param clientCache the connection
 	 */
-	protected GeodeClient(ClientCache clientCache)
+	protected GemFireClient(ClientCache clientCache)
 	{
 		this(clientCache,
 				clientCache.createClientRegionFactory(ClientRegionShortcut.PROXY),
@@ -78,8 +78,8 @@ public class GeodeClient
 				new QuerierMgr()
 		);
 	}//------------------------------------------------
-	protected GeodeClient(ClientCache clientCache,  ClientRegionFactory<?, ?> proxyRegionfactory,
-						  ClientRegionFactory<?, ?> cachingProxyRegionfactory, QuerierService querier
+	protected GemFireClient(ClientCache clientCache, ClientRegionFactory<?, ?> proxyRegionfactory,
+							ClientRegionFactory<?, ?> cachingProxyRegionfactory, QuerierService querier
 	)
 	{
 		cachingProxy = false;
@@ -88,11 +88,11 @@ public class GeodeClient
 		this.cachingRegionfactory = cachingProxyRegionfactory;
 		this.querier = querier;
 	}//------------------------------------------------
-	protected GeodeClient(boolean cachingProxy, String... classPatterns)
+	protected GemFireClient(boolean cachingProxy, String... classPatterns)
 	{
 		this.cachingProxy = cachingProxy;
 			
-		String name = Config.getProperty(GeodeConfigConstants.NAME_PROP,GeodeClient.class.getSimpleName());
+		String name = Config.getProperty(GemFireConfigConstants.NAME_PROP, GemFireClient.class.getSimpleName());
 		
 		//check for exists client cache
 		ClientCache cache = null;
@@ -113,7 +113,7 @@ public class GeodeClient
 		{Debugger.println(e.getMessage());}
 		
 		String className = Config.getProperty(
-			GeodeConfigConstants.PDX_SERIALIZER_CLASS_NM_PROP,
+			GemFireConfigConstants.PDX_SERIALIZER_CLASS_NM_PROP,
 			EnhancedReflectionSerializer.class.getName());
 		
 		PdxSerializer pdxSerializer = createPdxSerializer(className,classPatterns);
@@ -133,14 +133,14 @@ public class GeodeClient
 		
 			factory.setPoolSubscriptionEnabled(true)
 			.setPdxSerializer(pdxSerializer)
-			.setPdxReadSerialized(GeodeConfigConstants.PDX_READ_SERIALIZED)
+			.setPdxReadSerialized(GemFireConfigConstants.PDX_READ_SERIALIZED)
 			.setPoolPRSingleHopEnabled(Config.getPropertyBoolean(
-				GeodeConfigConstants.POOL_PR_SINGLE_HOP_ENABLED_PROP,true))
+				GemFireConfigConstants.POOL_PR_SINGLE_HOP_ENABLED_PROP,true))
 			.set("log-level", Config.getProperty("log-level","config"))
 			.set("name", name);
 			
 			//.addPoolLocator(host, port)
-			GeodeSettings.getInstance().constructPoolLocator(factory);
+			GemFireSettings.getInstance().constructPoolLocator(factory);
 
 			this.clientCache = factory.create();
 			
@@ -158,14 +158,14 @@ public class GeodeClient
 	 */
 	protected void constructSecurity(Properties props) throws IOException
 	{
-		props.setProperty("security-client-auth-init", GeodeConfigAuthInitialize.class.getName()+".create");
+		props.setProperty("security-client-auth-init", GemFireConfigAuthInitialize.class.getName()+".create");
 		
 		//write to file
-		File sslFile = saveEnvFile(GeodeConfigConstants.SSL_KEYSTORE_CLASSPATH_FILE_PROP);
+		File sslFile = saveEnvFile(GemFireConfigConstants.SSL_KEYSTORE_CLASSPATH_FILE_PROP);
 		
 		System.out.println("sslFile:"+sslFile);
 
-		File sslTrustStoreFile = saveEnvFile(GeodeConfigConstants.SSL_TRUSTSTORE_CLASSPATH_FILE_PROP);
+		File sslTrustStoreFile = saveEnvFile(GemFireConfigConstants.SSL_TRUSTSTORE_CLASSPATH_FILE_PROP);
 		String sslTrustStoreFilePath = "";
 		if(sslTrustStoreFile != null)
 			sslTrustStoreFilePath = sslTrustStoreFile.getAbsolutePath();
@@ -203,16 +203,16 @@ public class GeodeClient
 		byte[] bytes = IO.readBinaryClassPath(sslKeystorePath);
 
 
-		String sslDirectory = Config.getProperty(GeodeConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP,".");
+		String sslDirectory = Config.getProperty(GemFireConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP,".");
 		File sslDirectoryFile = Paths.get(sslDirectory).toFile();
 
 		if(!sslDirectoryFile.exists())
 		{
-			throw new ConfigException("Configuration property "+GeodeConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP+" "+sslDirectoryFile+" but it does not exist");
+			throw new ConfigException("Configuration property "+ GemFireConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP+" "+sslDirectoryFile+" but it does not exist");
 		}
 		else if(!sslDirectoryFile.isDirectory())
 		{
-			throw new ConfigException("Configuration property "+GeodeConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP+" "+sslDirectoryFile+" but is not a valid directory");
+			throw new ConfigException("Configuration property "+ GemFireConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP+" "+sslDirectoryFile+" but is not a valid directory");
 		}
 
 		File sslFile = Paths.get(sslDirectoryFile+IO.fileSperator()+fileName).toFile();
@@ -311,7 +311,7 @@ public class GeodeClient
 
 	public <K,V> Map<K,V> readSearchResultsByPage(TextPageCriteria criteria, int pageNumber)
 	{
-		GeodeLuceneSearch search = new GeodeLuceneSearch(this.clientCache);
+		GemFireLuceneSearch search = new GemFireLuceneSearch(this.clientCache);
 		
 		Region<String,Collection<?>> pageRegion = this.getRegion(criteria.getPageRegionName());
 		Region<K,V> region = this.getRegion(criteria.getRegionName());
@@ -320,7 +320,7 @@ public class GeodeClient
 	}//------------------------------------------------
 	public Collection<String> clearSearchResultsByPage(TextPageCriteria criteria)
 	{
-		GeodeLuceneSearch search = new GeodeLuceneSearch(this.clientCache);
+		GemFireLuceneSearch search = new GemFireLuceneSearch(this.clientCache);
 	
 		return search.clearSearchResultsByPage(criteria,this.getRegion(criteria.getPageRegionName()));
 		
@@ -489,17 +489,17 @@ public class GeodeClient
 	 * 
 	 * @return the GEODE client
 	 */
-	public synchronized static GeodeClient connect()
+	public synchronized static GemFireClient connect()
 	{
-		if(geodeClient != null)
-			return geodeClient;
+		if(gemFireClient != null)
+			return gemFireClient;
 		
-		boolean cachingProxy = Config.getPropertyBoolean(GeodeConfigConstants.USE_CACHING_PROXY_PROP,false);
+		boolean cachingProxy = Config.getPropertyBoolean(GemFireConfigConstants.USE_CACHING_PROXY_PROP,false);
 		
-		geodeClient = new GeodeClient(cachingProxy,
-		Config.getProperty(GeodeConfigConstants.PDX_CLASS_PATTERN_PROP,".*"));
+		gemFireClient = new GemFireClient(cachingProxy,
+		Config.getProperty(GemFireConfigConstants.PDX_CLASS_PATTERN_PROP,".*"));
 		
-		return geodeClient;
+		return gemFireClient;
 	}//------------------------------------------------
 	
 	/**

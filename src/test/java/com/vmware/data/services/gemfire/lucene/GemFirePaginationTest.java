@@ -11,16 +11,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-class GeodePaginationTest
+class GemFirePaginationTest
 {
     private Region<String, Collection<?>> pageRegion;
-    private GeodePagination subject;
+    private GemFirePagination subject;
 
     @BeforeEach
     void setUp()
     {
         pageRegion = mock(Region.class);
-        subject = new GeodePagination();
+        subject = new GemFirePagination();
     }
 
     @Test
@@ -56,7 +56,7 @@ class GeodePaginationTest
     {
         String id = "id";
         int pageNumber = 3;
-        assertEquals(id+"-"+pageNumber,GeodePagination.toPageKey(id,pageNumber));
+        assertEquals(id+"-"+pageNumber, GemFirePagination.toPageKey(id,pageNumber));
     }
 
     @Test
@@ -68,7 +68,7 @@ class GeodePaginationTest
         String value = "1";
         Map.Entry<String, String> entry = new MapEntry<>(key,value);
         List<Map.Entry<String, String>> mapEntries = Arrays.asList(entry,entry,entry,entry,entry);
-        List<Collection<String>> actual = GeodePagination.toKeyPages(mapEntries, pageSize);
+        List<Collection<String>> actual = GemFirePagination.toKeyPages(mapEntries, pageSize);
 
         assertNotNull(actual);
         assertEquals(3,actual.size());

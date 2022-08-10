@@ -30,9 +30,9 @@ import static org.mockito.Mockito.*;
 /**
  * @author Gregory Geen
  */
-public class GeodeClientTest
+public class GemFireClientTest
 {
-    private GeodeClient subject;
+    private GemFireClient subject;
     private ClientCache clientCache;
     private ClientRegionFactory<?, ?> proxyRegionfactory;
     private ClientRegionFactory<?, ?> cachingProxyRegionfactory;
@@ -66,7 +66,7 @@ public class GeodeClientTest
         when(proxyRegion.getAttributesMutator()).thenReturn((AttributesMutator)attributesMutator);
         when(cachingProxyRegion.getAttributesMutator()).thenReturn((AttributesMutator)attributesMutator);
 
-        subject = new GeodeClient(clientCache,proxyRegionfactory,
+        subject = new GemFireClient(clientCache,proxyRegionfactory,
                 cachingProxyRegionfactory,querier);
 
     }
@@ -86,13 +86,13 @@ public class GeodeClientTest
     @Test
     void getRegionClientCache()
     {
-        Assertions.assertNotNull(GeodeClient.getRegion(clientCache,"regionName"));
+        Assertions.assertNotNull(GemFireClient.getRegion(clientCache,"regionName"));
     }
 
     @Test
     void getRegionClientCachePoolName()
     {
-        Assertions.assertNotNull(GeodeClient.getRegion(clientCache,"regionName","myPool"));
+        Assertions.assertNotNull(GemFireClient.getRegion(clientCache,"regionName","myPool"));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class GeodeClientTest
     void registerCacheLoader()
     {
         CacheLoader cacheLoader = mock(CacheLoader.class);
-        GeodeClient.registerCacheLoader(proxyRegion,cacheLoader);
+        GemFireClient.registerCacheLoader(proxyRegion,cacheLoader);
         verify(proxyRegion).getAttributesMutator();
         verify(attributesMutator).setCacheLoader(cacheLoader);
     }

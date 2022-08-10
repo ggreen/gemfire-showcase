@@ -61,14 +61,14 @@ import org.apache.geode.cache.client.PoolFactory;
  * 
  * }
  */
-public class GeodeSettings
+public class GemFireSettings
 {
 	/**
 	 * VCAP_SERVICES = "VCAP_SERVICES"
 	 */
 	public static final String VCAP_SERVICES = "VCAP_SERVICES";
 
-	private static GeodeSettings instance = null;
+	private static GemFireSettings instance = null;
 	private final String envContent;
 	private static final Pattern regExpPattern = Pattern.compile("(.*)\\[(\\d*)\\].*");
 
@@ -79,7 +79,7 @@ public class GeodeSettings
 	/**
 	 * Get from VCAP_SERVICES system environment variable or JVM system property
 	 */
-	private GeodeSettings()
+	private GemFireSettings()
 	{
 
 	this(System.getenv().get(VCAP_SERVICES) !=null 
@@ -88,7 +88,7 @@ public class GeodeSettings
 		
 	}// ------------------------------------------------
 
-	GeodeSettings(String envContent)
+	GemFireSettings(String envContent)
 	{
 		this.envContent = envContent;
 		
@@ -100,7 +100,7 @@ public class GeodeSettings
 		
 		port = 10334;
 		
-		host = Config.getProperty(GeodeConfigConstants.LOCATOR_HOST_PROP,"");
+		host = Config.getProperty(GemFireConfigConstants.LOCATOR_HOST_PROP,"");
 		
 		if (host.trim().length() == 0)
 		{
@@ -113,10 +113,10 @@ public class GeodeSettings
 		}
 		else
 		{
-			port = Config.getPropertyInteger(GeodeConfigConstants.LOCATOR_PORT_PROP,10334).intValue();
+			port = Config.getPropertyInteger(GemFireConfigConstants.LOCATOR_PORT_PROP,10334).intValue();
 			
 			if(host.trim().length() == 0)
-				throw new ConfigException(GeodeConfigConstants.LOCATOR_PORT_PROP+" configuration property required");
+				throw new ConfigException(GemFireConfigConstants.LOCATOR_PORT_PROP+" configuration property required");
 		}
 		
 	}// ------------------------------------------------
@@ -125,13 +125,13 @@ public class GeodeSettings
 	 * 
 	 * @return the VCAPConfig
 	 */
-	public static GeodeSettings getInstance()
+	public static GemFireSettings getInstance()
 	{
-		synchronized (GeodeSettings.class)
+		synchronized (GemFireSettings.class)
 		{
 			if (instance == null)
 			{
-				instance = new GeodeSettings();
+				instance = new GemFireSettings();
 			}
 		}
 		return instance;
@@ -216,7 +216,7 @@ public class GeodeSettings
 			if(locators == null || locators.isEmpty())
 			{
 				//get for LOCATORS env
-				String locatorsConfig = Config.getProperty(GeodeConfigConstants.LOCATORS_PROP,"");
+				String locatorsConfig = Config.getProperty(GemFireConfigConstants.LOCATORS_PROP,"");
 				if(locatorsConfig.length() == 0)
 					return null;
 	

@@ -68,7 +68,7 @@ public class TextPolicySearchStrategy
 
         try {
             //clearing asynchronously
-            GeodePagination pagination = new GeodePagination();
+            GemFirePagination pagination = new GemFirePagination();
 
             pagination.clearSearchResultsByPage(criteria, pageKeysRegion);
 

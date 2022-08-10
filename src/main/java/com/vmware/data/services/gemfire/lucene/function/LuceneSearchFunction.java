@@ -1,6 +1,6 @@
 package com.vmware.data.services.gemfire.lucene.function;
 
-import com.vmware.data.services.gemfire.lucene.GeodePagination;
+import com.vmware.data.services.gemfire.lucene.GemFirePagination;
 import com.vmware.data.services.gemfire.lucene.TextPageCriteria;
 import com.vmware.data.services.gemfire.lucene.TextPolicySearchStrategy;
 import nyla.solutions.core.patterns.iteration.PagingCollection;
@@ -78,7 +78,7 @@ public class LuceneSearchFunction<T> implements Function<Object>
 			
 			Region<?,?> region = cache.getRegion(criteria.getRegionName());
 			
-			GeodePagination pagination = new GeodePagination();
+			GemFirePagination pagination = new GemFirePagination();
 			
 			TextPolicySearchStrategy geodeSearch = new TextPolicySearchStrategy(cache);
 			

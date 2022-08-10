@@ -13,12 +13,12 @@ import java.util.Properties;
  *
  * @author Gregory Green
  */
-public class GeodeConfigAuthInitializeTest
+public class GemFireConfigAuthInitializeTest
 {
     @Test
     public void testSecurity_USERNAME_PASSWORD()
     {
-        synchronized (GeodeConfigAuthInitializeTest.class)
+        synchronized (GemFireConfigAuthInitializeTest.class)
         {
 
             System.setProperty("SECURITY_USERNAME", "myuser");
@@ -26,7 +26,7 @@ public class GeodeConfigAuthInitializeTest
 
             Config.reLoad();
 
-            GeodeConfigAuthInitialize auth = new GeodeConfigAuthInitialize(new GeodeSettings(""));
+            GemFireConfigAuthInitialize auth = new GemFireConfigAuthInitialize(new GemFireSettings(""));
 
             Assertions.assertEquals("myuser", auth.getSecurityUserName());
             Assertions.assertEquals("mypassword", auth.getSecurityPassword());
@@ -37,7 +37,7 @@ public class GeodeConfigAuthInitializeTest
 
             Config.reLoad();
 
-            auth = new GeodeConfigAuthInitialize(new GeodeSettings(""));
+            auth = new GemFireConfigAuthInitialize(new GemFireSettings(""));
 
             Assertions.assertEquals("myuser2", auth.getSecurityUserName());
             Assertions.assertEquals("mypassword2", auth.getSecurityPassword());
@@ -49,12 +49,12 @@ public class GeodeConfigAuthInitializeTest
     public void testGetCredentials()
     throws Exception
     {
-        synchronized (GeodeConfigAuthInitializeTest.class)
+        synchronized (GemFireConfigAuthInitializeTest.class)
         {
             String vcap = IO.readClassPath("json/vcap.json");
-            System.setProperty(GeodeSettings.VCAP_SERVICES, vcap);
+            System.setProperty(GemFireSettings.VCAP_SERVICES, vcap);
 
-            AuthInitialize auth = new GeodeConfigAuthInitialize(new GeodeSettings(vcap));
+            AuthInitialize auth = new GemFireConfigAuthInitialize(new GemFireSettings(vcap));
 
             Properties in = new Properties();
 
@@ -63,9 +63,9 @@ public class GeodeConfigAuthInitializeTest
             System.out.println("output properties:" + out);
 
 
-            String username = out.getProperty(GeodeConfigAuthInitialize.USER_NAME);
+            String username = out.getProperty(GemFireConfigAuthInitialize.USER_NAME);
             Assertions.assertTrue(username != null && username.trim().length() > 0);
-            Assertions.assertNotNull(out.getProperty(GeodeConfigAuthInitialize.PASSWORD));
+            Assertions.assertNotNull(out.getProperty(GemFireConfigAuthInitialize.PASSWORD));
 
 
         }

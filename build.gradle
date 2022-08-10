@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
-version = '1.0.0'
+version = '1.1.0'
 
 allprojects {
     tasks.withType(Javadoc) {
@@ -61,7 +61,11 @@ repositories {
 dependencies {
 
     implementation group: 'org.apache.geode', name: 'geode-core', version: geodeVersion
-    implementation group: 'org.apache.geode', name: 'geode-core', version: geodeVersion
+    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
+    implementation 'org.apache.shiro:shiro-core:1.9.1'
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+
     implementation group: 'org.apache.geode', name: 'geode-common', version: geodeVersion
     implementation group: 'org.apache.geode', name: 'geode-lucene', version: geodeVersion
     implementation group: 'org.apache.geode', name: 'geode-cq', version: geodeVersion

@@ -2,7 +2,7 @@ package com.vmware.data.services.gemfire.io.search;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.vmware.data.services.gemfire.lucene.GeodeLuceneSearch;
+import com.vmware.data.services.gemfire.lucene.GemFireLuceneSearch;
 import com.vmware.data.services.gemfire.lucene.TextPageCriteria;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.lucene.LuceneQuery;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 
-public class GeodeLuceneSearchTest
+public class GemFireLuceneSearchTest
 {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -42,7 +42,7 @@ public class GeodeLuceneSearchTest
 		
 		when(query.findResults()).thenReturn(results);
 		
-		GeodeLuceneSearch searcher = new GeodeLuceneSearch(luceneService);
+		GemFireLuceneSearch searcher = new GemFireLuceneSearch(luceneService);
 		
 		
 		assertNull(searcher.saveSearchResultsWithPageKeys(null,pageRegion));

@@ -2,7 +2,7 @@ package com.vmware.data.services.gemfire.client;
 
 import nyla.solutions.core.util.Config;
 
-public interface GeodeConfigConstants
+public interface GemFireConfigConstants
 {
 	public final static String SSL_KEYSTORE_CLASSPATH_FILE_PROP = "SSL_KEYSTORE_CLASSPATH_FILE";
 	

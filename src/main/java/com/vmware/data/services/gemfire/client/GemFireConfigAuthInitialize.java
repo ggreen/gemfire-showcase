@@ -2,7 +2,6 @@ package com.vmware.data.services.gemfire.client;
 
 import java.util.Properties;
 
-import org.apache.geode.LogWriter;
 import org.apache.geode.distributed.DistributedMember;
 import org.apache.geode.security.AuthInitialize;
 import org.apache.geode.security.AuthenticationFailedException;
@@ -24,24 +23,21 @@ import nyla.solutions.core.util.Config;
  * @author Gregory Green
  *
  */
-@SuppressWarnings("deprecation")
-public class GeodeConfigAuthInitialize
-implements AuthInitialize, GeodeConfigConstants
+public class GemFireConfigAuthInitialize
+implements AuthInitialize, GemFireConfigConstants
 {
-	private final GeodeSettings vcapConfig;
+	private final GemFireSettings vcapConfig;
  
-	  //private LogWriter logWriter, securityLogWriter;
-
 	  /**
 	   * Constructor
 	   * @param vcapConfig the VCAP configuration
 	   */
-	  protected GeodeConfigAuthInitialize(GeodeSettings vcapConfig)
+	  protected GemFireConfigAuthInitialize(GemFireSettings vcapConfig)
 	  {
 		  this.vcapConfig = vcapConfig;
 	  }//------------------------------------------------
 	  public static AuthInitialize create() {
-	    return new GeodeConfigAuthInitialize(GeodeSettings.getInstance());
+	    return new GemFireConfigAuthInitialize(GemFireSettings.getInstance());
 	  }
 
 	  @Override
@@ -88,12 +84,4 @@ implements AuthInitialize, GeodeConfigConstants
 		return username;
 	}//------------------------------------------------
 
-
-	@Override
-	  public void init(LogWriter logWriter, LogWriter securityLogWriter)
-	      throws AuthenticationFailedException 
-	  {
-		  //this.logWriter = logWriter;
-		  //this.securityLogWriter = securityLogWriter;
-	  }
 }

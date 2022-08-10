@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Gregory Green
  */
-public class GeodeSettingsTest
+public class GemFireSettingsTest
 {
 
     @Test
@@ -26,14 +26,14 @@ public class GeodeSettingsTest
 
         PoolFactory factory1 = mock(PoolFactory.class);
         String locators1 = "host1[1002]";
-        GeodeSettings.constructLocators(locators1, factory1);
+        GemFireSettings.constructLocators(locators1, factory1);
 
         verify(factory1, atLeast(1)).addLocator(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt());
 
         PoolFactory factory2 = mock(PoolFactory.class);
 
         String locators2 = "host1[1002],host[232]";
-        GeodeSettings.constructLocators(locators2, factory2);
+        GemFireSettings.constructLocators(locators2, factory2);
 
         verify(factory1, atLeast(1)).addLocator(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt());
 
@@ -44,11 +44,11 @@ public class GeodeSettingsTest
     public void testGetLocatorUrlList()
     throws Exception
     {
-        System.setProperty(GeodeConfigConstants.LOCATORS_PROP, "host1[1],host2[2],host2[3];");
+        System.setProperty(GemFireConfigConstants.LOCATORS_PROP, "host1[1],host2[2],host2[3];");
 
         Config.reLoad();
 
-        List<URI> list = GeodeSettings.getInstance().getLocatorUrlList();
+        List<URI> list = GemFireSettings.getInstance().getLocatorUrlList();
         Assertions.assertTrue(list != null && !list.isEmpty());
 
     }//--------------------------------------
@@ -59,18 +59,18 @@ public class GeodeSettingsTest
     {
         try
         {
-            System.setProperty(GeodeConfigConstants.LOCATORS_PROP, "host1[1],host2[2],host2[3]");
+            System.setProperty(GemFireConfigConstants.LOCATORS_PROP, "host1[1],host2[2],host2[3]");
 
             Config.reLoad();
 
-            List<URI> list = GeodeSettings.getInstance().getLocatorUrlList();
+            List<URI> list = GemFireSettings.getInstance().getLocatorUrlList();
             Assertions.assertTrue(list != null && !list.isEmpty());
 
             Assertions.assertEquals(3, list.size());
 
 
             ClientCacheFactory factory = mock(ClientCacheFactory.class);
-            GeodeSettings.getInstance().constructPoolLocator(factory);
+            GemFireSettings.getInstance().constructPoolLocator(factory);
 
             Assertions.assertNotNull(factory);
             verify(factory, atLeastOnce()).addPoolLocator(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt());
@@ -91,7 +91,7 @@ public class GeodeSettingsTest
     {
 
 
-        GeodeSettings config = GeodeSettings.getInstance();
+        GemFireSettings config = GemFireSettings.getInstance();
 
         Assertions.assertNotNull(config);
 
@@ -102,7 +102,7 @@ public class GeodeSettingsTest
     throws Exception
     {
         String envContent = IO.readClassPath("json/vcap.json");
-        GeodeSettings config = new GeodeSettings(envContent);
+        GemFireSettings config = new GemFireSettings(envContent);
 
         String locators = config.getLocators();
         System.out.println("locators:" + locators);
@@ -115,9 +115,9 @@ public class GeodeSettingsTest
     throws Exception
     {
         String envContent = null;
-        GeodeSettings config = new GeodeSettings(envContent);
+        GemFireSettings config = new GemFireSettings(envContent);
 
-        String envLocatorHost = System.getenv(GeodeConfigConstants.LOCATOR_HOST_PROP);
+        String envLocatorHost = System.getenv(GemFireConfigConstants.LOCATOR_HOST_PROP);
 
         if (envLocatorHost == null || envLocatorHost.length() == 0)
         {
@@ -127,7 +127,7 @@ public class GeodeSettingsTest
 
 
             envContent = " ";
-            config = new GeodeSettings(envContent);
+            config = new GemFireSettings(envContent);
 
             l = config.getLocatorUrlList();
             Assertions.assertTrue(l == null || l.size() == 0,"getLocatorHost:" + l + " would be empty");
@@ -135,7 +135,7 @@ public class GeodeSettingsTest
         }
         else
         {
-            assertEquals(envLocatorHost, GeodeSettings.getInstance().getLocatorHost());
+            assertEquals(envLocatorHost, GemFireSettings.getInstance().getLocatorHost());
         }
 
     }//------------------------------------------------
@@ -145,7 +145,7 @@ public class GeodeSettingsTest
     throws Exception
     {
         String envContent = IO.readClassPath("json/vcap.json");
-        GeodeSettings config = new GeodeSettings(envContent);
+        GemFireSettings config = new GemFireSettings(envContent);
 
         String token = null;
         Assertions.assertNull(config.getSecuredToken("invalid", token));
@@ -165,7 +165,7 @@ public class GeodeSettingsTest
     throws Exception
     {
         String envContent = IO.readClassPath("json/vcap.json");
-        GeodeSettings config = new GeodeSettings(envContent);
+        GemFireSettings config = new GemFireSettings(envContent);
 
         String token = null;
         assertArrayEquals("some_developer_password".toCharArray(), config.getSecuredToken("developer", token).getCredentials());

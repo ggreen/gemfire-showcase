@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.vmware.data.services.gemfire.client.GeodeClient;
+import com.vmware.data.services.gemfire.client.GemFireClient;
 import com.vmware.data.services.gemfire.lucene.function.SimpleLuceneSearchFunction;
 import org.apache.geode.cache.GemFireCache;
 import org.apache.geode.cache.Region;
@@ -31,14 +31,14 @@ import nyla.solutions.core.util.Organizer;
  * @author Gregory Green
  *
  */
-public class GeodeLuceneSearch
+public class GemFireLuceneSearch
 {
 	private final LuceneService luceneService;
 	/**
 	 * 
 	 * @param gemFireCache the cache
 	 */
-	public GeodeLuceneSearch(GemFireCache gemFireCache)
+	public GemFireLuceneSearch(GemFireCache gemFireCache)
 	{
 		this(LuceneServiceProvider.get(gemFireCache));
 	}//------------------------------------------------
@@ -46,7 +46,7 @@ public class GeodeLuceneSearch
 	 * 
 	 * @param luceneService the luceneService
 	 */
-	public GeodeLuceneSearch(LuceneService luceneService)
+	public GemFireLuceneSearch(LuceneService luceneService)
 	{
 		this.luceneService = luceneService;
 	}//------------------------------------------------
@@ -201,7 +201,7 @@ public class GeodeLuceneSearch
 	public <T> Collection<T> search(String indexName,String regionName,String queryString,String defaultField) 
 	throws Exception
 	{
-		Region<?,?> region = GeodeClient.connect().getRegion(regionName);
+		Region<?,?> region = GemFireClient.connect().getRegion(regionName);
 		
 		String[] args = {indexName,regionName,queryString,defaultField};
 	

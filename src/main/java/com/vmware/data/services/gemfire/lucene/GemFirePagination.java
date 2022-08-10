@@ -13,7 +13,7 @@ import com.vmware.data.services.gemfire.io.Querier;
 import nyla.solutions.core.util.BeanComparator;
 import nyla.solutions.core.util.Organizer;
 
-public class GeodePagination
+public class GemFirePagination
 {
 	/**
 	 * 
