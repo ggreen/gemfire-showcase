@@ -22,8 +22,7 @@ import org.mockito.ArgumentMatchers;
 import java.util.Collection;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -40,6 +39,13 @@ public class GemFireClientTest
     private Region<?,?> cachingProxyRegion;
     private AttributesMutator<?, ?> attributesMutator;
     private QuerierService querier;
+
+
+    @Test
+    void builder()
+    {
+        assertNotNull(GemFireClient.builder());
+    }
 
     @BeforeEach
     void setUp()
@@ -74,25 +80,25 @@ public class GemFireClientTest
     @Test
     void getClientCache()
     {
-        Assertions.assertNotNull(subject.getClientCache());
+        assertNotNull(subject.getClientCache());
     }
 
     @Test
     void getQuerierService()
     {
-        Assertions.assertNotNull(subject.getQuerierService());
+        assertNotNull(subject.getQuerierService());
     }
 
     @Test
     void getRegionClientCache()
     {
-        Assertions.assertNotNull(GemFireClient.getRegion(clientCache,"regionName"));
+        assertNotNull(GemFireClient.getRegion(clientCache,"regionName"));
     }
 
     @Test
     void getRegionClientCachePoolName()
     {
-        Assertions.assertNotNull(GemFireClient.getRegion(clientCache,"regionName","myPool"));
+        assertNotNull(GemFireClient.getRegion(clientCache,"regionName","myPool"));
     }
 
     @Test
@@ -117,7 +123,7 @@ public class GemFireClientTest
     {
 
         Region<Object, Object> region = subject.getRegion("test");
-        Assertions.assertNotNull(region);
+        assertNotNull(region);
         verify(proxyRegionfactory).create(ArgumentMatchers.anyString());
     }//------------------------------------------------
     @Test
@@ -163,7 +169,7 @@ public class GemFireClientTest
     {
         String oql = "";
         Collection<Object> results = subject.select(oql);
-        Assertions.assertNotNull(results);
+        assertNotNull(results);
         verify(querier).query(ArgumentMatchers.anyString(),
                 nullable(RegionFunctionContext.class));
     }
@@ -174,7 +180,7 @@ public class GemFireClientTest
         RegionFunctionContext rfc = mock(RegionFunctionContext.class);
         String oql = "";
         Collection<Object> results = subject.select(oql,rfc);
-        Assertions.assertNotNull(results);
+        assertNotNull(results);
 
         verify(querier).query(ArgumentMatchers.anyString(), ArgumentMatchers.any(RegionFunctionContext.class));
     }

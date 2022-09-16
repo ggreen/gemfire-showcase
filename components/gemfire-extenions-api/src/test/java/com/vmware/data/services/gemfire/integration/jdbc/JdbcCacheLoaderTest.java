@@ -21,9 +21,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -75,6 +75,11 @@ class JdbcCacheLoaderTest
     @Test
     void given_recordInDb_WHEN_load_THEN_record_loaded() throws SQLException
     {
+        Properties properties = new Properties();
+        properties.setProperty("JDBC_CACHE_LOADER_USERPROFILE_SQL","select firstName as \"firstName\", lastName as " +
+                "\"lastName\", loginID as \"loginID\" from user_profiles where email = ?");
+        Config.setProperties(properties);
+
         String regionName = "UserProfile";
         UserProfile expected = JavaBeanGeneratorCreator.of(UserProfile.class).create();
         Map map = JavaBean.toMap(expected);
@@ -89,6 +94,20 @@ class JdbcCacheLoaderTest
         Object actual = subject.load(helper);
 
         assertEquals(expected,actual);
+    }
+
+    @Test
+    void given_regionWithNoSQL_WHEN_load_THEN_printException() throws SQLException
+    {
+        String regionName = "NotFound";
+        UserProfile expected = JavaBeanGeneratorCreator.of(UserProfile.class).create();
+        Map map = JavaBean.toMap(expected);
+
+        when(helper.getRegion()).thenReturn(region);
+        when(region.getName()).thenReturn(regionName);
+
+        assertNull(subject.load(helper));
+
     }
 
     @Test

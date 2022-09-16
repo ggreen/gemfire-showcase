@@ -1,5 +1,4 @@
 
-
 ```shell
 cd /Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.0/bin
 ./gfsh
@@ -18,6 +17,13 @@ export JDBC_USERNAME=postgres
 export JDBC_PASSWORD=CRYPTED_PASSWORD_HERE
 ```
 
+
+
+```shell
+./gfsh
+```
+
+Gfsh
 ```shell
 start locator --name=locator --locators=127.0.0.1[10334] --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
 ```
@@ -37,18 +43,15 @@ deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-ext
 
 
 
-```shell
-JDBC_LOADER_TEST_CACHELOADER_SQL=select firstName as "firstName", lastName as "lastName", loginID as "loginID" from test_cacher where email = ?
-```
 
 
 ```shell
-create region --name=user_load  --type=PARTITION --cache-loader=com.vmware.data.services.gemfire.integration.jdbc.JdbcCacheLoader
+create region --name=user_profiles  --type=PARTITION --cache-writer=com.vmware.data.services.gemfire.integration.jdbc.JdbcCacheWriter
 ```
 
-In Postgres
-
-```sqlite-sql
+```shell
+open http://localhost:9090/geode/swagger-ui.html
+```
 
 CREATE TABLE user_profiles (
 email varchar(255),
@@ -66,17 +69,30 @@ values
   'jimani',
   'jimani@test.unit'
 );
-```
 
-
-In gfsh
 
 ```shell
-get --key="jimani@test.unit" --region=/user_load
+curl -X 'POST' \
+'http://localhost:9090/geode/v1/user_profiles?keys=aimani%40pivotal.io&op=PUT' \
+-H 'accept: application/json;charset=UTF-8' \
+-H 'Content-Type: application/json;charset=UTF-8' \
+-d '{
+"firstName" : "AImani",
+"lastName" : "Imani",
+"loginID" :  "aimani",
+"email" : "aimani@pivotal.io"
+}'
 ```
 
-
-
-query --query="select * from  /Test_CacheLoader"
-
-remove --region=/Test_CacheLoader --key="jimani@test.unit"
+```shell
+curl -X 'PUT' \
+'http://localhost:9090/geode/v1/user_profiles?keys=nimani%40pivotal.io&op=PUT' \
+-H 'accept: application/json;charset=UTF-8' \
+-H 'Content-Type: application/json;charset=UTF-8' \
+-d '{
+"firstName" : "Noles",
+"lastName" : "Imani",
+"loginID" :  "nimani",
+"email" : "nimani@vmware.com"
+}'
+```

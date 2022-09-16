@@ -1,2 +1,4 @@
 rootProject.name = 'gemfire-extensions'
 include 'components', 'shared', 'components:gemfire-extenions-api'
+//include 'applications', 'shared', 'applications:gemfire-sink'
+//include 'applications', 'shared','applications:gemfire-sink'

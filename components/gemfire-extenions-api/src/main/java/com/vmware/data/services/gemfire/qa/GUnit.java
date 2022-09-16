@@ -43,7 +43,7 @@ public class GUnit
 	
 	public GUnit()
 	{
-	}//------------------------------------------------
+	}
 	/**
 	 * <pre>
 	 * This method will start a single locator and cache server.
@@ -95,7 +95,7 @@ public class GUnit
 		System.out.println(pi.exitValue);
 		System.out.println("OUTPUT:"+pi.output);
 		System.out.println("ERROR:"+pi.error);
-	}//------------------------------------------------
+	}
 	/**
 	 * 
 	 * @param regionName the region name
@@ -114,7 +114,8 @@ public class GUnit
 		System.out.println("OUTPUT:"+pi.output);
 		System.out.println("ERROR:"+pi.error);
 		
-	}//------------------------------------------------
+	}
+	//------------------------------------------------
 	public void shutdown()
 	{
 		try(JMX jmx = JMX.connect("localhost", 1099))

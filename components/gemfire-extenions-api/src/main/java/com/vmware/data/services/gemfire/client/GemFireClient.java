@@ -151,6 +151,12 @@ public class GemFireClient
 			this.querier = new QuerierMgr();
 		
 	}//------------------------------------------------
+
+	public static Builder builder()
+	{
+		return new GemFireClientBuilder();
+	}
+
 	/**
 	 * Initialize security properties
 	 * @param props the security properties

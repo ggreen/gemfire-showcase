@@ -3,6 +3,7 @@ package com.vmware.data.services.gemfire.integration.jdbc;
 import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Cryption;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.postgresql.Driver;
 
 import javax.sql.ConnectionPoolDataSource;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class HikariDataSourceCreatorTest
 {
     @Test
+    @EnabledIfSystemProperty(named = "integration.test", matches = "true")
     void create() throws Exception
     {
         ConnectionPoolDataSource p;
@@ -29,6 +31,7 @@ class HikariDataSourceCreatorTest
     }
 
     @Test
+    @EnabledIfSystemProperty(named = "integration.test", matches = "true")
     void create_Postgres() throws Exception
     {
         System.setProperty("CRYPTION_KEY","JUNIT_TESTING");

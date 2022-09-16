@@ -74,7 +74,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.2'
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
-    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1-SNAPSHOT'
+    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.6.1'
