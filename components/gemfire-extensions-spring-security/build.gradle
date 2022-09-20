@@ -101,10 +101,10 @@ publishing {
     publications {
         maven(MavenPublication) {
             pom {
-                name = 'apache-geode-extensions-core'
+                name = archivesBaseName
                 groupId = group
-                artifactId = 'gemfire-extensions-core'
-                description = 'This Java API provides support for GemFire'
+                artifactId = archivesBaseName
+                description = 'This Spring Security user detail services backed by GemFire'
                 packaging = 'jar'
                 url = 'https://github.com/ggreen/gemfire-extensions'
                 licenses {
