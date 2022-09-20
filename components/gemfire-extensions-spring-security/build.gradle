@@ -95,3 +95,49 @@ test {
         events "passed", "skipped", "failed"
     }
 }
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                name = 'apache-geode-extensions-core'
+                groupId = group
+                artifactId = 'gemfire-extensions-core'
+                description = 'This Java API provides support for GemFire'
+                packaging = 'jar'
+                url = 'https://github.com/ggreen/gemfire-extensions'
+                licenses {
+                    license {
+                        url = 'https://github.com/ggreen/gemfire-extensions/blob/main/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'ggreen'
+                        name = 'Gregory Green'
+                        email = 'gregoryg@vmware.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/ggreen/gemfire-extensions.git'
+                    developerConnection = 'scm:git:https://github.com/ggreen/gemfire-extensions.git'
+                    url = 'https://github.com/ggreen/gemfire-extensions.git'
+                }
+            }
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+    repositories {
+        maven {
+            name = "CentralMaven" //  optional target repository name
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+}
