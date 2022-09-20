@@ -1,0 +1,97 @@
+apply plugin: 'signing'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+
+sourceCompatibility = 1.8
+version = '1.0.0'
+
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+group = 'io.pivotal.services.dataTx'
+archivesBaseName = 'gemfire-extensions-spring-security'
+
+
+ext {
+    geodeVersion = '1.15.0'
+}
+
+
+compileJava   {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+task myJavadocs(type: Javadoc) {
+    source = sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar) {
+    archiveClassifier.set("javadoc")
+    from javadoc
+}
+
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
+artifacts { archives sourcesJar, javadocJar }
+
+signing {
+    sign(publishing.publications)
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': 'gemfire-extensions-core',
+                'Can-Redefine-Classes': false,
+                'Can-Set-Native-Method-Prefix': false
+        )
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.4'
+    implementation group: 'org.apache.geode', name: 'geode-core', version: geodeVersion
+    implementation group: 'org.apache.geode', name: 'geode-core', version: geodeVersion
+    implementation group: 'org.apache.geode', name: 'geode-common', version: geodeVersion
+    implementation group: 'org.apache.geode', name: 'geode-lucene', version: geodeVersion
+    implementation group: 'org.apache.geode', name: 'geode-cq', version: geodeVersion
+    implementation group: 'org.apache.geode', name: 'geode-wan', version: geodeVersion
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.1'
+    implementation group: 'org.apache.geode', name: 'geode-logging', version: geodeVersion
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'
+    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
+
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.8.0'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.0'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.0'
+
+}
+test {
+    // Enable JUnit 5 (Gradle 4.6+).
+    useJUnitPlatform()
+
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
