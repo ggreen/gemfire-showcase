@@ -18,7 +18,10 @@ cd /Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.0/bin
 ./gfsh
 ```
 ```shell
-start locator --name=locator1 --port=10334 --locators="127.0.0.1[10334],127.0.0.1[10434]" --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
+start locator --name=gf-locator1 --port=10334 --locators="127.0.0.1[10334],127.0.0.1[10434]" --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
+```
+```shell
+start locator --name=gf-locator2 --port=10434 --locators="127.0.0.1[10334],127.0.0.1[10434]"  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --http-service-port=0 --J="-Dgemfire.jmx-manager-port=1098"
 ```
 
 ```shell
@@ -26,9 +29,13 @@ configure pdx --disk-store --read-serialized=true
 ```
 
 ```shell
-start server --name=server1   --locators="127.0.0.1[10334],127.0.0.1[10434]"  --server-port=40401 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9090  --J=-Dgemfire-for-redis-port=6379 --J=-Dgemfire-for-redis-enabled=true --include-system-classpath=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties
+start server --name=gf-server1 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334],127.0.0.1[10434]"  --server-port=40401 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9090  --J=-Dgemfire-for-redis-port=6379 --J=-Dgemfire-for-redis-enabled=true --include-system-classpath=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties
 ```
 
+```shell
+start server --name=gf-server2 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334],127.0.0.1[10434]"  --server-port=40402 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9092  --J=-Dgemfire-for-redis-port=6372 --J=-Dgemfire-for-redis-enabled=true --include-system-classpath=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties
+
+```
 
 ```shell
 create region --name=customers  --type=PARTITION --cache-loader=com.vmware.data.services.gemfire.integration.jdbc.JdbcJsonPdxLoader --cache-writer=com.vmware.data.services.gemfire.integration.jdbc.JdbcJsonCacheWriter
@@ -97,6 +104,29 @@ curl -X 'PUT' \
 }'   
 ```
 
+```shell
+curl -X 'PUT' \
+'http://localhost:9090/geode/v1/customers?keys=jsmith%40vmware.com&op=PUT' \
+-H 'accept: application/json;charset=UTF-8' \
+-H 'Content-Type: application/json;charset=UTF-8' \
+-d '{
+"email" : "jsmith@vmware.com",
+"firstName" : "John",
+"lastName" : "Smith"
+}'   
+```
+
+```shell
+curl -X 'PUT' \
+'http://localhost:9090/geode/v1/customers?keys=msmith%40vmware.com&op=PUT' \
+-H 'accept: application/json;charset=UTF-8' \
+-H 'Content-Type: application/json;charset=UTF-8' \
+-d '{
+"email" : "msmith@vmware.com",
+"firstName" : "Mary",
+"lastName" : "Smith"
+}'   
+```
 
 In gfsh
 
@@ -105,28 +135,24 @@ http://localhost:9090/geode/swagger-ui/index.html
 
 ```shell
 curl -X 'GET' \
-  'http://localhost:9090/geode/v1/customers?limit=50&keys=jsmith%40vmware.com' \
+  'http://localhost:9090/geode/v1/customers?limit=50&keys=jdoe@vmware.com' \
   -H 'accept: application/json;charset=UTF-8'
 ```
 
 
 
-query --query="select * from  /Test_CacheLoader"
+query --query="select * from  /customers where lastName like  'S%'"
 
-remove --region=/Test_CacheLoader --key="jimani@test.unit"
-# GemFire Startup
 
-Local environment
 
-Start Locator Server 1
-
+Got http://localhost:9090/geode/swagger-ui/index.html#/queries/runAdhocQuery
+select * from  /customers where lastName like  'S%25'
+or run
 ```shell
-
+curl -X 'GET' \
+  'http://localhost:9090/geode/v1/queries/adhoc?q=select%20%2A%20from%20%20%2Fcustomers%20where%20lastName%20like%20%20%27S%2525%27' \
+  -H 'accept: application/json;charset=UTF-8'
 ```
 
-Start Redis Server 1
 
-```shell
-
-```
 
