@@ -134,6 +134,7 @@ public class JdbcCacheLoader<K, V> implements CacheLoader<K, V>
                     return null;
 
                 result = JavaBean.newBean(map, regionValueClass);
+
             }
 
             return (V) result;

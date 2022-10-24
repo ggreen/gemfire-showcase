@@ -80,6 +80,8 @@ class JdbcCacheWriterTest
         verify(sql).executeUpdateWithJavaBean(any(),any(),any());
     }
 
+
+
     @Test
     void given_pdxInstance_When_put_Then_setPreparedStatementWithPdxVales() throws SQLException
     {
@@ -106,5 +108,23 @@ class JdbcCacheWriterTest
         verify(pdxInstance).getFieldNames();
         verify(pdxInstance,atLeastOnce()).getField(any());
         verify(preparedStatement).executeUpdate();
+    }
+
+    @Test
+    void given_entryDoesNotExistInDb_When_beforeUpdate_Then_insert_record() throws SQLException
+    {
+        Region<String, PdxInstance> region = mock(Region.class);
+
+        when(dataSourceCreator.create()).thenReturn(dataSource);
+        when(dataSource.getConnection()).thenReturn(connection);
+        when(connection.prepareStatement(any())).thenReturn(preparedStatement);
+        when(event.getRegion()).thenReturn(region);
+        when(region.getName()).thenReturn("regionName");
+
+        UserProfile userProfile = JavaBeanGeneratorCreator.of(UserProfile.class).create();
+
+        subject.beforeUpdate(event);
+
+        verify(sql).executeUpdateWithJavaBean(any(),any(),any());
     }
 }

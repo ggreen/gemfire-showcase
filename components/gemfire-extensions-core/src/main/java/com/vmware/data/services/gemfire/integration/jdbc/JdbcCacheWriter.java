@@ -47,6 +47,12 @@ public class JdbcCacheWriter<K,V> extends CacheWriterAdapter<K,V>
         processEvent(event);
     }
 
+    @Override
+    public void beforeUpdate(EntryEvent<K, V> event) throws CacheWriterException
+    {
+        processEvent(event);
+    }
+
     /**
      * Write the event new value to the database
      * @param event the region event

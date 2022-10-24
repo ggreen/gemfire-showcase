@@ -86,8 +86,9 @@ dependencies {
     implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
     implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
     implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.4'
+    implementation 'org.apache.shiro:shiro-core:1.9.1'
     implementation group: 'com.vmware.gemfire', name: 'geode-logging', version: gemFireVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
