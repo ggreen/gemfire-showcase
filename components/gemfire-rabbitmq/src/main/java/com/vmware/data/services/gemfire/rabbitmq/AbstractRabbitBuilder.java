@@ -2,18 +2,21 @@ package com.vmware.data.services.gemfire.rabbitmq;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 public  abstract class AbstractRabbitBuilder {
-    private final Connection connection;
+    private final RabbitConnectionCreator connectionCreator;
 
     private final Map<Long, Channel> channelMap;
 
@@ -23,15 +26,15 @@ public  abstract class AbstractRabbitBuilder {
     private Map<String, Object> queueArgument;
     private String exchangeName;
     private String uri;
+    private Set<String[]> queueRules = new HashSet<>();
 
-    protected Connection getConnection() throws URISyntaxException, NoSuchAlgorithmException, KeyManagementException, IOException, TimeoutException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUri(uri);
-        return factory.newConnection();
+    protected RabbitConnectionCreator getConnectionCreator() throws URISyntaxException, NoSuchAlgorithmException, KeyManagementException, IOException, TimeoutException {
+
+        return this.connectionCreator;
     }
 
-    protected AbstractRabbitBuilder(Connection connection) {
-        this.connection = connection;
+    protected AbstractRabbitBuilder(RabbitConnectionCreator connection) {
+        this.connectionCreator = connection;
         this.channelMap = new ConcurrentHashMap<>();
     }
 
@@ -45,6 +48,12 @@ public  abstract class AbstractRabbitBuilder {
        channel.queueBind(queueName,exchangeName,routingKey);
     }
 
+    protected void addQueue(String queueName, String bindingRules)
+    {
+        String[] queueRule = {queueName, bindingRules};
+
+        queueRules.add(queueRule);
+    }
 
     public Channel getChannel() throws IOException {
 
@@ -53,12 +62,26 @@ public  abstract class AbstractRabbitBuilder {
         Channel channel = channelMap.get(threadId);
 
         if(channel  == null){
-            channel = connection.createChannel();
+            channel = connectionCreator.getChannel();
 
             channelMap.put(threadId,channel);
         }
 
         return channel;
 
+    }
+
+
+    protected void constructQueues() throws IOException {
+
+        for (String[] queueBindRule: this.queueRules) {
+                declareQueue(queueBindRule[0],queueBindRule[1]);
+            }
+    }
+
+
+    protected List<String> getQueueNames() {
+        return this.queueRules.stream().map(queueRule -> queueRule[0])
+                .collect(Collectors.toList());
     }
 }

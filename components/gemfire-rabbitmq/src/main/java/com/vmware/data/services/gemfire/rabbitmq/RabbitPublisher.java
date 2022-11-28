@@ -1,27 +1,58 @@
 package com.vmware.data.services.gemfire.rabbitmq;
 
 import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
+import nyla.solutions.core.util.Config;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author gregory green
  */
-public class RabbitPublisher {
-    private final Channel channel;
+public class RabbitPublisher implements AutoCloseable{
+
+    private final AMQP.BasicProperties basicProperties;
+    private final RabbitConnectionCreator creator;
     private final String exchange;
+    private final boolean requireReliableDelivery;
 
-    private boolean mandatory = true;
-    private  boolean immediate = true;
-    private AMQP.BasicProperties properties;
+    private long waitFromConfirmationTimeSpan;
 
-    public RabbitPublisher(Channel channel, String exchange) {
-        this.channel = channel;
+    private int WAIT_FOR_CONFIRMATION_SECONDS = Config.getPropertyInteger("RABBIT_WAIT_FOR_CONFIRMATION_SECS",30);
+
+
+    public RabbitPublisher(RabbitConnectionCreator creator, String exchange, AMQP.BasicProperties basicProperties, boolean confirmPublish)
+    {
+        this.creator = creator;
         this.exchange = exchange;
+        this.basicProperties = basicProperties;
+        this.requireReliableDelivery = confirmPublish;
+
+        if(confirmPublish)
+            waitFromConfirmationTimeSpan  = WAIT_FOR_CONFIRMATION_SECONDS * 1000;
     }
 
-    public void send(byte[] body, String routingKey) throws IOException {
-        channel.basicPublish(exchange,routingKey,mandatory,immediate,properties,body);
+    public void close() throws Exception {
+        this.creator.close();
+    }
+
+    public void publish(byte[] body, String routingKey) throws IOException, InterruptedException, TimeoutException {
+        if (body == null || body.length == 0)
+            throw new IllegalArgumentException("Body cannot be null or empty");
+
+        if (routingKey == null)
+            throw new IllegalArgumentException("routingKey cannot be null");
+
+        creator.getChannel().basicPublish( exchange,
+            routingKey,
+            true,
+             basicProperties,
+            body);
+
+        if (this.requireReliableDelivery)
+        {
+            creator.getChannel().waitForConfirmsOrDie(waitFromConfirmationTimeSpan);
+        }
+
     }
 }

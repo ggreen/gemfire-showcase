@@ -1,44 +1,50 @@
 package com.vmware.data.services.gemfire.rabbitmq;
 
-import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.Consumer;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
+/**
+ * Builder for RabbitMQ consumers
+ * @author gregory Green
+ */
 public class RabbitConsumerBuilder extends AbstractRabbitBuilder {
-    private final List<String[]> queueRules;
 
-    public RabbitConsumerBuilder(Connection connection) {
+    private Consumer consumer;
+
+    public RabbitConsumerBuilder(RabbitConnectionCreator connection) {
         super(connection);
-
-        this.queueRules = new ArrayList<>();
     }
 
-    public void queue(String queueName, String bindingRules) {
-        String[] queueRule = {queueName, bindingRules};
-        queueRules.add(queueRule);
+    public RabbitConsumerBuilder queue(String queueName, String bindingRules) {
+        this.addQueue(queueName,bindingRules);
+
+        return this;
     }
 
     public RabbitConsumer build() {
         try {
-            Connection connection = getConnection();
+            super.constructQueues();
 
-            for (String[] queueBindRule: this.queueRules) {
-                declareQueue(queueBindRule[0],queueBindRule[1]);
+            List<String> queueNames = super.getQueueNames();
+
+            for(String queueName : queueNames)
+            {
+                this.getChannel().basicConsume(queueName,consumer);
             }
 
             return new RabbitConsumer();
-        } catch (URISyntaxException| NoSuchAlgorithmException | KeyManagementException | IOException | TimeoutException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
 
+    public RabbitConsumerBuilder addConsumer(Consumer consumer) {
+        this.consumer = consumer;
 
+        return this;
+    }
 }
 

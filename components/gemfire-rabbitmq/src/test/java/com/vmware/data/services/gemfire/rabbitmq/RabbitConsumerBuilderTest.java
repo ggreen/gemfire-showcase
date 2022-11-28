@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -21,34 +21,30 @@ class RabbitConsumerBuilderTest {
     private RabbitConsumerBuilder subject;
     private Channel consumerChannel;
     private Consumer consumer;
+    private RabbitConnectionCreator connectionCreator;
     private Connection connection;
 
     @BeforeEach
     void setUp() {
 
         consumerChannel = mock(Channel.class);
-        consumer = mock(Consumer.class);
         connection = mock(Connection.class);
+        consumer = mock(Consumer.class);
+        connectionCreator = mock(RabbitConnectionCreator.class);
+        when(connectionCreator.getConnection()).thenReturn(connection);
+        when(connectionCreator.getChannel()).thenReturn(consumerChannel);
 
-        subject = new RabbitConsumerBuilder(connection);
+        subject = new RabbitConsumerBuilder(connectionCreator);
 
     }
 
     @Test
     void given_queueName_when_queue_then_consumer_queueAdded() throws IOException {
 
-        subject.queue(queueName, bindingRules);
+        subject.queue(queueName, bindingRules).addConsumer(consumer);
 
         subject.build();
 
         verify(consumerChannel).basicConsume(anyString(),any(Consumer.class));
-    }
-
-    @Test
-    void given_thread_when_getChannel_then_returnPerThread() throws IOException {
-
-        when(connection.createChannel()).thenReturn(consumerChannel);
-
-        assertEquals(consumerChannel, subject.getChannel());
     }
 }

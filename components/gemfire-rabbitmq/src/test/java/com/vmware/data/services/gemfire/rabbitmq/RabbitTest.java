@@ -3,6 +3,7 @@ package com.vmware.data.services.gemfire.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import nyla.solutions.core.patterns.creational.Creator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,10 +14,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -31,6 +29,12 @@ class RabbitTest {
     private Creator<Connection> connectionCreator;
     private Connection connection;
 
+    @BeforeAll
+    static void beforeAll() {
+        System.setProperty("RABBIT_CLIENT_NAME","junit-test");
+        System.setProperty("RABBIT_URIS","localhost:5672");
+    }
+
     @BeforeEach
     void setUp() {
         connection = mock(Connection.class);
@@ -39,31 +43,22 @@ class RabbitTest {
 
         publisherChannel = mock(Channel.class);
 
-        subject = new Rabbit(connectionCreator);
-
-
     }
 
 
 
 
     @Test
-    void connect() throws URISyntaxException, NoSuchAlgorithmException, IOException, KeyManagementException, TimeoutException {
+    void connect() throws URISyntaxException, NoSuchAlgorithmException, IOException, KeyManagementException, TimeoutException, InterruptedException {
+
+
         String url = "amqp://localhost:5672";
-        Rabbit subject = Rabbit.builder().connectUri(url).connect();
 
-        assertNotNull(subject);
-    }
 
-    @Test
-    void when_publisher_then_notNull() throws IOException {
+        Rabbit subject = Rabbit.connect();
+        subject.PublishBuilder().exchange("hello").AddQueue("world","#")
+                .build().publish("Imani".getBytes(StandardCharsets.UTF_8),"Green");
 
-        when(connection.createChannel()).thenReturn(publisherChannel);
-
-        byte[] message = "Hello World".getBytes(StandardCharsets.UTF_8);
-
-        String exchange = "amqp.topic";
-        assertNotNull(subject.publisherBuilder().exchange(exchange).build());
     }
 
 
