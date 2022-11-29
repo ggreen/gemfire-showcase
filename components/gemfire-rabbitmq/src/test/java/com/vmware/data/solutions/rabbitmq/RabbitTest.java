@@ -1,4 +1,4 @@
-package com.vmware.data.services.gemfire.rabbitmq;
+package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -56,7 +56,7 @@ class RabbitTest {
 
 
         Rabbit subject = Rabbit.connect();
-        subject.PublishBuilder().exchange("hello").AddQueue("world","#")
+        subject.publishBuilder().exchange("hello").AddQueue("world","#")
                 .build().publish("Imani".getBytes(StandardCharsets.UTF_8),"Green");
 
     }

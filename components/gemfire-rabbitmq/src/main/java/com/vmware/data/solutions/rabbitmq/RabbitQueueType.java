@@ -1,4 +1,4 @@
-package com.vmware.data.services.gemfire.rabbitmq;
+package com.vmware.data.solutions.rabbitmq;
 
 public enum RabbitQueueType {
     classic, quorum

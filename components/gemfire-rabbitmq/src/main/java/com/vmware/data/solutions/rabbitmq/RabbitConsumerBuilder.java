@@ -1,4 +1,4 @@
-package com.vmware.data.services.gemfire.rabbitmq;
+package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.Consumer;
 
@@ -9,16 +9,16 @@ import java.util.List;
  * Builder for RabbitMQ consumers
  * @author gregory Green
  */
-public class RabbitConsumerBuilder extends AbstractRabbitBuilder {
+public class RabbitConsumerBuilder extends RabbitBuilder {
 
     private Consumer consumer;
 
     public RabbitConsumerBuilder(RabbitConnectionCreator connection) {
-        super(connection);
+        super(connection, (short) 1000);
     }
 
     public RabbitConsumerBuilder queue(String queueName, String bindingRules) {
-        this.addQueue(queueName,bindingRules);
+        this.addQueueRoutingKey(queueName,bindingRules);
 
         return this;
     }
@@ -31,7 +31,7 @@ public class RabbitConsumerBuilder extends AbstractRabbitBuilder {
 
             for(String queueName : queueNames)
             {
-                this.getChannel().basicConsume(queueName,consumer);
+                super.getChannel().basicConsume(queueName,consumer);
             }
 
             return new RabbitConsumer();

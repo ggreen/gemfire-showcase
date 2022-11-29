@@ -1,4 +1,4 @@
-package com.vmware.data.services.gemfire.rabbitmq;
+package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.AMQP;
 import nyla.solutions.core.util.Config;

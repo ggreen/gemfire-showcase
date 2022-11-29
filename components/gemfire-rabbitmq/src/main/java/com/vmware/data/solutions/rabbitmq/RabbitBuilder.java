@@ -1,11 +1,14 @@
-package com.vmware.data.services.gemfire.rabbitmq;
+package com.vmware.data.solutions.rabbitmq;
 
+import com.rabbitmq.client.Channel;
 import nyla.solutions.core.util.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RabbitBuilder {
     public final static String QUORUM_QUEUE_TYPE = "quorum";
@@ -137,6 +140,11 @@ public class RabbitBuilder {
 
     }
 
+    protected List<String> getQueueNames() {
+        return this.queues.stream().map(queueRule -> queueRule[0])
+                .collect(Collectors.toList());
+    }
+
     protected void assignQueueTypeArgToQuorum()
     {
         this.getQueueArguments().put(QUEUE_TYPE_PROP, QUORUM_QUEUE_TYPE);
@@ -196,5 +204,9 @@ public class RabbitBuilder {
 
     protected void setExchange(String exchange) {
         this.exchange = exchange;
+    }
+
+    protected Channel getChannel() {
+        return this.creator.getChannel();
     }
 }

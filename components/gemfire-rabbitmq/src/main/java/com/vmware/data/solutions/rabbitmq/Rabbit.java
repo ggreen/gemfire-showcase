@@ -1,4 +1,4 @@
-package com.vmware.data.services.gemfire.rabbitmq;
+package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.*;
 import nyla.solutions.core.util.Text;
@@ -112,7 +112,7 @@ public class Rabbit implements RabbitConnectionCreator, BlockedListener, Shutdow
     }
 
 
-    public RabbitPublisherBuilder PublishBuilder() {
+    public RabbitPublisherBuilder publishBuilder() {
         return new RabbitPublisherBuilder(this, qosPreFetchLimit);
     }
 
