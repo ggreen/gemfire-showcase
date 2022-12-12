@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Imani.Solutions.Core.API.NET;
 using Imani.Solutions.Core.API.Serialization;
@@ -16,6 +15,16 @@ namespace Apache.Geode.Core.HTTP.API
         {
             this.urlRoot = urlRoot;
             this.http = http;
+        }
+
+        public GeodeClient(string urlRoot)
+        :this(urlRoot,new Http())
+        {
+        }
+
+        public GeodeClient(string urlRoot, String userName,char[] password)
+        :this(urlRoot, new Http(userName,password,null))
+        {
         }
 
         public static GeodeClient Connect()

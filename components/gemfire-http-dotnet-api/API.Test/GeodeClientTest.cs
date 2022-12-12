@@ -10,12 +10,13 @@ using Moq;
 
 namespace Apache.Geode.Core.HTTP.Test
 {
-    //[TestClass]
+    [TestClass]
     public class GeodeClientTest
     {
 
         private GeodeClient subject;
-        private readonly string urlRoot = "http://localhost:7071";
+        private readonly string apiUrl = "http://localhost:7071";
+        private readonly string gemFireUrl = "http://localhost:7071/geode/v1";
 
         private Mock<IHttp> http;
 
@@ -23,11 +24,11 @@ namespace Apache.Geode.Core.HTTP.Test
         public void InitializeGeodeClientTest()
         {
             http = new Mock<IHttp>();
-            subject = new GeodeClient(urlRoot,http.Object);
+            subject = new GeodeClient(apiUrl,http.Object);
         }
 
         [TestMethod]
-        public void QuerService()
+        public void QueryService()
         {
             Assert.IsNotNull(subject.GetQueryService<Account>());
         }
@@ -48,7 +49,7 @@ namespace Apache.Geode.Core.HTTP.Test
 
             var cryption = new Cryption(cyrptionKey);
                                                                 http://localhost:9090/geode/v1/customers?keys=jdoe%40vmware.com&op=PUT
-            Environment.SetEnvironmentVariable("HTTP_ROOT_URL","http://localhost:9090/geode/v1");
+            Environment.SetEnvironmentVariable("HTTP_ROOT_URL",gemFireUrl);
             Environment.SetEnvironmentVariable("CRYPTION_KEY",cyrptionKey);
             Environment.SetEnvironmentVariable("USERNAME","admin");
             Environment.SetEnvironmentVariable("PASSWORD",$"{Cryption.CRYPTION_PREFIX}{cryption.EncryptText("admin")}");
@@ -87,15 +88,8 @@ namespace Apache.Geode.Core.HTTP.Test
         [TestMethod]
         public void IntegrationRegion_Test()
         {
-            string cyrptionKey ="PLEASECHANGEMETHISISJUSTATEST";
-
-            var cryption = new Cryption(cyrptionKey);
-            Environment.SetEnvironmentVariable("HTTP_ROOT_URL","http://localhost:9090/geode/v1");
-            Environment.SetEnvironmentVariable("CRYPTION_KEY",cyrptionKey);
-            Environment.SetEnvironmentVariable("USERNAME","admin");
-            Environment.SetEnvironmentVariable("PASSWORD",$"{Cryption.CRYPTION_PREFIX}{cryption.EncryptText("admin")}");
-            
-            var subject = GeodeClient.Connect();
+            string gemFireUrl = "http://localhost:7071/geode/v1";
+            var subject =new GeodeClient(gemFireUrl);
 
             //You can use native data object save a JSON format using PDX serializer
             var expected = new Account();
@@ -122,12 +116,31 @@ namespace Apache.Geode.Core.HTTP.Test
             var queryService = subject.GetQueryService<Account>();
 
             //Usign the Object Query Language (very similar to SQL)
-            string oql = $"select * from /{testRegion.Name} where Id = {expected.Id}";
+            string oql = $"select * from /{testRegion.Name} where Id = '{expected.Id}'";
 
             ICollection<Account> actualList = queryService.Query(oql);
 
             Assert.IsNotNull(actualList);
+            Assert.IsTrue(actualList.Count > 0);
 
+        }
+
+            [TestMethod]
+    public void Function_IntTest()
+    {
+          
+            var subject = new GeodeClient(gemFireUrl);
+
+            //You can use native data object save a JSON format using PDX serializer
+            var expected = new Account();
+            expected.Id = "test";
+            expected.Name = "VMware GemFire";
+            expected.Notes = "This framework is powered by Power Apache Geode";
+            expected.Location = new Location("123 Street","LA","CA",12345,"US");
+
+
+            //Regions are like a database table with key/value format
+            var testRegion = subject.GetRegion<string,Account>("test");
 
             //Each Function has a unique
             string functionName = "SimpleLuceneSearchFunction";
@@ -151,12 +164,11 @@ namespace Apache.Geode.Core.HTTP.Test
             //Each function is executed in a distributed fashion
             //Developers have control on where the functions execute
             
-            /*ICollection<Account[]> luceneResults = functionService.Execute(args);    
+            ICollection<Account[]> luceneResults = functionService.Execute(args);    
 
             //Results are aggregated from each distributed execution
             Assert.IsNotNull(luceneResults); 
             Assert.IsTrue(luceneResults.Count > 0); 
-
 
             foreach(Account[] results in luceneResults)
             {
@@ -164,13 +176,13 @@ namespace Apache.Geode.Core.HTTP.Test
                {
                    Console.WriteLine($"DOMAIN: {domain}");
                }
-            }
-            */
-
-        }
+            }        
+    }
 
     }
     //----------------------------
+
+
 
 
     //     [TestMethod]
