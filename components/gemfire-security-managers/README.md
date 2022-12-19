@@ -1,17 +1,14 @@
-# DataTx Geode Security Extensions
+# Geode Security Extensions
 
 This project provides a simple file or LDAP based Security Manager 
-capabilities for a [Apache Geode](https://pivotal.io/pivotal-gemfire)/[Apache Geode cluster](https://geode.apache.org/).
+capabilities for an [Apache Geode](https://pivotal.io/pivotal-gemfire)/[Apache Geode cluster](https://geode.apache.org/).
 
 This implementation is derived from other [open source framework](https://github.com/nyla-solutions/gedi-geode-security-extensions).
-
-It is managed by the Data Transformation team (DataTx) 
-from [Pivotal](http://www.pivotal.io) Services.
 
 
 Supported Security Extensions
 
-**1 - [LDAP](https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions/blob/master/security-core/README_LDAP_SecurityMgr.md)** 
+**1 - [LDAP](README_LDAP_SecurityMgr.md)** 
 
  - User or Group level permissions
  - Password encryption in-flight 
@@ -20,7 +17,7 @@ Supported Security Extensions
  - LDAPS/TLS/SSL
  - Supports LDAP authentication caching with a timeout to survive LDAP network hiccups and optimizations when using  the GemFire REST API.
 
-**2- [File Properties](https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions)**
+**2- [File Properties](README.md)**
 
  - User level permissions
  - Password encryption in-flight 
