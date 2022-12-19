@@ -1,7 +1,7 @@
 # Geode Security Extensions
 
 This project provides a simple file or LDAP based Security Manager 
-capabilities for an [Apache Geode](https://pivotal.io/pivotal-gemfire)/[Apache Geode cluster](https://geode.apache.org/).
+capabilities for an [GemFire](https://tanzu.vmware.com/gemfire)/[Apache Geode cluster](https://geode.apache.org/).
 
 This implementation is derived from other [open source framework](https://github.com/nyla-solutions/gedi-geode-security-extensions).
 
