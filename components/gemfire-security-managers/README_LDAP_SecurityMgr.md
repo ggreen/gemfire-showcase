@@ -2,7 +2,7 @@
 
 This module contains a LDAP based implementation of the GemFire/Geode 9.x [integrated security manager](https://gemfire.docs.pivotal.io/geode/managing/security/implementing_authentication.html).
 
-Note this package supports [GemFire](https://gemfire.docs.pivotal.io/gemfire/about_gemfire.html) version 9.3.0 or higher and [nyla.solutions.core](https://github.com/nyla-solutions/nyla/tree/master) version 1.2.4 or higher.
+Note this package supports [GemFire](https://tanzu.vmware.com/gemfire) version 9.10.0 or higher and [nyla.solutions.core](https://github.com/nyla-solutions/nyla/tree/master) version 1.2.4 or higher.
 
 
 ## Cluster Startup
