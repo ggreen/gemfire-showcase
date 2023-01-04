@@ -3,6 +3,7 @@ include 'components', 'shared', 'components:gemfire-extensions-core'
 include 'components','shared','components:gemfire-rabbitmq'
 include 'components', 'shared', 'components:gemfire-extensions-spring-security'
 include 'components', 'shared', 'components:gemfire-security-managers'
+include 'components', 'shared', 'components:gemfire-health-office'
 
 //include 'applications', 'shared', 'applications:gemfire-sink'
 //include 'applications', 'shared','applications:gemfire-sink'
