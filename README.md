@@ -1,4 +1,4 @@
-# Apache Geode/Pivotal GemFire/Pivotal Cloud Cache (PCC)   Extension 
+# GemFire Cache (PCC)   Extension 
 
 
 This project contains an API for Java Virtual Machine based languages to access [Apache Geode](https://geode.apache.org/)/[GemFire](https://tanzu.vmware.com/gemfire). It builds on top of the core GemFire APIs. It provides a simple interface to connect and perform GemFire data access operations.
