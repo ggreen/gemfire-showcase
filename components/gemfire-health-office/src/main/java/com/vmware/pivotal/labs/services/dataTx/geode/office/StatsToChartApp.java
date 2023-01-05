@@ -20,7 +20,9 @@ public class StatsToChartApp
     {
     	if(args.length != 3)
     	{
-    		throw new IllegalArgumentException("Usage java "+StatsToChart.class.getName()+" <fileOrDirectoryWithStats> <outputDirectory> <filterDay");
+			System.out.println("Usage java "+StatsToChart.class.getName()+" <fileOrDirectoryWithStats> <outputDirectory> <filterDay");
+			System.out.flush();
+    		System.exit(0);
     	}
     	
     	

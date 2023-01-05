@@ -10,6 +10,7 @@ import com.vmware.data.services.apache.geode.operations.stats.statInfo.StatDescr
 import com.vmware.data.services.apache.geode.operations.stats.statInfo.StatValue;
 import nyla.solutions.core.data.Property;
 import nyla.solutions.core.data.clock.Day;
+import nyla.solutions.core.util.Debugger;
 import nyla.solutions.core.util.Text;
 import nyla.solutions.office.chart.Chart;
 
@@ -112,8 +113,10 @@ public class ParNewCollectionTimeThresholdChartStatsVisitor
 				else
 					max = Double.valueOf(Math.max(values[i], max.doubleValue()));
 
-				if (max.doubleValue() > statValue.getSnapshotsMaximum())
-					throw new IllegalArgumentException(max.doubleValue() + ">" + statValue.getSnapshotsMaximum() + " statValue:" + statValue);
+				if (max.doubleValue() > statValue.getSnapshotsMaximum()) {
+					Debugger.printWarn(this,max.doubleValue() + ">" + statValue.getSnapshotsMaximum() + " statValue:" + statValue);
+					//throw new IllegalArgumentException(max.doubleValue() + ">" + statValue.getSnapshotsMaximum() + " statValue:" + statValue);
+				}
 
 				if (values[i] >= threshold)
 					this.maxMap.put(timeValue, max);
