@@ -11,14 +11,17 @@ based cluster deployments.
 ## Start Up
 Starting the app shell
 
-        java -jar target/dataTx-gART-shell-app-<version>.jar
+```shell
+java -jar applications/gemfire-health-shell-app/build/libs/gemfire-health-shell-app-0.0.1-SNAPSHOT.jar
+```
 
 
 ## User guide
 
 Example usages
 
-        shell:>chart-cpu-above-threshold --input-file-path-dir ./stats --out-file-image-path /Users/ggreen/cpu.png --day-date 7/4/2019
+        shell:>chart-cpu-usage --cpuUsageThreshold 50 --inputFilePathDir <dir> --dayFilter 1/4/2023 --outFileImagePath /tmp/jvm.png
+
 
         shell:>chart-jvm-avg-memory-above-threshold --input-file-path-dir ./stats --memory-percentage 50 --out-file-image-path ./jvmAvg.png
 
