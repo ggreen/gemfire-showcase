@@ -43,7 +43,7 @@ public class SettingsUserServiceTest
         properties.setProperty("CRYPTION_KEY", "PIVOTAL");
         properties.setProperty("CONFIG_FILE_WATCH_POLLING_INTERVAL_MS", "1000");
 
-        file = Paths.get("./target/junit_users.properties").toFile();
+        file = Paths.get("src/test/resources/junit_users.properties").toFile();
         properties.store(new FileWriter(file), null);
 
         System.setProperty(Config.SYS_PROPERTY, file.getAbsolutePath());
@@ -239,7 +239,7 @@ public class SettingsUserServiceTest
         properties.setProperty("CRYPTION_KEY", "PIVOTAL");
         properties.setProperty("CONFIG_FILE_WATCH_POLLING_INTERVAL_MS", "1000");
 
-        File file = Paths.get("./target/junit_users.properties").toFile();
+        File file = Paths.get("src/test/resources/junit_users.properties").toFile();
         properties.store(new FileWriter(file), null);
 
         System.setProperty(Config.SYS_PROPERTY, file.getAbsolutePath());
@@ -274,7 +274,7 @@ public class SettingsUserServiceTest
         props.setProperty("CRYPTION_KEY", "PIVOTAL");
         props.setProperty("CONFIG_FILE_WATCH_POLLING_INTERVAL_MS","1000");
 
-        File file = Paths.get("./target/test_new_user_in_property_file_privledges.properties").toFile();
+        File file = Paths.get("src/test/resources/test_new_user_in_property_file_privledges.properties").toFile();
         props.store(new FileWriter(file), null);
 
         System.setProperty(Config.SYS_PROPERTY, file.getAbsolutePath());

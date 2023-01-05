@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ResourceInst;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ResourceType;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.StatDescriptor;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.StatValue;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceInst;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceType;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.StatDescriptor;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.StatValue;
 import nyla.solutions.core.data.NumberedProperty;
 import nyla.solutions.core.data.clock.Day;
 import nyla.solutions.core.util.Text;

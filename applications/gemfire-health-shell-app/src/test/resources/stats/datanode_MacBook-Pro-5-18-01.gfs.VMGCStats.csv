@@ -1,0 +1,3 @@
+"name","collections        Total number of collections this garbage collector has done.","collectionTime        Approximate elapsed time spent doing collections by this garbage collector."
+"ParNew","1.9980019980019983","71.01167315175097"
+"ConcurrentMarkSweep","0.9970089730807579","36.88933200398804"

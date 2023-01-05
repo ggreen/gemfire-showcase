@@ -1,11 +1,11 @@
 package com.vmware.pivotal.labs.services.dataTx.geode.office;
 
-import com.vmware.data.services.apache.geode.operations.stats.GfStatsReader;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ArchiveInfo;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ResourceInst;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ResourceType;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.StatValue;
-import com.vmware.data.services.apache.geode.operations.stats.visitors.StatsVisitor;
+import com.vmware.data.services.gemfire.operations.stats.GfStatsReader;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ArchiveInfo;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceInst;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceType;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.StatValue;
+import com.vmware.data.services.gemfire.operations.stats.visitors.StatsVisitor;
 import nyla.solutions.core.data.clock.Day;
 import nyla.solutions.core.io.csv.CsvWriter;
 import nyla.solutions.core.util.Text;

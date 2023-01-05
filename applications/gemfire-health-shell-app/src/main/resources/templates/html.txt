@@ -1,0 +1,216 @@
+<html>
+    <head>
+      <script type="text/javascript">
+
+          function zoomToogle(theImg)
+          {
+              if(theImg.height == '1500')
+              {
+                theImg.style.width = 900;
+                theImg.style.height = 1000;
+              }
+              else {
+                theImg.style.height = '1500';
+                theImg.style.width = '2000';
+
+              }
+
+          }
+      </script>
+    <style>
+        .chart img {
+             width: 900;
+             height: 1000;
+        }//----------------------------
+
+            .wideChart img {
+                  width: 1055px;
+                  height: 150px;
+                }//----------------------------
+
+    </style>
+    </head>
+    <body>
+        <div>
+            <img height="60"  src="data:image/png;base64,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"/>
+        </div>
+        <h1>Overview</h1>
+        <p>
+            <p>
+            This report analyzes the current state a GemFire environment.
+            The output can be used to identify risk and issues.
+            The report will help to provide suggestions to improve GemFire system.
+
+            </p>
+                 <ul>
+                    <li>Identify misconfigurations</li>
+                    <li>Determine deviations from best practices</li>
+                    <li>Analyze potential architecture issues</li>
+                    <li>Reporting environment assessment of violations</li>
+                  </ul>
+             </p>
+
+        </p>
+        <h1>Charts</h1>
+        <div><i>Click on any chart image to zoom in/out</i></div>
+        <!-- ==================================== -->
+        <h2>Maximum JVM Memory Heap  Usage</h2>
+        <p >
+        A Healthy JVM should have a max of 65% use memory.
+
+        See <a href="https://cwiki.apache.org/confluence/display/GEODE/Troubleshooting+Garbage+Collection+Pauses">Troubleshooting+Garbage+Collection+Pauses</a>
+            <div class="chart">
+            ${jvmMaxMemoryChart}
+            </div>
+        </p>
+        <!-- ==================================== -->
+        <h2>Average JVM Memory Heap Usage</h2>
+        <p>
+            A Healthy JVM should have an average of under 50% use memory.
+             <div class="chart">
+                ${jvmAvgMemoryChart}
+             </div>
+         </p>
+        <!-- ==================================== -->
+        <h2>JVM pauses</h2>
+
+         <p>
+
+            <div>
+            JVM pause should be minimized to prevent
+            <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/sizing.html">Garbage collection performance</a> issues.
+            Garbage collection should be tuned to minimize the number of collection events per second.
+            Increase the young generation (ex: Parameter -DNewSize) size will result in less often minor collections.
+            You must be careful not to make young generation too large, because this would
+            results in smaller tenured generation. Smaller tenured generation can increase the frequency
+            of major collections.
+            </div>
+
+
+             <div class="chart">
+                ${parNewCollectionsChart}
+             </div>
+         </p>
+         <!-- ==================================== -->
+         <h2>JVM pause timings</h2>
+         <p>
+            <div>
+
+              <div>
+                  Each collection should be targeted to complete as fast as possible to minimize
+                  the impact of overall processing times.
+                 </div>
+                 <br/>
+                 <div>Increase the number of garbage collection to improve this time.</div>
+                 <br/>
+                 <div>-XX:ParallelGCThreads=n</div>
+                 <br/>
+                 <div>Sets the value of the STW worker threads. Sets the value of n to the number of logical processors. The value of n is the same as the number of logical processors up to a value of 8.</div>
+                 <br/>
+                 <div>If there are more than eight logical processors, sets the value of n to approximately 5/8 of the logical processors. This works in most cases except for larger SPARC systems where the value of n can be approximately 5/16 of the logical processors.</div>
+                 <br/>
+                 <div>-XX:ConcGCThreads=n</div>
+                 <div>Sets the number of parallel marking threads. Sets n to approximately 1/4 of the number of parallel garbage collection threads (ParallelGCThreads).<div>
+            </div>
+             <div class="chart">
+                ${parNewCollectionTimeChart}
+              </div>
+         </p>
+                 <!-- ==================================== -->
+                 <h2>CPU Usage</h2>
+                    <p>
+                         <div>CPU utilization monitoring is key to maintaining a healthy cluster.
+                         When peak usage exceeds 90%, the system is unlikely to be able to handle any
+                         further traffic increases without more hardware capacity.
+
+                         Note that this statistic is only supported on Linux deployments.
+                         See stat <a href="https://geode.apache.org/docs/guide/11/reference/statistics/statistics_list.html">LinuxSystemStats</a>
+                         </div>
+                         <div class="chart">
+                             ${cpuActive}
+                         </div>
+                    </p>
+                    <!-- ==================================== -->
+                    <!-- ioWait -->
+
+                    <h2>CPU IOWAITS</h2>
+                  <p>
+                        <div>
+
+                        Percentage of time CPU(s) waited for IO to complete.
+                        Higher I/O waits can be related to writing data to disks or Networking IO.
+                        In a general healthy environment, the ioWait is typically no more than 10%.
+
+
+                        Note that this statistic is only supported on Linux deployments.
+                        See stat <a href="https://geode.apache.org/docs/guide/11/reference/statistics/statistics_list.html">LinuxSystemStats</a>
+
+
+
+
+                                          </div>
+                                          <div class="chart">
+                                              ${ioWait}
+                                          </div>
+                  </p>
+                    <!-- ==================================== -->
+                    <h2>abandonedReadRequests</h2>
+                     <p>
+                        <div>
+
+
+                                          </div>
+                                          <div class="chart">
+                                              ${abandonedReadRequests}
+                                          </div>
+                     </p>
+
+              <!-- ==================================== -->
+
+                    <h2>connectionsTimedOut</h2>
+                     <p>
+                        <div>
+
+
+                                          </div>
+                                          <div class="chart">
+                                              ${connectionsTimedOut}
+                                          </div>
+                     </p>
+
+ <h2>failedConnectionAttempts</h2>
+                     <p>
+                        <div>
+
+
+                                          </div>
+                                          <div class="chart">
+                                              ${failedConnectionAttempts}
+                                          </div>
+                     </p>
+              <!-- ==================================== -->
+
+               <h2>statSamplerDelayDuration</h2>
+                                   <p>
+                                      <div>
+
+
+                                                        </div>
+                                                        <div class="chart">
+                                                            ${statSamplerDelayDuration}
+                                                        </div>
+                                   </p>
+        <!-- ==================================== -->
+
+               <h2>pagesPagedOut</h2>
+                                   <p>
+                                      <div>
+
+
+                                                        </div>
+                                                        <div class="chart">
+                                                            ${pagesPagedOut}
+                                                        </div>
+                                   </p>
+    </body>
+</html>

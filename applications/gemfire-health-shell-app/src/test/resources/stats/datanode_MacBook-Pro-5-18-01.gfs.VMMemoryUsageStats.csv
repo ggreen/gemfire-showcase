@@ -1,0 +1,3 @@
+"name","initMemory        Initial memory the vm requested from the operating system for this area","maxMemory        The maximum amount of memory this area can have in bytes.","usedMemory        The amount of used memory for this area, measured in bytes.","committedMemory        The amount of committed memory for this area, measured in bytes."
+"vmHeapMemoryStats","5.24288E8","5.06855424E8","1.86682352E8","5.06855424E8"
+"vmNonHeapMemoryStats","2555904.0","-1.0","1.27719384E8","1.30998272E8"

@@ -1,0 +1,40 @@
+<html>
+
+    <h1>Example Report</h1>
+    <p>
+       <div>
+        This chart is very importance
+       </div>
+       <div>
+            ${jvmMaxMemoryChart}
+       </div>
+     </p>
+
+    <p>
+       <div>
+        This chart is alos very importance
+       </div>
+       <div>
+            ${jvmAvgMemoryChart}
+       </div>
+     </p>
+
+    <p>
+       <div>
+        This is hurt you
+       </div>
+       <div>
+            ${parNewCollectionTimeChart}
+       </div>
+     </p>
+    <p>
+       <div>
+        This is will also hurt you
+       </div>
+       <div>
+            ${parNewCollectionsChart}
+       </div>
+     </p>
+
+
+</html>

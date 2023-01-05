@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import com.vmware.data.services.apache.geode.operations.stats.GfStatsReader;
+import com.vmware.data.services.gemfire.operations.stats.GfStatsReader;
 import nyla.solutions.core.io.IO;
 import nyla.solutions.core.patterns.conversion.Converter;
 import nyla.solutions.office.chart.Chart;

@@ -1,7 +1,7 @@
 package com.vmware.pivotal.labs.services.dataTx.geode.office;
 
-import com.vmware.data.services.apache.geode.operations.stats.GfStatsReader;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.*;
+import com.vmware.data.services.gemfire.operations.stats.GfStatsReader;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.*;
 import nyla.solutions.core.data.clock.Day;
 import nyla.solutions.core.io.csv.CsvWriter;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,7 @@ class CsvVisitorTest
     CsvWriter mockWriter;
     CsvVisitor subject;
     StatValue statValue;
-    ResourceInst resourceInst;
+     ResourceInst resourceInst;
     GfStatsReader statReader;
     ArchiveInfo archiveInfo;
     ResourceType resourceType;

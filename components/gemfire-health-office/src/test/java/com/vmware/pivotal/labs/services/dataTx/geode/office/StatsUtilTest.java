@@ -1,7 +1,7 @@
 package com.vmware.pivotal.labs.services.dataTx.geode.office;
 
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ResourceInst;
-import com.vmware.data.services.apache.geode.operations.stats.statInfo.ResourceType;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceInst;
+import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
