@@ -1,9 +1,11 @@
 # Apache Geode/Pivotal GemFire/Pivotal Cloud Cache (PCC)   Extension 
 
 
-This project contains an API for Java Virtual Machine based languages to access [Apache Geode](https://geode.apache.org/)/[Pivotal GemFire](https://pivotal.io/pivotal-gemfire)/[Pivotal Cloud Cache](https://pivotal.io/pivotal-cloud-cache) (PCC) based data grid/cache instances. It builds on top of the of the core Apache Geode APIs. It provides a simpler configuration than [Spring Data GemFire](https://spring.io/projects/spring-data-gemfire)
-or [Spring Data Geode](https://spring.io/projects/spring-data-geode) (with no additional dependencies).
+This project contains an API for Java Virtual Machine based languages to access [Apache Geode](https://geode.apache.org/)/[GemFire](https://tanzu.vmware.com/gemfire). It builds on top of the core GemFire APIs. It provides a simple interface to connect and perform GemFire data access operations.
 
+# GemFire Extension
+
+See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)
 
 **Simple Configuration**
 
@@ -15,21 +17,9 @@ It provides out of box security credential login support. The username and passw
  It  supports loading keystore/trustores from the application CLASSPATH for SSL/TLS communication with the GemFire cluster.
 
 
-This implement is based on the [Apache Geode/GemFire Enterprise Data Integration framework](https://github.com/nyla-solutions/gedi-geode) open source implementation.
+This implement is based on the legacy [Apache Geode/GemFire Enterprise Data Integration framework](https://github.com/nyla-solutions/gedi-geode) open source implementation.
 
-
-Note that this API is available in the [Maven Repository](https://mvnrepository.com/artifact/com.github.nyla-solutions/dataTx-geode-extensions-core).
-
-	
-	<dependency>
-	    <groupId>io.pivotal.services.dataTx</groupId>
-	    <artifactId>dataTx-geode-extensions-core</artifactId>
-	    <version>${VERSION}</version>
-	</dependency>
-
-
-
-## GeodeClient API Developer Guide
+## GemFireClient API Developer Guide
 
 **Setup Environment Single locator**
 
@@ -73,7 +63,7 @@ If you need to set PDX read serialize to true (default false).
   
  **Cloud Foundry/ Pivotal Cloud Cache (PCC) Friendly**
  
- Pivotal Cloud Cache [PCC](https://docs.pivotal.io/p-cloud-cache/index.html) is [Pivotal](http://pivotal.io)'s [12-factor](https://12factor.net/) [backing service](https://12factor.net/backing-services) implementation of GemFire. GeodeClient.connect method supports automatically wiring the locators hosts, ports and security credential when the PCC service is binded a Cloud Foundry application that using this API.
+ Pivotal Cloud Cache [PCC](https://docs.pivotal.io/p-cloud-cache/index.html) is [Pivotal](http://pivotal.io)'s [12-factor](https://12factor.net/) [backing service](https://12factor.net/backing-services) implementation of GemFire. GemFireClient.connect method supports automatically wiring the locators hosts, ports and security credential when the PCC service is binded a Cloud Foundry application that using this API.
  
  
  See [https://docs.pivotal.io/p-cloud-cache/using-pcc.html#bind-service](https://docs.pivotal.io/p-cloud-cache/using-pcc.html#bind-service)
@@ -101,22 +91,22 @@ see the properties below.
 
 **Get a Apache Geode/GemFire Connection**
 
-	GeodeClient geodeClient = GeodeClient.connect()
+	GemFireClient gemFireClient = GemFireClient.connect()
 
 Get the Apache Geode/GemFire client cache
 	
-	ClientCache cache = geodeClient.getClientCache();
+	ClientCache cache = gemFireClient.getClientCache();
 		
 
 **Get a Region**
 	
 	//Does not require a client.xml or pre-registration of the region on the client
 	//But, the region must exist on the server
-	Region<String,PdxInstance> region = geodeClient.getRegion("Test"))
+	Region<String,PdxInstance> region = gemFireClient.getRegion("Test"))
 
 **Execute a Query**
 
-    Collection<Object> collection = geodeClient.select("select * from /myregion");
+    Collection<Object> collection = gemFireClient.select("select * from /myregion");
  
 **Get a queue continuous query matches**
 
@@ -139,12 +129,12 @@ Get the Apache Geode/GemFire client cache
  
  The following will extract a single statistic type with the name "CachePerfStats"
  
- 	`java io.pivotal.services.dataTx.geode.stats.GfStatsReader /stats/stats.gfs CachePerfStats   /Projects/stats/CachePerfStats.csv`
+ 	`java  com.vmware.data.services.gemfire.operations.stats.GfStatsReader /stats/stats.gfs CachePerfStats   /Projects/stats/CachePerfStats.csv`
  
  
  To export all statistics with a file name pattern `<name>.gfs.<type>.csv` in the same directory as the stat file.
  
- 	`java io.pivotal.services.dataTx.geode.operations.stats.GfStatsReader /Projects/analysis/DigitIT/stats/stats.gfs`
+ 	`java  com.vmware.data.services.gemfire.operations.stats.GfStatsReader /Projects/analysis/DigitIT/stats/stats.gfs`
 
  
 ## GemFire Commercial Repository
@@ -153,3 +143,15 @@ Get the Apache Geode/GemFire client cache
 See the following for instruction to down the GemFire artifacts.
 
 [https://gemfire.docs.pivotal.io/gemfire/getting_started/installation/obtain_gemfire_maven.html](https://gemfire.docs.pivotal.io/gemfire/getting_started/installation/obtain_gemfire_maven.html) 
+
+
+# Sub Projects
+
+
+Project                   |  Notes
+------------------------- | -------------------------------
+[components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core) | GemFire client API wrapper
+[components/gemfire-extensions-spring-security](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-spring-security) | Spring Security implements backed by GemFire 
+[components/gemfire-health-office](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-health-office) | Tools for analyzing GemFire statistics
+[components/gemfire-http-dotnet-api](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-http-dotnet-api) | Wrapper Dotnet Core client that uses the GemFire HTTP API
+[components/gemfire-security-managers](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-security-managers) | [GemFire security manager](https://tanzu.vmware.com/developer/data/gemfire/blog/security-manager-basics-authentication-and-authorization/) implementations
