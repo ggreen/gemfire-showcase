@@ -1,4 +1,4 @@
-# Apache Geode Health Shell App
+# GemFire Health Shell App
 
 This spring shell based application provides
 utility to assist with the assessment of Apache Geode
