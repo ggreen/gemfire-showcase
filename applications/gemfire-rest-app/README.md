@@ -94,6 +94,12 @@ The following are optional settings
 
 ## Getting Started
 
+### REST Application startup
+
+```shell
+java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSHOT.jar
+```
+
 ### Starting GemFire
 
 Start a simple GemFire Cluster
@@ -133,11 +139,6 @@ create region --name=test --type=PARTITION
 ```
 
 
-### REST Application startup
-
-```shell
-java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSHOT.jar
-```
 
 
 # REST Application Endpoints 
