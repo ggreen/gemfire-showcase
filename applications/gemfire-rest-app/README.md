@@ -12,45 +12,13 @@ This is a Spring Boot based app that provides the following GemFire features
 
 Requires Pivotal GemFire various 9.15 and higher
 
-## Getting Started
+# User Interface
 
-### Starting GemFire
+You can access API doc and a test swagger UI from the root URL
+(example http://localhost:8080/)
 
-Start a simple GemFire Cluster
+![Home](docs/images/rootscreenshot.png)
 
-```
-cd $GEMFIRE_HOME/bin
-```
-
-Start gfsh
-
-```shell script
-./gfsh
-```
-
-In Gfsh start a locator 
-
-```shell script
-start locator --name=locator
-```
-
-In Gfsh, Enable PDX serializer
-
-```shell script
-configure pdx --read-serialized=true --disk-store=DEFAULT
-```
-
-In Gfsh, Start a DataNode/Cache Server
-
-```shell script
-start server --name=server1
-```
-
-In Gfsh create a region
-
-```shell script
-create region --name=test --type=PARTITION
-```
  
 ### REST Application Configuration
 
@@ -122,6 +90,47 @@ see the properties below.
 The following are optional settings
 	
 	export POOL_PR_SINGLE_HOP_ENABLED=true
+
+
+## Getting Started
+
+### Starting GemFire
+
+Start a simple GemFire Cluster
+
+```
+cd $GEMFIRE_HOME/bin
+```
+
+Start gfsh
+
+```shell script
+./gfsh
+```
+
+In Gfsh start a locator
+
+```shell script
+start locator --name=locator
+```
+
+In Gfsh, Enable PDX serializer
+
+```shell script
+configure pdx --read-serialized=true --disk-store=DEFAULT
+```
+
+In Gfsh, Start a DataNode/Cache Server
+
+```shell script
+start server --name=server1
+```
+
+In Gfsh create a region
+
+```shell script
+create region --name=test --type=PARTITION
+```
 
 
 ### REST Application startup
@@ -221,12 +230,7 @@ http://localhost:8080/query/10
     select * from /region
 
 
-# User Interface
 
-You can access API doc and a test swagger UI from the root URL
-(example http://localhost:8080/)
-
-![Home](docs/images/rootscreenshot.png)
 
 # Docker 
 
