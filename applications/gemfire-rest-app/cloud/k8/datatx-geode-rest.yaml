@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: datatx-geode-rest-java-app
+spec:
+  selector:
+    app: datatx-geode-rest-java-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: datatx-geode-rest-java-app
+    run: datatx-geode-rest-java-app
+  name: datatx-geode-rest-java-app
+spec:
+  containers:
+    - image: datatx-geode-rest-java-app:0.1.0
+      imagePullPolicy: IfNotPresent
+      name: datatx-geode-rest-java-app
+      env:
+        - name: LOCATORS
+          value: geode-0[10334]
+        - name: SECURITY_USERNAME
+          value: admin
+        - name: SECURITY_PASSWORD
+          value: admin
+      resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

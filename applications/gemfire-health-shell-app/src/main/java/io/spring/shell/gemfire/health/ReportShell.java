@@ -1,4 +1,4 @@
-package io.pivotal.service.dataTx.geode.health;
+package io.spring.shell.gemfire.health;
 
 import com.vmware.data.services.gemfire.operations.stats.GfStatsReader;
 import com.vmware.data.services.gemfire.operations.stats.visitors.StatsVisitor;

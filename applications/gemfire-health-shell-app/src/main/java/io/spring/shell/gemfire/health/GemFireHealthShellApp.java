@@ -1,4 +1,4 @@
-package io.pivotal.service.dataTx.geode.health;
+package io.spring.shell.gemfire.health;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
