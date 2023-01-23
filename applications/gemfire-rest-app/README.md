@@ -126,7 +126,9 @@ The following are optional settings
 
 ### REST Application startup
 
-	java -jar target/gemfire-rest-app-0.0.1-SNAPSHOT.jar
+```shell
+java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSHOT.jar
+```
 
 
 # REST Application Endpoints 
