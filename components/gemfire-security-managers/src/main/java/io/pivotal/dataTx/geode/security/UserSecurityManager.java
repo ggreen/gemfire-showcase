@@ -133,14 +133,14 @@ public class UserSecurityManager implements SecurityManager
     	
     	//this MUST BE FAST!!!
     	
-    	Collection<String> priviledges = user.getPriviledges();
+    	Collection<String> privileges = user.getPriviledges();
     	
-    	if(priviledges == null || priviledges.isEmpty())
+    	if(privileges == null || privileges.isEmpty())
     		return false;
     	
     	String textPermission = permission.toString();
     	
-    	boolean hasPermission =  priviledges.parallelStream().anyMatch(p -> p.equals("ALL") || textPermission.contains(p));
+    	boolean hasPermission =  privileges.parallelStream().anyMatch(p -> p.equals("ALL") || textPermission.contains(p));
     	
     	if(!hasPermission)
     	{

@@ -1,8 +1,7 @@
 package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.*;
-import nyla.solutions.core.util.Text;
-import nyla.solutions.core.util.settings.ConfigSettings;
+import nyla.solutions.core.util.Config;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,14 +35,14 @@ public class Rabbit implements RabbitConnectionCreator, BlockedListener, Shutdow
         this.endpoints = endpoints;
     }
 
-    private static List<Address> toAddresses(List<URI> endpoints) {
+    protected static List<Address> toAddresses(List<URI> endpoints) {
         if (endpoints == null)
             return null;
 
         List<Address> amqpEndpoints = new ArrayList<>(endpoints.size());
         for(URI uri : endpoints)
         {
-            amqpEndpoints.add(Address.parseAddress(uri.toString()));
+            amqpEndpoints.add(new Address(uri.getHost(),uri.getPort()));
         }
         return amqpEndpoints;
     }
@@ -117,18 +116,18 @@ public class Rabbit implements RabbitConnectionCreator, BlockedListener, Shutdow
     }
 
     public static Rabbit connect() throws MalformedURLException, URISyntaxException {
-        ConfigSettings config = new ConfigSettings();
-        int networkRecoveryIntervalSecs = config.getPropertyInteger("RABBIT_CONNECTION_RETRY_SECS", DEFAULT_CONNECTION_RETRY_SECS);
-        String clientName = config.getProperty("RABBIT_CLIENT_NAME");
-        Short qosPreFetchLimit = Short.parseShort(config.getProperty("RABBIT_PREFETCH_LIMIT", "1000"));
 
-        String urisText = config.getProperty("RABBIT_URIS");
+        int networkRecoveryIntervalSecs = Config.getPropertyInteger("RABBIT_CONNECTION_RETRY_SECS", DEFAULT_CONNECTION_RETRY_SECS);
+        String clientName = Config.getProperty("RABBIT_CLIENT_NAME");
+        Short qosPreFetchLimit = Short.parseShort(Config.getProperty("RABBIT_PREFETCH_LIMIT", "1000"));
+
+        String urisText = Config.getProperty("RABBIT_URIS");
             boolean sslEnabled = urisText.toLowerCase().contains("amqps:");
             return new Rabbit(parseUrisToEndPoints(urisText), sslEnabled, clientName, networkRecoveryIntervalSecs, qosPreFetchLimit);
     }
 
     private static List<URI> parseUrisToEndPoints(String urisText)  throws URISyntaxException {
-        if (Text.isNull(urisText)) {
+        if (urisText == null || urisText.isEmpty()) {
             throw new IllegalArgumentException("URIS required");
         }
 

@@ -1,7 +1,7 @@
 package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.AMQP;
-import nyla.solutions.core.util.Config;
+import com.vmware.data.solutions.rabbitmq.gemfire.Env;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -18,7 +18,7 @@ public class RabbitPublisher implements AutoCloseable{
 
     private long waitFromConfirmationTimeSpan;
 
-    private int WAIT_FOR_CONFIRMATION_SECONDS = Config.getPropertyInteger("RABBIT_WAIT_FOR_CONFIRMATION_SECS",30);
+    private int WAIT_FOR_CONFIRMATION_SECONDS = Env.getPropertyInteger("RABBIT_WAIT_FOR_CONFIRMATION_SECS",30);
 
 
     public RabbitPublisher(RabbitConnectionCreator creator, String exchange, AMQP.BasicProperties basicProperties, boolean confirmPublish)

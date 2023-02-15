@@ -1,7 +1,6 @@
 package com.vmware.data.solutions.rabbitmq;
 
 import com.rabbitmq.client.Channel;
-import nyla.solutions.core.util.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -83,7 +82,7 @@ public class RabbitBuilder {
 
     protected void addQueueRoutingKey(String queue, String routingKey)
     {
-        if (Text.isNull(queue))
+        if (queue == null || queue.isEmpty())
             throw new IllegalArgumentException("queue cannot be null or empty");
 
         if (routingKey == null)
@@ -95,7 +94,7 @@ public class RabbitBuilder {
 
 
     protected void constructExchange() throws IOException {
-        if (Text.isNull(exchange))
+        if (exchange == null || exchange.isEmpty())
             throw new IllegalArgumentException("Set Exchange required");
 
         creator.getChannel().basicQos(this.qosPrefetchSize, this.qosPreFetchLimit, this.qosGlobal);

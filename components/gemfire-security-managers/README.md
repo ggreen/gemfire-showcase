@@ -141,11 +141,11 @@ The User privileges are based on the GemFire ResourePermission (Resource:Operati
 - DATA:READ - data read permission
 - DATA:WRITE - data write permission
 - DATA:MANAGE - data managed permissions such as creating regions
-- DATA:WRITE:<RegionName> - - data write permission for a region 
-- DATA:READ:<RegionName> - - data read permission for a region 
-- DATA:MANAGE:<RegionName> - - data manage permission for a region 
-- DATA:WRITE:<RegionName>:<KEY - data write permission for a region entry that matches a string key 
-- DATA:WRITE:<RegionName>:<KEY - - data read permission for a region entry that matches a string key 
+- DATA:WRITE:*RegionName* - - data write permission for a region 
+- DATA:READ:*RegionName* - - data read permission for a region 
+- DATA:MANAGE:*RegionName* - - data manage permission for a region 
+- DATA:WRITE:*RegionName*:*KEY* - data write permission for a region entry that matches a string key 
+- DATA:WRITE:*RegionName*:*KEY* - - data read permission for a region entry that matches a string key 
 
 
 
