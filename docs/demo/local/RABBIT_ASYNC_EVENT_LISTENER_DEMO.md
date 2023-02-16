@@ -1,8 +1,18 @@
 
 
+
+
 Generate password
 ```shell
-java -DCRYPTION_KEY=PIVOTAL -classpath /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/applications/libs/nyla.solutions.core-1.5.1.jar nyla.solutions.core.util.Cryption $1
+java -DCRYPTION_KEY=PIVOTAL -classpath /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/lib/nyla.solutions.core-1.5.1.jar nyla.solutions.core.util.Cryption $1
+```
+
+
+```shell
+export JDBC_URL=jdbc:postgresql://localhost:5432/postgres
+export JDBC_DRIVER_CLASS=org.postgresql.Driver
+export JDBC_USERNAME=postgres
+export JDBC_PASSWORD=CRYPTED_PASSWORD_HERE
 ```
 
 ```shell
@@ -26,7 +36,21 @@ configure pdx --disk-store --read-serialized=true
 ```
 
 ```shell
-start server --name=server1 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334]"  --server-port=40401 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9090  --J=-Dgemfire-for-redis-port=6379 --J=-Dgemfire-for-redis-enabled=true --include-system-classpath=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties
+start server --name=server1 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334]"  --server-port=40401 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9090  --J=-Dgemfire-for-redis-port=6379 --J=-Dgemfire-for-redis-enabled=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties 
+```
+
+--J="--add-opens java.base/java.lang=ALL-UNNAMED" --J="--add-opens java.base/java.net=ALL-UNNAMED"
+
+
+--add-opens java.base/java.lang=ALL-UNNAMED  --add-opens java.base/java.net=ALL-UNNAMED
+
+```shell
+deploy --dir=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/lib
+
+deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-rabbitmq/build/libs/gemfire-rabbitmq-1.0.0.jar
+
+
+deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-extensions-core/build/libs/gemfire-extensions-core-1.2.0.jar
 ```
 
 
@@ -39,14 +63,31 @@ create async-event-queue --id=rabbit --parallel=true --enable-batch-conflation=t
 create region --name=customers  --type=PARTITION --cache-loader=com.vmware.data.services.gemfire.integration.jdbc.JdbcJsonPdxLoader --cache-writer=com.vmware.data.services.gemfire.integration.jdbc.JdbcJsonCacheWriter --async-event-queue-id=rabbit
 ```
 
-```json
-{
-  "@type": "java.lang.Object",
-  "firstName": "Imani",
-  "lastName": "Victoria",
-  "loginID": "ivictoria",
-  "email": "ivictoria@vmware.com"
-}
+
+# GemFire Rest Apps
+
+
+```shell
+java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSHOT.jar
+```
+
+
+```shell
+open http://localhost:8080
+```
+
+```shell
+curl -X 'POST' \
+'http://localhost:8080/region/customers/imani' \
+-H 'accept: */*' \
+-H 'Content-Type: application/json' \
+-d '{
+"@type": "java.lang.Object",
+"firstName": "Imani",
+"lastName": "Victoria",
+"loginID": "ivictoria",
+"email": "ivictoria@vmware.com"
+}'
 ```
 
 In Postgres

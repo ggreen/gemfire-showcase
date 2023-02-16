@@ -6,6 +6,7 @@ import com.rabbitmq.client.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 import java.io.IOException;
 import java.net.URI;
@@ -77,6 +78,7 @@ class RabbitTest {
     }
 
     @Test
+    @EnabledIfSystemProperty(named = "integration.test", matches = "true")
     void connect() throws URISyntaxException, NoSuchAlgorithmException, IOException, KeyManagementException, TimeoutException, InterruptedException {
 
         String url = "amqp://localhost:5672";
