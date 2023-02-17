@@ -9,18 +9,12 @@ java -DCRYPTION_KEY=PIVOTAL -classpath /Users/Projects/VMware/Tanzu/TanzuData/Ta
 
 
 ```shell
+export CLASSPATH="/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-extensions-core/build/libs/gemfire-extensions-core-1.2.0.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-rabbitmq/build/libs/gemfire-rabbitmq-1.0.0.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/lib/*"
+
 export JDBC_URL=jdbc:postgresql://localhost:5432/postgres
 export JDBC_DRIVER_CLASS=org.postgresql.Driver
 export JDBC_USERNAME=postgres
 export JDBC_PASSWORD=CRYPTED_PASSWORD_HERE
-```
-
-```shell
-#export CLASSPATH="/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.3/lib/HikariCP-4.0.3.jar:/Users/devtools/repositories/RDMS/PostgreSQL/driver/postgresql-42.2.9.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/applications/libs/nyla.solutions.core-1.5.1.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-extensions-core/build/libs/gemfire-extensions-core-1.2.0.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-rabbitmq/build/libs/gemfire-rabbitmq-1.0.0.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/lib/gemfire-rabbitmq/amqp-client-5.16.0.jar:/Users/devtools/repositories/IMDG/gemfire/gemfire-for-redis-apps-1.0.1/lib/*"
-#export JDBC_URL=jdbc:postgresql://localhost:5432/postgres
-#export JDBC_DRIVER_CLASS=org.postgresql.Driver
-#export JDBC_USERNAME=postgres
-
 ```
 
 ```shell
@@ -36,26 +30,15 @@ configure pdx --disk-store --read-serialized=true
 ```
 
 ```shell
-start server --name=server1 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334]"  --server-port=40401 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9090  --J=-Dgemfire-for-redis-port=6379 --J=-Dgemfire-for-redis-enabled=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties 
+start server --name=server1 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334]"  --server-port=40401 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9090  --J=-Dgemfire-for-redis-port=6379 --J=-Dgemfire-for-redis-enabled=true --J=-DCRYPTION_KEY=PIVOTAL  --include-system-classpath=true --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties 
 ```
-
---J="--add-opens java.base/java.lang=ALL-UNNAMED" --J="--add-opens java.base/java.net=ALL-UNNAMED"
 
 
 --add-opens java.base/java.lang=ALL-UNNAMED  --add-opens java.base/java.net=ALL-UNNAMED
 
-```shell
-deploy --dir=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/lib
-
-deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-rabbitmq/build/libs/gemfire-rabbitmq-1.0.0.jar
-
-
-deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-extensions-core/build/libs/gemfire-extensions-core-1.2.0.jar
-```
-
 
 ```shell
-create async-event-queue --id=rabbit --parallel=true --enable-batch-conflation=true --batch-size=10 --batch-time-interval=10 --persistent=true --disk-store=DEFAULT --disk-synchronous=true --forward-expiration-destroy=true --max-queue-memory=10 --dispatcher-threads=5  --listener=com.vmware.data.solutions.rabbitmq.gemfire.RabbitAsyncEventListener
+create async-event-queue --id=rabbit --parallel=true --enable-batch-conflation=true --batch-size=10 --batch-time-interval=10 --persistent=true --disk-synchronous=true --forward-expiration-destroy=true --max-queue-memory=10 --dispatcher-threads=5  --listener=com.vmware.data.solutions.rabbitmq.gemfire.RabbitAsyncEventListener
 
 ```
 
@@ -212,3 +195,6 @@ curl -X 'GET' \
 start server --name=server2 --initial-heap=500m --max-heap=500m  --locators="127.0.0.1[10334],127.0.0.1[10434]"  --server-port=40402 --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --start-rest-api=true --http-service-bind-address=127.0.0.1 --http-service-port=9092  --J=-Dgemfire-for-redis-port=6372 --J=-Dgemfire-for-redis-enabled=true --include-system-classpath=true --J=-DCRYPTION_KEY=PIVOTAL --J=-Dconfig.properties=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/gemfire-server/config/gf-extensions.properties
 
 ```
+
+
+select row_to_json(customers) from customers
