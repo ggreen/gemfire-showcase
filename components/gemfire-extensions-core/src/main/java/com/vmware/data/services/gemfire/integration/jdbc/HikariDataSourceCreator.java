@@ -18,6 +18,7 @@ import javax.sql.DataSource;
 public class HikariDataSourceCreator implements Creator<DataSource>
 {
     private final Logger logger;
+    private HikariDataSource dataSource = null;
 
     public HikariDataSourceCreator()
     {
@@ -27,6 +28,9 @@ public class HikariDataSourceCreator implements Creator<DataSource>
     @Override
     public DataSource create()
     {
+        if(dataSource != null)
+            return dataSource;
+
         String jdbcUrl = Config.getProperty("JDBC_URL");
         String driveClassName = Config.getProperty("JDBC_DRIVER_CLASS");
 
@@ -42,7 +46,9 @@ public class HikariDataSourceCreator implements Creator<DataSource>
             config.addDataSourceProperty( "cachePrepStmts" , Config.getPropertyBoolean("cachePrepStmts",true) );
             config.addDataSourceProperty( "prepStmtCacheSize" ,  Config.getProperty("prepStmtCacheSize","true") );//250
             config.addDataSourceProperty( "prepStmtCacheSqlLimit" ,  Config.getProperty("prepStmtCacheSqlLimit","2048") );
-            return new HikariDataSource( config );
+            this.dataSource = new HikariDataSource( config );
+
+            return this.dataSource;
         }
         catch(ClassNotFoundException e)
         {

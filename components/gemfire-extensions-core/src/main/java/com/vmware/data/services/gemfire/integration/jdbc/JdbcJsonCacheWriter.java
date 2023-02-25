@@ -8,6 +8,8 @@ import org.apache.geode.cache.EntryEvent;
 import org.apache.geode.cache.util.CacheWriterAdapter;
 import org.apache.geode.pdx.JSONFormatter;
 import org.apache.geode.pdx.PdxInstance;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -20,6 +22,7 @@ public class JdbcJsonCacheWriter extends CacheWriterAdapter<String, PdxInstance>
     private final Settings settings;
 
     private final Function<PdxInstance, String> converter;
+    private Logger logger = LogManager.getLogger(JdbcJsonCacheWriter.class);
 
     public JdbcJsonCacheWriter()
     {
@@ -45,6 +48,8 @@ public class JdbcJsonCacheWriter extends CacheWriterAdapter<String, PdxInstance>
         String regionName = event.getRegion().getName();
 
         String upsertSQL = settings.getProperty(regionName.toUpperCase()+"_UPSERT_SQL");
+        logger.info(upsertSQL);
+
         String json = converter.apply(event.getNewValue());
 
         DataSource dataSource = this.creator.create();
@@ -57,6 +62,7 @@ public class JdbcJsonCacheWriter extends CacheWriterAdapter<String, PdxInstance>
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
+            logger.error(e);
             throw new RuntimeException(e);
         }
     }
