@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export CLASSPATH=$CLASSPATH:"$GEMFIRE_HOME/lib/*":"$PWD/lib/*"
+
 #------------------------------
 # Process Locators variable
 if [ ! -f "./config/locators" ]; then
@@ -99,9 +101,6 @@ if [ -z $CACHE_XML_FILE ] || [ ! -f $CACHE_XML_FILE ]; then
 else
   export ENABLE_CLUSTER_CONFIGURATION=false
 fi
-
-
-export CLASSPATH=$CLASSPATH:"$GEMFIRE_HOME/lib/*":"$PWD/lib/*"
 
 function listRegion () {
 
