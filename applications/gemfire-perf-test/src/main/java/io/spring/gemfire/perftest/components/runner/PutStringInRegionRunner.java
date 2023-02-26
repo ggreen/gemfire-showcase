@@ -14,22 +14,21 @@ import static java.lang.String.valueOf;
 @ConditionalOnProperty(name = "action", havingValue = "putString")
 public class PutStringInRegionRunner implements Runnable {
 
-    @Value("${valueSize}")
+
     private final int valueSize;
-
-    @Value("${startKeyValue}")
     private final int min;
-
-    @Value("${endKeyValue}")
     private final int max;
-
     private final String valueString;
     private final String keyId;
 
     @Resource(name = "perfTestRegion")
     private Region<String, String> region;
 
-    public PutStringInRegionRunner(int valueSize, int min, int max) {
+    public PutStringInRegionRunner(@Value("${valueSize}") int valueSize,
+                                   @Value("${startKeyValue}")
+                                   int min,
+                                   @Value("${endKeyValue}")
+                                   int max) {
         this.valueSize = valueSize;
         this.min = min;
         this.max = max;

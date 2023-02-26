@@ -2,6 +2,7 @@ package io.spring.gemfire.perftest.components;
 
 import nyla.solutions.core.operations.performance.BenchMarker;
 import nyla.solutions.core.operations.performance.PerformanceCheck;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,9 @@ public class StartPerfCmd implements CommandLineRunner {
     private final int capacity;
     private final Runnable runner;
 
-    public StartPerfCmd(BenchMarker benchMarker, int capacity, Runnable runner) {
+    public StartPerfCmd(BenchMarker benchMarker,
+                        @Value("${capacity}") int capacity,
+                        Runnable runner) {
 
         this.benchMarker = benchMarker;
         this.capacity = capacity;
@@ -25,6 +28,6 @@ public class StartPerfCmd implements CommandLineRunner {
         var perfTest = new PerformanceCheck(benchMarker,capacity);
         perfTest.perfCheck(runner);
 
-        println(this,"report:\n${perfTest.report}");
+        println(this,"report:\n"+perfTest.getReport());
     }
 }

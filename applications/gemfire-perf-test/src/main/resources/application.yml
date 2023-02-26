@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gemfire-perf-test
+  data.gemfire.pool.locators: localhost[10334]
+threadCount : 10
+threadSleepMs : 0
+rampUPSeconds : 1
+loopCount: 100000
+threadLifeTimeSeconds : 100
+idField : id
+capacity: 1000
+regionName : test
+startKeyValue : 1
+endKeyValue : 20
+valueSize : 10
+#action: putString
