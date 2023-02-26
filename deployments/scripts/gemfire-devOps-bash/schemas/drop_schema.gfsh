@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd ..
+
+source ./setenv.sh
+
+$GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "destroy gateway-sender --id=AUTH_to_"$REMOTE_DISTRIBUTED_ID""
+
+cd schemas

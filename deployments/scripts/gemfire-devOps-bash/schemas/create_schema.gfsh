@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cd ..
+source ./setenv.sh
+
+# GATEWAY Disk Stores
+$GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "create disk-store --name=GATEWAY_DISK_STORE --dir=$DISK_STORE_DIR/GATEWAY --max-oplog-size=512"
+
+
+#DATA Disk store
+$GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "create disk-store --name=DATA_DISKSTORE --dir=$DISK_STORE_DIR/DATA --max-oplog-size=512"
+
+# gateway-receiver
+$GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "create gateway-receiver --start-port=15000 --end-port=15010"
+
+$GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "create gateway-sender --id=sender_to_$REMOTE_DISTRIBUTED_ID --remote-distributed-system-id=$REMOTE_DISTRIBUTED_ID --parallel=true --disk-store-name=DEFAULT --enable-persistence=true"
+
+
+REGIONS="\
+test \
+"
+
+S_CreateRegion()
+{
+
+  region=$1
+
+  $GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "create gateway-sender --remote-distributed-system-id=$REMOTE_DISTRIBUTED_ID --parallel=true --disk-store-name=GATEWAY_DISK_STORE --enable-persistence=true --id=${region}_to_$REMOTE_DISTRIBUTED_ID"
+
+  $GEMFIRE_HOME/bin/gfsh -e ="connect --locator=$LOCATORS" -e "create region --type=PARTITION_REDUNDANT_PERSISTENT --redundant-copies=2 --disk-store=DATA_DISKSTORE --name=${region} --gateway-sender-id=${region}_to_$REMOTE_DISTRIBUTED_ID"
+}
+
+for region in ${REGIONS}
+do
+  S_CreateRegion ${region} &
+done
+
+wait
+
+exit 0

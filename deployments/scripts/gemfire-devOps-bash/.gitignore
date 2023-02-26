@@ -1,0 +1,13 @@
+runtime/
+software/
+release/
+gemfire/
+.DS_Store
+config/
+setenv.sh
+*.out
+*.pem
+spring-shell.log
+*.log
+archive/
+setenv_docker.sh

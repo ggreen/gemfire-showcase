@@ -1,0 +1,110 @@
+#!/bin/bash
+
+#------------------------------
+# Process Locators variable
+if [ ! -f "./config/locators" ]; then
+  touch ./config/locators
+fi
+
+if [ ! -z $LOCATOR1 ]
+then
+  echo $LOCATOR1 > ./config/locators
+fi
+
+if [ ! -z $LOCATOR2 ]
+then
+  echo $LOCATOR2 >> ./config/locators
+fi
+
+if [ ! -z $LOCATOR3 ]
+then
+  echo $LOCATOR3 >> ./config/locators
+fi
+
+export LOCATORS="null"
+
+  #Build locator connect string
+
+  for i in $(cat ./config/locators);
+  do
+     if [ $LOCATORS == "null" ]; then
+       LOCATORS="$i[$LOCATOR_PORT]"
+     else
+       LOCATORS=$LOCATORS",$i[$LOCATOR_PORT]"
+     fi
+  done
+
+  if [ $LOCATORS == "null" ]; then
+    LOCATORS="$HOSTNAME[$LOCATOR_PORT]"
+  fi
+
+  export LOCATORS
+
+#------------------------------
+
+
+
+# Locator Single Gfsh Connect locator
+
+LOCATOR_GFSH_CONNECT="null"
+
+for i in $(cat ./config/locators);
+do
+
+  STATUS_LOCATOR_NM="$i"_$LOCATOR_NM
+  echo Checking if $STATUS_LOCATOR_NM is running
+  running=`$GEMFIRE_HOME/bin/gfsh -e ="connect --locator="$i[$LOCATOR_PORT]" --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties" -e "status locator --name=$STATUS_LOCATOR_NM" | grep "up and running" `
+
+
+  if [ -z "$running" ]; then
+      echo "Locator $i[$LOCATOR_PORT is not running"
+  else
+       LOCATOR_GFSH_CONNECT="$i[$LOCATOR_PORT]"
+        break;
+  fi
+
+done
+
+if [ $LOCATOR_GFSH_CONNECT == "null" ]; then
+  LOCATOR_GFSH_CONNECT="$HOSTNAME[$LOCATOR_PORT]"
+fi
+
+export LOCATOR_GFSH_CONNECT
+
+
+if [ -z "$MAX_CONNECTIONS" ]; then
+  export MAX_CONNECTIONS=800
+fi
+
+export REMOTE_LOCATORS="null"
+
+#Build remote locator connect string
+for i in $(cat ./config/remoteLocators);
+do
+  echo adding $i the REMOTE_LOCATORS
+  if [ $REMOTE_LOCATORS == "null" ]; then
+     REMOTE_LOCATORS="$i[$REMOTE_LOCATOR_PORT]"
+   else
+     REMOTE_LOCATORS=$REMOTE_LOCATORS",$i[$REMOTE_LOCATOR_PORT]"
+   fi
+done
+
+if [ "$REMOTE_LOCATORS" == "null" ]; then
+  export REMOTE_LOCATORS=""
+fi
+
+
+if [ -z $CACHE_XML_FILE ] || [ ! -f $CACHE_XML_FILE ]; then
+  export ENABLE_CLUSTER_CONFIGURATION=true
+else
+  export ENABLE_CLUSTER_CONFIGURATION=false
+fi
+
+
+export CLASSPATH=$CLASSPATH:"$GEMFIRE_HOME/lib/*":"$PWD/lib/*"
+
+function listRegion () {
+
+   export REGIONS=`$GEMFIRE_HOME/bin/gfsh -e "connect --locator=$LOCATORS --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties" -e "list regions" |  sed -n '/List of regions/,/ $/p' | sed -n '/---------------/,/ $/p' |  grep -v "\--"`
+
+}
