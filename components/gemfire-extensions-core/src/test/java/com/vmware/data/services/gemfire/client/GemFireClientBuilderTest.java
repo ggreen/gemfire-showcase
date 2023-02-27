@@ -2,6 +2,7 @@ package com.vmware.data.services.gemfire.client;
 
 import nyla.solutions.core.exception.RequiredException;
 import nyla.solutions.core.exception.SetupException;
+import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Organizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,17 @@ class GemFireClientBuilderTest
         assertEquals(locators,subject.getLocators());
         assertEquals(clientName,subject.getClientName());
         assertEquals(userName,subject.getUserName());
-        assertEquals(password,subject.getPassword());
+        assertEquals("sdsds", String.valueOf(subject.getPassword()));
+
+    }
+
+    @Test
+    void builderPassword_Then_return_notNull() {
+
+        Builder actual = subject.password("password".toCharArray());
+        assertNotNull(actual);
+
+        assertEquals("password",Config.getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP));
 
     }
 }

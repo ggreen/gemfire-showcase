@@ -26,16 +26,20 @@ import nyla.solutions.core.util.Config;
 public class GemFireConfigAuthInitialize
 implements AuthInitialize, GemFireConfigConstants
 {
+	public static final String SECURITY_PASSWORD_PROP = "SECURITY_PASSWORD";
+	public static final String SECURITY_USER_PROP = "SECURITY_USERNAME";
+
 	private final GemFireSettings vcapConfig;
- 
-	  /**
+
+	/**
 	   * Constructor
 	   * @param vcapConfig the VCAP configuration
 	   */
 	  protected GemFireConfigAuthInitialize(GemFireSettings vcapConfig)
 	  {
 		  this.vcapConfig = vcapConfig;
-	  }//------------------------------------------------
+	  }
+
 	  public static AuthInitialize create() {
 	    return new GemFireConfigAuthInitialize(GemFireSettings.getInstance());
 	  }
@@ -75,12 +79,14 @@ implements AuthInitialize, GemFireConfigConstants
 	  }//------------------------------------------------
 	protected String getSecurityPassword()
 	{
-		String password = Config.getProperty(PASSWORD,Config.getProperty("SECURITY_PASSWORD",""));
+
+		String password = Config.getProperty(PASSWORD,Config.getProperty(SECURITY_PASSWORD_PROP,""));
 		return password;
 	}//------------------------------------------------
 	protected String getSecurityUserName()
 	{
-		String username = Config.getProperty(USER_NAME,Config.getProperty("SECURITY_USERNAME",""));
+
+		String username = Config.getProperty(USER_NAME,Config.getProperty(SECURITY_USER_PROP,""));
 		return username;
 	}//------------------------------------------------
 

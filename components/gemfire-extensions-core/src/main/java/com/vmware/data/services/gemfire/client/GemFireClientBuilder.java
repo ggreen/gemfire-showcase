@@ -8,6 +8,7 @@ import nyla.solutions.core.exception.SetupException;
 import nyla.solutions.core.exception.SystemException;
 import nyla.solutions.core.io.IO;
 import nyla.solutions.core.operations.ClassPath;
+import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Debugger;
 import org.apache.geode.cache.CacheClosedException;
 import org.apache.geode.cache.client.ClientCache;
@@ -36,8 +37,6 @@ public class GemFireClientBuilder  implements Builder
 {
     private String locators;
     private String clientName;
-    private String userName;
-    private char[] password;
     private boolean useCachingProxy;
     private String pdxClassPatternProperty = ".*";
     private String pdxSerializerClassNm  = EnhancedReflectionSerializer.class.getName();
@@ -75,7 +74,9 @@ public class GemFireClientBuilder  implements Builder
     @Override
     public Builder userName(String userName)
     {
-        this.userName = userName;
+        Properties prop = new Properties();
+        prop.setProperty(GemFireConfigAuthInitialize.SECURITY_USER_PROP,userName);
+        Config.setProperties(prop);
 
         return this;
     }
@@ -83,8 +84,11 @@ public class GemFireClientBuilder  implements Builder
     @Override
     public Builder password(char[] password)
     {
-        this.password = password;
-        return null;
+        Properties prop = new Properties();
+        prop.setProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP,String.valueOf(password));
+        Config.setProperties(prop);
+
+        return this;
     }
 
     @Override
@@ -210,7 +214,7 @@ public class GemFireClientBuilder  implements Builder
         IO.writeFile(sslFile, bytes);
 
         return sslFile;
-    }//------------------------------------------------
+    }
 
     String getLocators()
     {
@@ -224,12 +228,12 @@ public class GemFireClientBuilder  implements Builder
 
     String getUserName()
     {
-        return userName;
+        return Config.getProperty(GemFireConfigAuthInitialize.SECURITY_USER_PROP,"");
     }
 
     char[] getPassword()
     {
-        return password;
+        return  Config.getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP,"").toCharArray();
     }
 
     public List<URI> getUris()

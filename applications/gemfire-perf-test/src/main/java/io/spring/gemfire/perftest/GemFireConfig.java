@@ -18,11 +18,19 @@ public class GemFireConfig {
     @Value("${spring.data.gemfire.pool.locators}")
     private String locators;
 
+    @Value("${spring.data.gemfire.security.username:admin}")
+    private String userName;
+
+    @Value("${spring.data.gemfire.security.password:admin}")
+    private String password;
+
     @Bean
     GemFireClient gemfire()
     {
         return GemFireClient.builder()
                 .locators(locators)
+                .userName(userName)
+                .password(password.toCharArray())
                 .clientName(applicationName)
                 .build();
     }
