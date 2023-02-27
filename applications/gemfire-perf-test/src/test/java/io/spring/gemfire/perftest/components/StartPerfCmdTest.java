@@ -20,7 +20,7 @@ class StartPerfCmdTest {
 
         var runner  = mock(Runnable.class);
 
-        var subject = new StartPerfCmd(marker, 10000,runner);
+        var subject = new StartPerfCmd(marker, 10000,runner,false);
 
         subject.run();
 

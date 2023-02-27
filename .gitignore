@@ -1,9 +1,11 @@
 target/
 build/
 bin/
+.gradle/
 obj/
 .gradle
 pom.xml.tag
+*.tar
 *.gfs.csv
 pom.xml.releaseBackup
 pom.xml.versionsBackup

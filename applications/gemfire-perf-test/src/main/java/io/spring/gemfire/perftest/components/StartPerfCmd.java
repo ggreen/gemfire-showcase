@@ -13,21 +13,38 @@ public class StartPerfCmd implements CommandLineRunner {
     private final BenchMarker benchMarker;
     private final int capacity;
     private final Runnable runner;
+    private final boolean runForever;
 
     public StartPerfCmd(BenchMarker benchMarker,
                         @Value("${capacity}") int capacity,
-                        Runnable runner) {
+                        Runnable runner,
+                        @Value("${runForever:false}")
+                        boolean runForever) {
 
         this.benchMarker = benchMarker;
         this.capacity = capacity;
         this.runner = runner;
+        this.runForever = runForever;
     }
 
     @Override
     public void run(String... args) throws Exception {
         var perfTest = new PerformanceCheck(benchMarker,capacity);
-        perfTest.perfCheck(runner);
 
-        println(this,"report:\n"+perfTest.getReport());
+
+        execute(perfTest);
+
+        while(runForever)
+        {
+            execute(perfTest);
+        }
+
+
+
+    }
+
+    private void execute(PerformanceCheck perfTest) {
+        perfTest.perfCheck(runner);
+        println(this,"report:\n"+ perfTest.getReport());
     }
 }

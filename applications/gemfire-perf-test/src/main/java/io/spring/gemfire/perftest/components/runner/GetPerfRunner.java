@@ -1,5 +1,6 @@
 package io.spring.gemfire.perftest.components.runner;
 
+import com.vmware.data.services.gemfire.client.GemFireClient;
 import lombok.SneakyThrows;
 import nyla.solutions.core.exception.SetupException;
 import org.apache.geode.cache.GemFireCache;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "action", havingValue = "get")
 public class GetPerfRunner implements Runnable, ApplicationListener<ContextRefreshedEvent> {
 
-    private final GemFireCache cache;
+    private final GemFireClient cache;
 
 
     private final String regionName;
@@ -23,7 +24,7 @@ public class GetPerfRunner implements Runnable, ApplicationListener<ContextRefre
     private Object key;
     private Region<Object, Object> region;
 
-    public GetPerfRunner(GemFireCache cache, @Value("${regionName}") String regionName) {
+    public GetPerfRunner(GemFireClient cache, @Value("${regionName}") String regionName) {
         this.cache = cache;
         this.regionName = regionName;
     }
@@ -38,7 +39,7 @@ public class GetPerfRunner implements Runnable, ApplicationListener<ContextRefre
         }
 
 
-        SelectResults<Object> results = (SelectResults<Object>) cache.getQueryService()
+        SelectResults<Object> results = (SelectResults<Object>) cache.getClientCache().getQueryService()
                 .newQuery("select * from /${regionName}.keySet limit 1")
                 .execute();
 

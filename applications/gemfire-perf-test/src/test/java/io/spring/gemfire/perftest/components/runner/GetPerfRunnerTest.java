@@ -1,7 +1,9 @@
 package io.spring.gemfire.perftest.components.runner;
 
+import com.vmware.data.services.gemfire.client.GemFireClient;
 import org.apache.geode.cache.GemFireCache;
 import org.apache.geode.cache.Region;
+import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.query.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,7 @@ class GetPerfRunnerTest {
     private SelectResults<Object> results;
 
     @Mock
-    private GemFireCache cache;
+    private ClientCache cache;
 
     @Mock
     private Region<Object,Object> mockRegion = null;
@@ -38,6 +40,9 @@ class GetPerfRunnerTest {
 
     @Mock
     private Iterator<Object> mockIterator;
+
+    @Mock
+    private GemFireClient client;
 
     @BeforeEach
     void setUp() throws FunctionDomainException, TypeMismatchException, QueryInvocationTargetException, NameResolutionException {
@@ -52,10 +57,12 @@ class GetPerfRunnerTest {
 
         when(queryService.newQuery(anyString())).thenReturn(query);
 
-        when(cache.getRegion(anyString())).thenReturn(mockRegion);
+        when(client.getClientCache()).thenReturn(cache);
+//        when(cache.getRegion(anyString())).thenReturn(mockRegion);
+        when(client.getRegion(anyString())).thenReturn(mockRegion);
         when(cache.getQueryService()).thenReturn(queryService);
 
-        subject = new GetPerfRunner(cache,regionName);
+        subject = new GetPerfRunner(client,regionName);
 
         subject.init();
 
