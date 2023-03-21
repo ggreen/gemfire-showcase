@@ -1,4 +1,8 @@
--------------------------------------
+# WAN Replication (Active-Active)
+
+The following explains how to set up two [GemFire](https://www.vmware.com/products/gemfire.html) clusters connected by a 
+[WAN replication](https://docs.vmware.com/en/VMware-Tanzu-GemFire/9.10/tgf/GUID-topologies_and_comm-multi_site_configuration-setting_up_a_multisite_system.html) gateways. GemFire supports Active-Active data updates when using WAN replication between sites. These instructions demonstrate the functionality.
+
 ## Start Cluster 1
 In Gfsh
 
