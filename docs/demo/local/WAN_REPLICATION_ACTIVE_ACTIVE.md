@@ -65,7 +65,7 @@ disconnect
 ```
 
 
-## - Create Gateway receiver to cluster b
+## - Create Gateway receiver to cluster 2
 
 
 gfsh
