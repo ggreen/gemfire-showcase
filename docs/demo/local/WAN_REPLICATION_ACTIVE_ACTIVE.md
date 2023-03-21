@@ -54,7 +54,7 @@ start server --name=gf2-server  --J=-Dgemfire.distributed-system-id=2  --J=-Dgem
 --------------------
 
 
-## - Create Gateway receiver to cluster 1
+## Create Gateway receiver to cluster 1
 
 ```shell
 connect --locator=[10001]
@@ -65,7 +65,7 @@ disconnect
 ```
 
 
-## - Create Gateway receiver to cluster 2
+## Create Gateway receiver to cluster 2
 
 
 gfsh
