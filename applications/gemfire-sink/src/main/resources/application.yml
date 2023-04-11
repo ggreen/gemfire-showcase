@@ -1,0 +1,21 @@
+spring:
+  rabbitmq:
+    listener:
+      type: stream
+    stream:
+      host: localhost
+  cloud:
+    function.definition: gemFireSink
+    stream:
+      bindings:
+        gemFireSink-in-0:
+          destination: testCdc
+          group: testCdc
+          consumer:
+            concurrency: 2
+            container-type: stream
+      rabbit:
+        bindings:
+          gemFireSink-in-0:
+            consumer:
+              container-type: stream
