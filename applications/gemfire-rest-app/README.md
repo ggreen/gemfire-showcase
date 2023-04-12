@@ -258,3 +258,17 @@ kubectl apply -f cloud/k8
 
 
 
+## Docker
+
+
+Build new image
+```shell
+gradle build :applications:gemfire-sink-app:bootBuildImage
+```
+
+
+```shell script
+docker tag gemfire-rest-app:0.0.1-SNAPSHOT cloudnativedata/gemfire-rest-app:0.0.1-SNAPSHOT
+docker push cloudnativedata/gemfire-rest-app:0.0.1-SNAPSHOT
+
+```

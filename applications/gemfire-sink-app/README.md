@@ -37,11 +37,12 @@ docker push cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
 
 
 
-| Property              | Notes                                      | Default          |
-|-----------------------| ------------------------------------------ |------------------|
-| regionName            | The region to be loaded                    |                  |
-| keyFieldExpression    | The JSON property to use as a key          | id               |
-| valuePdxClassName     | The full class name to store with entry    | java.lang.Object |
+| Property                          | Notes                                   | Default          |
+|-----------------------------------|-----------------------------------------|------------------|
+| regionName                        | The region to be loaded                 |                  |
+| keyFieldExpression                | The JSON property to use as a key       | id               |
+| valuePdxClassName                 | The full class name to store with entry | java.lang.Object |
+ | spring.data.gemfire.pool.locators | GemFire locator                         | localhost[10334] | 
 
 
 Rabbit Properties 

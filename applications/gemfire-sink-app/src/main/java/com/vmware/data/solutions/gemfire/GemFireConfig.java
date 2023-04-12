@@ -16,6 +16,17 @@ public class GemFireConfig {
     @Value("${regionName}")
     private String regionName;
 
+    @Value("${spring.data.gemfire.pool.locators:localhost[10334]}")
+    private String locators;
+
+    @Value("${spring.application.name}")
+    private String applicationName;
+
+    @Value("${spring.data.gemfire.security.username:admin}")
+    private String userName;
+
+    @Value("${spring.data.gemfire.security.password:admin}")
+    private String password;
 
     @Bean
     PDX pdx()  {
@@ -23,10 +34,19 @@ public class GemFireConfig {
     }
 
     @Bean
-    Map<String, PdxInstance> createRegion() {
+    GemFireClient gemfireClient()
+    {
+        return GemFireClient.builder().locators(locators).clientName(applicationName)
+                .userName(userName)
+                .password(password.toCharArray())
+                .build();
+    }
+
+    @Bean
+    Map<String, PdxInstance> createRegion(GemFireClient gemfire) {
 
         log.info("Getting region: "+regionName);
-        return GemFireClient.connect().getRegion(regionName);
+        return gemfire.getRegion(regionName);
     }
 
 }
