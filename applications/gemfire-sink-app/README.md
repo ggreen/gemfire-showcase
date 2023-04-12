@@ -55,8 +55,15 @@ docker push cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
 
 # RabbitMQ
 
-
-spring.rabbitmq.stream.host: localhost
+Set the RabbitMq host
+```properties
+spring.rabbitmq.stream.host=localhost
+spring.rabbitmq.stream.username=guest
+spring.rabbitmq.stream.password=guest
+spring.rabbitmq.stream.port=5552
+spring.cloud.stream.gemFireSinkConsumer-in-0.destination=
+spring.cloud.stream.gemFireSinkConsumer-in-0.group=
+```
 
 # Testing
 

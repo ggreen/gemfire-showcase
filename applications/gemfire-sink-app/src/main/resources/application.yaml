@@ -11,8 +11,8 @@ spring:
     stream:
       bindings:
         gemFireSinkConsumer-in-0:
-          destination: testCdc
-          group: testCdc
+#          destination: testCdc
+#          group: testCdc
           consumer:
             concurrency: 2
             container-type: stream
