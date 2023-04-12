@@ -2,6 +2,8 @@ package com.vmware.data.solutions.gemfire;
 
 import com.rabbitmq.stream.OffsetSpecification;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
+import org.springframework.amqp.support.converter.ContentTypeDelegatingMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.config.ListenerContainerCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,13 @@ public class RabbitStreamConfig {
     private String applicationName = "gemfire-sink";
 
 
+    /**
+     * Override the Java Serializer
+     */
+    @Bean
+    MessageConverter convert()  {
+        return new ContentTypeDelegatingMessageConverter();
+    }
 
     @Bean
     ListenerContainerCustomizer<MessageListenerContainer> customizer() {
@@ -41,7 +50,7 @@ public class RabbitStreamConfig {
                         }
                     } else {
                         builder.offset(
-                                        OffsetSpecification.first()
+                                        OffsetSpecification.next()
                                 ).name(applicationName)
                                 .autoTrackingStrategy();
                     }

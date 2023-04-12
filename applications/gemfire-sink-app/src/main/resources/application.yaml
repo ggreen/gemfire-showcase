@@ -1,0 +1,32 @@
+spring:
+  rabbitmq:
+    listener:
+      type: stream
+    stream:
+      host: localhost
+  application:
+    name: gemfire-sink-app
+  cloud:
+    function.definition: gemFireSinkConsumer
+    stream:
+      bindings:
+        gemFireSinkConsumer-in-0:
+          destination: testCdc
+          group: testCdc
+          consumer:
+            concurrency: 2
+            container-type: stream
+      rabbit:
+        bindings:
+          gemFireSinkConsumer-in-0:
+            consumer:
+              container-type: stream
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health
+  wavefront:
+    application:
+      name: gemfire-sink-app
+      service-name: gemfire-sink-app

@@ -9,7 +9,7 @@ The JSON input will be converted to an [PDX instance](https://gemfire.docs.pivot
 Example Start (from project root directory)
 
 ```shell script
-java -jar applications/gemfire-sink-app/build/libs/gemfire-sink-app-0.0.2-SNAPSHOT.jar --regionName=TestGemFireSink --keyFieldExpression=id --valuePdxClassName=com.vmware.pivotallabs.dataTxt.domains.User
+java -jar applications/gemfire-sink-app/build/libs/gemfire-sink-app-0.0.1-SNAPSHOT.jar --regionName=TestGemFireSink --keyFieldExpression=id --valuePdxClassName=com.vmware.pivotallabs.dataTxt.domains.User --server.port=0
 ```
 
 
@@ -57,3 +57,26 @@ docker push cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
 
 
 spring.rabbitmq.stream.host: localhost
+
+# Testing
+
+Set property
+
+```properties
+content_type=application/json
+```
+
+
+Example Payload
+
+```json
+{
+  "id": "0012",
+  "@type" : "com.my.company.domain.Example"
+}
+```
+
+```shell
+gfsh>query --query="select * from /TestGemFireSink"
+```
+
