@@ -12,25 +12,6 @@ Example Start (from project root directory)
 java -jar applications/gemfire-sink-app/build/libs/gemfire-sink-app-0.0.1-SNAPSHOT.jar --regionName=TestGemFireSink --keyFieldExpression=id --valuePdxClassName=com.vmware.pivotallabs.dataTxt.domains.User --server.port=0
 ```
 
-
-Property           | Notes                                      | Default
------------------  | ------------------------------------------ | ----------------------
-regionName         | The region to be loaded                    | 
-keyFieldExpression | The JSON property to use as a key          | id
-valuePdxClassName  | The full class name to store with entry    | java.lang.Object
-
-
-
-```yaml
-spring.cloud.stream.bindings.input.destination=myDestination
-spring.cloud.stream.bindings.input.group=consumerGroup
-#disable binder retries
-spring.cloud.stream.bindings.input.consumer.max-attempts=1
-spring.cloud.stream.rabbit.bindings.input.consumer.auto-bind-dlq=true
-spring.cloud.stream.rabbit.bindings.input.consumer.dlq-ttl=5000
-spring.cloud.stream.rabbit.bindings.input.consumer.dlq-dead-letter-exchange=
-```
-
 Example
 
 ```shell
@@ -47,15 +28,23 @@ mvn spring-boot:build-image
 cd ../..
 ```
 
-
 ```shell
 docker tag gemfire-sink-app:0.0.1-SNAPSHOT cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
 docker push cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
 ```
 
-# RabbitMQ
+# Configuration
 
-Set the RabbitMq host
+
+
+| Property              | Notes                                      | Default          |
+|-----------------------| ------------------------------------------ |------------------|
+| regionName            | The region to be loaded                    |                  |
+| keyFieldExpression    | The JSON property to use as a key          | id               |
+| valuePdxClassName     | The full class name to store with entry    | java.lang.Object |
+
+
+Rabbit Properties 
 ```properties
 spring.rabbitmq.stream.host=localhost
 spring.rabbitmq.username=guest
@@ -65,6 +54,13 @@ spring.rabbitmq.stream.password=guest
 spring.rabbitmq.stream.port=5552
 spring.cloud.stream.gemFireSinkConsumer-in-0.destination=input
 spring.cloud.stream.gemFireSinkConsumer-in-0.group=gemfire-sink-app
+#spring.cloud.stream.bindings.input.destination=myDestination
+#spring.cloud.stream.bindings.input.group=consumerGroup
+#disable binder retries
+spring.cloud.stream.bindings.input.consumer.max-attempts=1
+spring.cloud.stream.rabbit.bindings.input.consumer.auto-bind-dlq=true
+spring.cloud.stream.rabbit.bindings.input.consumer.dlq-ttl=5000
+spring.cloud.stream.rabbit.bindings.input.consumer.dlq-dead-letter-exchange=
 ```
 
 # Testing
