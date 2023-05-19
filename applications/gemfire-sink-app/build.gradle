@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.vmware.data.solutions'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
@@ -39,8 +39,7 @@ ext {
 
 dependencies {
 
-	implementation 'io.pivotal.services.dataTx:gemfire-extensions-core:1.2.0'
-
+//	implementation 'io.pivotal.services.dataTx:gemfire-extensions-core:1.2.0'
 
 	implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
 	implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion

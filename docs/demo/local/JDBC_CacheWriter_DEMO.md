@@ -1,16 +1,16 @@
-
+n
 ```shell
-cd /Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.0/bin
+cd /Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.4/bin
 ./gfsh
 ```
 
 Generate password
 ```shell
-java -DCRYPTION_KEY=PIVOTAL -classpath /Users/Projects/solutions/nyla/nyla-core/build/libs/nyla.solutions.core-1.5.1.jar nyla.solutions.core.util.Cryption $1
+java -DCRYPTION_KEY=PIVOTAL -classpath /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/libs/nyla.solutions.core-1.5.1.jar nyla.solutions.core.util.Cryption $1
 ```
 
 ```shell
-export CLASSPATH=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.0/lib/HikariCP-4.0.3.jar:/Users/devtools/repositories/RDMS/PostgreSQL/driver/postgresql-42.2.9.jar:/Users/Projects/solutions/nyla/nyla-core/build/libs/nyla.solutions.core-1.5.1.jar
+export CLASSPATH=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-9.15.0/lib/HikariCP-4.0.3.jar:/Users/devtools/repositories/RDBMS/PostgreSQL/driver/postgresql-42.2.9.jar:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/deployments/libs/nyla.solutions.core-1.5.1.jar
 export JDBC_URL=jdbc:postgresql://localhost:5432/postgres
 export JDBC_DRIVER_CLASS=org.postgresql.Driver
 export JDBC_USERNAME=postgres
@@ -38,7 +38,7 @@ start server --name=server   --locators=127.0.0.1[10334] --bind-address=127.0.0.
 
 
 ```shell
-deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-extenions-api/build/libs/gemfire-extensions-core-1.1.1-SNAPSHOT.jar
+deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-extensions-core/build/libs/gemfire-extensions-core-1.2.1-SNAPSHOT.jar
 ```
 
 
@@ -95,4 +95,30 @@ curl -X 'PUT' \
 "loginID" :  "nimani",
 "email" : "nimani@vmware.com"
 }'
+```
+
+
+```shell
+query --query="select * from /user_profiles"
+```
+
+
+```shell
+select * from user_profiles;
+```
+
+
+Cleanup;
+
+
+```shell
+ delete from user_profiles ;
+```
+
+
+
+```shell
+ remove --region=/user_profiles --key=1
+ remove --region=/user_profiles --key=nimani@pivotal.io
+ 
 ```

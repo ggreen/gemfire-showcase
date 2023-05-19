@@ -36,6 +36,7 @@ public class GemFireConfig {
     @Bean
     GemFireClient gemfireClient()
     {
+        log.info("***************locators: {}",locators);
         return GemFireClient.builder().locators(locators).clientName(applicationName)
                 .userName(userName)
                 .password(password.toCharArray())

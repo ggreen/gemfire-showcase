@@ -9,7 +9,7 @@ The JSON input will be converted to an [PDX instance](https://gemfire.docs.pivot
 Example Start (from project root directory)
 
 ```shell script
-java -jar applications/gemfire-sink-app/build/libs/gemfire-sink-app-0.0.1-SNAPSHOT.jar --regionName=TestGemFireSink --keyFieldExpression=id --valuePdxClassName=com.vmware.pivotallabs.dataTxt.domains.User --server.port=0
+java -jar applications/gemfire-sink-app/build/libs/gemfire-sink-app-0.0.2-SNAPSHOT.jar --regionName=TestGemFireSink --keyFieldExpression=id --valuePdxClassName=com.vmware.pivotallabs.dataTxt.domains.User --server.port=0
 ```
 
 Example
@@ -22,15 +22,12 @@ Example
 ## Building Docker
 
 ```shell
-mvn install
-cd  applications/gemfire-sink-app
-mvn spring-boot:build-image
-cd ../..
+gradle clean build :applications:gemfire-sink-app:bootBuildImage
 ```
 
 ```shell
-docker tag gemfire-sink-app:0.0.1-SNAPSHOT cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
-docker push cloudnativedata/gemfire-sink-app:0.0.1-SNAPSHOT
+docker tag gemfire-sink-app:0.0.2-SNAPSHOT cloudnativedata/gemfire-sink-app:0.0.2-SNAPSHOT
+docker push cloudnativedata/gemfire-sink-app:0.0.2-SNAPSHOT
 ```
 
 # Configuration
