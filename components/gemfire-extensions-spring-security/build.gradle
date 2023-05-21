@@ -3,8 +3,8 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 
-sourceCompatibility = 1.8
-version = '1.0.0'
+sourceCompatibility = 11
+version = '2.0.0'
 
 
 allprojects {
@@ -18,13 +18,13 @@ archivesBaseName = 'gemfire-extensions-spring-security'
 
 
 ext {
-    gemFireVersion = '9.15.0'
+    gemFireVersion = '10.0.0'
 }
 
 
 compileJava   {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 }
 
 task myJavadocs(type: Javadoc) {
@@ -80,16 +80,16 @@ repositories {
 dependencies {
 
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.4'
-    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.4'
-    implementation 'org.apache.shiro:shiro-core:1.9.1'
-    implementation group: 'com.vmware.gemfire', name: 'geode-logging', version: gemFireVersion
+//    implementation 'org.apache.shiro:shiro-core:1.9.1'
+//    implementation group: 'com.vmware.gemfire', name: 'geode-logging', version: gemFireVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.18.0'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
 

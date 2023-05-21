@@ -2,9 +2,9 @@ apply plugin: 'signing'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-version = '1.0.0'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+version = '2.0.0'
 
 allprojects {
     tasks.withType(Javadoc) {
@@ -16,12 +16,12 @@ group = 'io.pivotal.services.dataTx'
 archivesBaseName = 'gemfire-security-managers'
 
 ext {
-    gemFireVersion = '9.15.3'
+    gemFireVersion = '10.0.0'
 }
 
 compileJava   {
-    sourceCompatibility =  JavaVersion.VERSION_17
-    targetCompatibility =  JavaVersion.VERSION_17
+    sourceCompatibility =  JavaVersion.VERSION_11
+    targetCompatibility =  JavaVersion.VERSION_11
 }
 
 task myJavadocs(type: Javadoc) {
@@ -73,15 +73,15 @@ repositories {
     }
 }
 dependencies {
-    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
 //    implementation 'org.apache.shiro:shiro-core:1.9.1'
 
-    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-lucene', version: '1.0.0'
 //    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '2.0.0'
 

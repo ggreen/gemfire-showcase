@@ -2,8 +2,8 @@ apply plugin: 'signing'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = 1.8
-version = '1.0.0'
+sourceCompatibility = 11
+version = '2.0.0'
 
 allprojects {
     tasks.withType(Javadoc) {
@@ -15,12 +15,12 @@ group = 'io.pivotal.services.dataTx'
 archivesBaseName = 'gemfire-rabbitmq'
 
 ext {
-    gemFireVersion = '9.15.0'
+    gemFireVersion = '10.0.0'
 }
 
 compileJava   {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 }
 
 task myJavadocs(type: Javadoc) {
@@ -72,16 +72,11 @@ repositories {
     }
 }
 dependencies {
-    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
     implementation("com.rabbitmq:amqp-client:5.16.0")
     implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
-    implementation 'org.apache.shiro:shiro-core:1.9.1'
 
-    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
 

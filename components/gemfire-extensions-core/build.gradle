@@ -2,8 +2,8 @@ apply plugin: 'signing'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = 1.8
-version = '1.2.1-SNAPSHOT'
+sourceCompatibility = 11
+version = '2.0.0-SNAPSHOT'
 
 allprojects {
     tasks.withType(Javadoc) {
@@ -15,12 +15,12 @@ group = 'io.pivotal.services.dataTx'
 archivesBaseName = 'gemfire-extensions-core'
 
 ext {
-    gemFireVersion = '9.15.3'
+    gemFireVersion = '10.0.0'
 }
 
 compileJava   {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 }
 
 task myJavadocs(type: Javadoc) {
@@ -72,19 +72,13 @@ repositories {
     }
 }
 dependencies {
-    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
-    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
-    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
-    implementation 'org.apache.shiro:shiro-core:1.9.1'
-    implementation 'commons-beanutils:commons-beanutils:1.9.4'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.4'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.13.4'
-
-
-    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'com.vmware.gemfire:gemfire-search:1.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
@@ -95,7 +89,6 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.0'
     testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
 }

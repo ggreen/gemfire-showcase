@@ -29,15 +29,15 @@ export LOCATORS="null"
 
   for i in $(cat ./config/locators);
   do
-     if [ $LOCATORS == "null" ]; then
-       LOCATORS="$i[$LOCATOR_PORT]"
+     if [ "$LOCATORS" = "null" ]; then
+       LOCATORS="${i}[$LOCATOR_PORT]"
      else
-       LOCATORS=$LOCATORS",$i[$LOCATOR_PORT]"
+       LOCATORS=$LOCATORS",${i}[$LOCATOR_PORT]"
      fi
   done
 
-  if [ $LOCATORS == "null" ]; then
-    LOCATORS="$HOSTNAME[$LOCATOR_PORT]"
+  if [ "$LOCATORS" = "null" ]; then
+    export LOCATORS="${HOSTNAME}[$LOCATOR_PORT]"
   fi
 
   export LOCATORS
@@ -55,20 +55,20 @@ do
 
   STATUS_LOCATOR_NM="$i"_$LOCATOR_NM
   echo Checking if $STATUS_LOCATOR_NM is running
-  running=`$GEMFIRE_HOME/bin/gfsh -e ="connect --locator="$i[$LOCATOR_PORT]" --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties" -e "status locator --name=$STATUS_LOCATOR_NM" | grep "up and running" `
+  running=`$GEMFIRE_HOME/bin/gfsh -e ="connect --locator="${i}[$LOCATOR_PORT]" --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties" -e "status locator --name=$STATUS_LOCATOR_NM" | grep "up and running" `
 
 
   if [ -z "$running" ]; then
-      echo "Locator $i[$LOCATOR_PORT is not running"
+      echo "Locator ${i}[$LOCATOR_PORT is not running"
   else
-       LOCATOR_GFSH_CONNECT="$i[$LOCATOR_PORT]"
+       LOCATOR_GFSH_CONNECT="${i}[$LOCATOR_PORT]"
         break;
   fi
 
 done
 
-if [ $LOCATOR_GFSH_CONNECT == "null" ]; then
-  LOCATOR_GFSH_CONNECT="$HOSTNAME[$LOCATOR_PORT]"
+if [ "$LOCATOR_GFSH_CONNECT" = "null" ]; then
+  LOCATOR_GFSH_CONNECT="${HOSTNAME}[$LOCATOR_PORT]"
 fi
 
 export LOCATOR_GFSH_CONNECT
@@ -85,13 +85,13 @@ for i in $(cat ./config/remoteLocators);
 do
   echo adding $i the REMOTE_LOCATORS
   if [ $REMOTE_LOCATORS == "null" ]; then
-     REMOTE_LOCATORS="$i[$REMOTE_LOCATOR_PORT]"
+     REMOTE_LOCATORS="${i}[$REMOTE_LOCATOR_PORT]"
    else
-     REMOTE_LOCATORS=$REMOTE_LOCATORS",$i[$REMOTE_LOCATOR_PORT]"
+     REMOTE_LOCATORS=$REMOTE_LOCATORS",${i}[$REMOTE_LOCATOR_PORT]"
    fi
 done
 
-if [ "$REMOTE_LOCATORS" == "null" ]; then
+if [ "$REMOTE_LOCATORS" = "null" ]; then
   export REMOTE_LOCATORS=""
 fi
 

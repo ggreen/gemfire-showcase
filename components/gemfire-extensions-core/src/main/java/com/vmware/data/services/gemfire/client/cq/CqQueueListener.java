@@ -1,7 +1,6 @@
 package com.vmware.data.services.gemfire.client.cq;
 
 import java.util.concurrent.LinkedBlockingQueue;
-
 import org.apache.geode.cache.Operation;
 import org.apache.geode.cache.query.CqEvent;
 import org.apache.geode.cache.query.CqListener;
@@ -9,16 +8,22 @@ import org.apache.geode.cache.query.CqQuery;
 import nyla.solutions.core.patterns.Disposable;
 import nyla.solutions.core.util.Debugger;
 
+/**
+ *
+ * @author gregory green
+ * @param <E> the value data type
+ */
 public class CqQueueListener<E> extends LinkedBlockingQueue<E> 
 implements CqListener, Disposable
 {	
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -1260014730371989800L;
-	
-	@SuppressWarnings("unchecked")
+	private transient CqQuery cqQuery = null;
+
+	/**
+	 * Add event records to in memory queue
+	 * @param cqEvent the Continuous Query Event
+	 */
 	public void onEvent(CqEvent cqEvent)
 	  {
 		//get the type of operation being performed
@@ -33,12 +38,13 @@ implements CqListener, Disposable
 	    E entry = (E)cqEvent.getNewValue();
 	    
 	    this.add(entry);
-	  }//------------------------------------------------
-	 
+	  }
+
 	  public void onError(CqEvent cqEvent)
 	  {
 		  Debugger.println(this,"ERROR"+cqEvent);
-	  }//------------------------------------------------
+	  }
+
 	  @Override
 	  public void close()
 	  {
@@ -46,7 +52,7 @@ implements CqListener, Disposable
 			{
 				try { cqQuery.close(); } catch (Exception e){Debugger.println(e.getMessage());}
 			}
-	  }//------------------------------------------------
+	  }
 
 	/**
 	 * @param cqQuery the cqQuery to set
@@ -60,7 +66,8 @@ implements CqListener, Disposable
 	public void dispose()
 	{
 		this.close();
-	}//------------------------------------------------
-	private transient CqQuery cqQuery = null;
+	}
+
+
 	 
 }
