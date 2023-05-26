@@ -42,7 +42,7 @@ Sample:
 
 With defaults
 
-	export PDX_SERIALIZER_CLASS_NM=...   (default org.apache.geode.pdx.ReflectionBasedAutoSerializer)
+	export PDX_SERIALIZER_CLASS_NM=...   (default org.apache.geode.gemFireJson.ReflectionBasedAutoSerializer)
 
 	export POOL_PR_SINGLE_HOP_ENABLED=false
 	export PDX_CLASS_PATTERN=.*

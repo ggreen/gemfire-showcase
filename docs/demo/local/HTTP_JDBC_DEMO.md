@@ -25,7 +25,7 @@ start locator --name=gf-locator2 --port=10434 --locators="127.0.0.1[10334],127.0
 ```
 
 ```shell
-configure pdx --disk-store --read-serialized=true
+configure gemFireJson --disk-store --read-serialized=true
 ```
 
 ```shell

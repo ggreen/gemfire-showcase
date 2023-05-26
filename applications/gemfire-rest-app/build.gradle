@@ -11,7 +11,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 ext {
-    gemFireVersion = '9.15.3'
+    gemFireVersion = '10.0.0'
 }
 
 dependencies {
@@ -19,11 +19,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'com.vmware.gemfire:gemfire-search:1.0.0'
 
     implementation project(':components:gemfire-extensions-core')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'

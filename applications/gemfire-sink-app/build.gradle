@@ -34,18 +34,16 @@ repositories {
 ext {
 	set('springCloudVersion', "2022.0.2")
 	set('wavefrontVersion', "3.0.1")
-	gemFireVersion = '9.15.4'
+	gemFireVersion = '10.0.0'
 }
 
 dependencies {
 
 //	implementation 'io.pivotal.services.dataTx:gemfire-extensions-core:1.2.0'
 
-	implementation group: 'com.vmware.gemfire', name: 'geode-core', version: gemFireVersion
-	implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-	implementation group: 'com.vmware.gemfire', name: 'geode-lucene', version: gemFireVersion
-	implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-	implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
+	implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+	implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+	implementation 'com.vmware.gemfire:gemfire-search:1.0.0'
 
 	implementation project(':components:gemfire-extensions-core')
 

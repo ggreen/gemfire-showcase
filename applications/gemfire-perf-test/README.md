@@ -4,7 +4,7 @@ Gfsh start
 
 ```shell
 start locator --name=locator  --locators=127.0.0.1[10334]  --max-heap=250m --initial-heap=250m --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
-configure pdx --read-serialized=true --disk-store
+configure gemFireJson --read-serialized=true --disk-store
 start server --name=server1 --max-heap=32g  --locators=127.0.0.1[10334]  --initial-heap=10g  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
 ```
 

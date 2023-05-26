@@ -1,6 +1,8 @@
 package io.spring.gemfire.rest.app;
 
-import com.vmware.data.services.gemfire.serialization.PDX;
+import com.vmware.data.services.gemfire.serialization.GemFireJson;
+import org.apache.geode.json.JsonDocument;
+import org.apache.geode.json.JsonDocumentFactory;
 import org.apache.geode.pdx.PdxInstance;
 import org.springframework.stereotype.Component;
 
@@ -10,25 +12,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class PdxService
 {
-    private final PDX pdx;
+    private final GemFireJson gemFireJson;
 
-    public PdxService()
+    public PdxService(JsonDocumentFactory factory)
     {
-        this(new PDX());
+        this(new GemFireJson(factory));
     }
 
-    public PdxService(PDX pdx)
+    public PdxService(GemFireJson gemFireJson)
     {
-        this.pdx = pdx;
+        this.gemFireJson = gemFireJson;
     }
 
-    public PdxInstance fromJSON(String value)
+    public JsonDocument fromJSON(String value)
     {
-        return pdx.fromJSON(value);
+        return gemFireJson.fromJSON(value);
     }
 
-    public String toJSON(PdxInstance value, String type)
+    public String toJSON(JsonDocument value, String type)
     {
-        return pdx.toJSON(value,type);
+        return value.toJson();
     }
 }

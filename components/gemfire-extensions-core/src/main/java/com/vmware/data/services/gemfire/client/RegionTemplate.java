@@ -93,7 +93,7 @@ public class RegionTemplate<K,V>
 	 */
 	public Set<K> keySet()
 	{
-		return region.keySet();
+		return region.keySetOnServer();
 	}
 
 

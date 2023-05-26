@@ -41,7 +41,7 @@ Example connection settings
 
 With defaults
 
-	export PDX_SERIALIZER_CLASS_NM=...   (default org.apache.geode.pdx.ReflectionBasedAutoSerializer)
+	export PDX_SERIALIZER_CLASS_NM=...   (default org.apache.geode.gemFireJson.ReflectionBasedAutoSerializer)
 
 	export POOL_PR_SINGLE_HOP_ENABLED=false
 	export PDX_CLASS_PATTERN=.*
@@ -123,7 +123,7 @@ start locator --name=locator
 In Gfsh, Enable PDX serializer
 
 ```shell script
-configure pdx --read-serialized=true --disk-store=DEFAULT
+configure gemFireJson --read-serialized=true --disk-store=DEFAULT
 ```
 
 In Gfsh, Start a DataNode/Cache Server

@@ -10,9 +10,14 @@ import org.apache.geode.cache.Cache;
 import org.apache.geode.cache.CacheClosedException;
 import org.apache.geode.cache.CacheFactory;
 import org.apache.geode.cache.Region;
-import org.apache.geode.pdx.PdxInstance;
+import org.apache.geode.json.JsonDocument;
+import org.apache.geode.json.JsonDocumentFactory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -24,18 +29,21 @@ import java.util.HashMap;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.*;
+import static org.mockito.Mockito.when;
 
-@Disabled
-public class PDXTest
+@ExtendWith(MockitoExtension.class)
+public class GemFireJsonTest
 {
-	private PDX subject;
+	private GemFireJson subject;
+	@Mock
+	private JsonDocumentFactory factory;
+
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	@BeforeEach
 	 void beforeAll()
 	{
-		this.subject = new PDX();
+		this.subject = new GemFireJson(factory);
 	}
 
 	@BeforeEach
@@ -57,7 +65,7 @@ public class PDXTest
 		{
 			//should already have factory
 		}
-	}//-------------------------------------------
+	}
 
 	@Test
 	public void test_convert_from_json_to_pdxInstance()
@@ -74,13 +82,12 @@ public class PDXTest
 
 		assertTrue(json.contains("@type"));
 
-		PdxInstance pdx = this.subject.fromJSON(json);
+		var pdx = this.subject.fromJSON(json);
 
-		UserProfile actual = (UserProfile)pdx.getObject();
+		String actual = pdx.toJson();
 		assertEquals(expected,actual);
-
-
 	}
+
 	@Test
 	void assignJsonType_empty()
 	{
@@ -162,7 +169,7 @@ public class PDXTest
 
 		try
 		{
-			PdxInstance instance = subject.fromJSON(invalid);
+			var instance = subject.fromJSON(invalid);
 			fail("invalid JSON");
 		}
 		catch(IllegalArgumentException e){
@@ -170,7 +177,7 @@ public class PDXTest
 			assertTrue(e.getMessage().contains(invalid));
 		}
 
-	}//-------------------------------------------
+	}
 
 	@Test
 	public void reject_valid_json_with_missing_type()
@@ -181,7 +188,7 @@ public class PDXTest
 
 		try
 			{
-			PdxInstance instance = subject.fromJSON(invalid);
+			var instance = subject.fromJSON(invalid);
 			fail("Must catch missing type");
 		}
 		catch(IllegalArgumentException e){
@@ -190,7 +197,8 @@ public class PDXTest
 			assertTrue(e.getMessage().contains(subject.JSON_TYPE_ATTRIBUTE));
 		}
 
-	}//-------------------------------------------
+	}
+
 	@Test
 	public void testFromJSON_Complex()
 	throws Exception
@@ -212,7 +220,7 @@ public class PDXTest
 		//TODO: simpleObject.setException(new Exception("Sdsds")); //DEFECT
 		//TODO: simpleObject.setError(new Error("Sdsd")); //DEFECT
 		//TODO: simpleObject.setFieldCalendar(Calendar.getInstance()); //DEFECT
-		simpleObject.setFieldClass(PDXTest.class);
+		simpleObject.setFieldClass(GemFireJsonTest.class);
 		simpleObject.setFieldDate(Calendar.getInstance().getTime());
 		simpleObject.setFieldTimestamp(new Timestamp(Calendar.getInstance().getTimeInMillis()));
 
@@ -230,14 +238,15 @@ public class PDXTest
 		String json = subject.toJsonFromNonPdxObject(expected);
 
 
-		PdxInstance pdx = this.subject.fromJSON(json);
+		var pdx = this.subject.fromJSON(json);
 		
 		assertNotNull(pdx);
 
-		ComplexObject actual = (ComplexObject)pdx.getObject();
+		var actual = pdx.toJson();
 
 		assertEquals(expected,actual);
-	}//-------------------------------------------
+	}
+
 	@Test
 	public void test_PDX_instance_to_json()
 	throws Exception {
@@ -247,29 +256,29 @@ public class PDXTest
 		String json = subject.toJsonFromNonPdxObject(userProfile);
 		System.out.println("JSON:"+json);
 
-		PdxInstance pdx = this.subject.fromJSON(json);
+		var pdx = this.subject.fromJSON(json);
 
-		String actual = this.subject.toJSON(
-				pdx,UserProfile.class.getName());
+		String actual = this.subject.toJsonFromNonPdxObject(pdx);
 		assertTrue(actual.contains("a@pivotal.io"));
 		assertTrue(actual.contains("@type"));
 		assertTrue(actual.contains(userProfile.getClass().getName()));
-	}//-------------------------------------------
+	}
+
 	@Test
 	public void test_region_to_jsonMapEntry()
 	throws Exception
 	{
 		BigDecimal expectedKey = new BigDecimal("25");
-		PdxInstance pdxInstance = subject.fromObject(new ComplexObject());
+		var pdxInstance = subject.toJsonFromNonPdxObject(new ComplexObject());
 
 		Set<Serializable> expectedKeys = Organizer.toSet(expectedKey);
-		Region<Serializable,PdxInstance> region = Mockito.mock(Region.class);
-		Mockito.when(region.keySetOnServer()).thenReturn(expectedKeys);
-		Mockito.when(region.get(Mockito.any())).thenReturn(pdxInstance);
+		Region<Serializable, JsonDocument> region = Mockito.mock(Region.class);
+		when(region.keySetOnServer()).thenReturn(expectedKeys);
+		//when(region.get(Mockito.any())).thenReturn(pdxInstance);
 
 		Collection<Serializable> keys = region.keySetOnServer();
 
-		SerializationPdxEntryWrapper wrapper;
+		SerializationJsonEntryWrapper wrapper;
 
 		for (Serializable key: keys)
 		{
@@ -277,7 +286,7 @@ public class PDXTest
 			assertNotNull(wrapper);
 			assertEquals(expectedKey.getClass().getName(),wrapper.getKeyClassName());
 			assertEquals(key,wrapper.deserializeKey());
-			assertEquals(region.get(key),wrapper.toPdxInstance());
+			assertEquals(region.get(key),wrapper.toJsonDocument());
 
 		}
 	}
@@ -287,48 +296,44 @@ public class PDXTest
 	throws IOException
 	{
 		Long keyLong = 12L;
-		PdxInstance pdx = this.subject.fromObject(new UserProfile());
-		SerializationPdxEntryWrapper expected = new SerializationPdxEntryWrapper(keyLong,
+		JsonDocument pdx = this.subject.fromJSON(objectMapper.writeValueAsString(new UserProfile()));
+		SerializationJsonEntryWrapper expected = new SerializationJsonEntryWrapper(keyLong,
 				UserProfile.class.getName(),pdx);
 
 		String json = this.subject.toJsonFromNonPdxObject(expected);
-		assertTrue(!json.contains(SerializationPdxEntryWrapper.class.getName()));
+		assertTrue(!json.contains(SerializationJsonEntryWrapper.class.getName()));
 
-		SerializationPdxEntryWrapper actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
+		SerializationJsonEntryWrapper actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
 		assertEquals(expected,actual);
 
 		Double keyDouble = 12.0;
-		expected = new SerializationPdxEntryWrapper(keyLong,UserProfile.class.getName(),pdx);
+		expected = new SerializationJsonEntryWrapper(keyLong,UserProfile.class.getName(),pdx);
 		json = this.subject.toJsonFromNonPdxObject(expected);
 		actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
 		assertEquals(expected,actual);
 
 		BigDecimal keyBigDecimal = BigDecimal.TEN;
-		expected = new SerializationPdxEntryWrapper(keyBigDecimal,UserProfile.class.getName(),pdx);
+		expected = new SerializationJsonEntryWrapper(keyBigDecimal,UserProfile.class.getName(),pdx);
 		json = this.subject.toJsonFromNonPdxObject(expected);
 		actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
 		assertEquals(expected,actual);
 
 
 		String keystring = "sdsdsd";
-		expected = new SerializationPdxEntryWrapper(keystring,UserProfile.class.getName(),pdx);
+		expected = new SerializationJsonEntryWrapper(keystring,UserProfile.class.getName(),pdx);
 		json = this.subject.toJsonFromNonPdxObject(expected);
 		actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
 		assertEquals(expected,actual);
-
 
 		try
 		{
 
 			UserProfile invalid = new UserProfile();
-			expected = new SerializationPdxEntryWrapper(invalid,UserProfile.class.getName(),pdx);
+			expected = new SerializationJsonEntryWrapper(invalid,UserProfile.class.getName(),pdx);
 			fail("Invalid key");
 		}
 		catch(InvalidSerializationKeyException e){
 
 		}
-
-
-
 	}
 }

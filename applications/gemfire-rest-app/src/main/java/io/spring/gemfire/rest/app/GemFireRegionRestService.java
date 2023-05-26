@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.RegionDestroyedException;
 import org.apache.geode.cache.client.ServerOperationException;
+import org.apache.geode.json.JsonDocument;
 import org.apache.geode.pdx.PdxInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class GemFireRegionRestService
         {
             Region<String, Object> gemRegion = gemfire.getRegion(region);
 
-            PdxInstance pdxInstance = pdxService.fromJSON(value);
+            JsonDocument pdxInstance = pdxService.fromJSON(value);
             gemRegion.put(key, pdxInstance);
 
         }
@@ -108,7 +109,7 @@ public class GemFireRegionRestService
                 return null;
 
             if (value instanceof PdxInstance)
-                return pdxService.toJSON((PdxInstance) value, type);
+                return pdxService.toJSON((JsonDocument) value, type);
             else
                 return objectMapper.writeValueAsString(value);
         }

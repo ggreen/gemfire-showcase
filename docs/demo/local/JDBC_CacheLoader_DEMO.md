@@ -23,7 +23,7 @@ start locator --name=locator --locators=127.0.0.1[10334] --bind-address=127.0.0.
 ```
 
 ```shell
-configure pdx --disk-store --read-serialized=true
+configure gemFireJson --disk-store --read-serialized=true
 ```
 
 ```shell

@@ -27,7 +27,7 @@ start locator --name=locator1  --bind-address=127.0.0.1 --hostname-for-clients=1
 In Gfsh Configure [GemFire PDX](https://docs.vmware.com/en/VMware-Tanzu-GemFire/9.15/tgf/GUID-developing-data_serialization-gemfire_pdx_serialization.html) 
 
 ```shell
-configure pdx --read-serialized=true --disk-store
+configure gemFireJson --read-serialized=true --disk-store
 ```
 
 In Gfsh Start Server that stored the data

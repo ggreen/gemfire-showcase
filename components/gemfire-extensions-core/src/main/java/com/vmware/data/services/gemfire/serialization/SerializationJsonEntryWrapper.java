@@ -1,8 +1,8 @@
 package com.vmware.data.services.gemfire.serialization;
 
-import com.vmware.data.services.gemfire.serialization.exception.InvalidSerializationKeyException;
 import nyla.solutions.core.operations.ClassPath;
-import org.apache.geode.pdx.PdxInstance;
+import org.apache.geode.json.JsonDocument;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,48 +12,34 @@ import java.util.Objects;
  *
  * @author Gregory Green
  */
-public class SerializationPdxEntryWrapper<Key extends Serializable>
+public class SerializationJsonEntryWrapper<Key extends Serializable>
 {
-    private String keyClassName;
-    private String valueClassName;
-    private String keyString; //
-    private String valueJson;
-    private final PDX pdx;
+    private  final String keyClassName;
+    private  final String valueClassName;
+    private final String keyString; //
+    private  final String valueJson;
 
-    public SerializationPdxEntryWrapper(PDX pdx)
-    {
-        this.pdx = pdx;
-    }
 
-    public SerializationPdxEntryWrapper()
-    {
-        pdx = new PDX();
-    }
-    protected SerializationPdxEntryWrapper(Key key,String valueClassName, PdxInstance pdxInstance)
+    protected SerializationJsonEntryWrapper(Key key, String valueClassName, JsonDocument pdxInstance)
     {
         if(key == null)
             throw new IllegalArgumentException("key required");
 
         if(isCustom(key))
-            throw new InvalidSerializationKeyException(key);
+            throw new IllegalArgumentException(key+" does not match class types of float|char|short|double|int|long|byte|boolean|(java.*)");
 
-        this.pdx = new PDX();
         this.keyClassName = key.getClass().getName();
 
         this.valueClassName = valueClassName;
 
-        this.valueJson = pdx.toJSON(pdxInstance,this.valueClassName);
+        this.valueJson = pdxInstance.toJson();
         this.keyString = key.toString();
 
     }
+
     public String getKeyString()
     {
         return keyString;
-    }
-
-    public void setKeyString(String keyString)
-    {
-        this.keyString = keyString;
     }
 
     public String getValueJson()
@@ -61,24 +47,11 @@ public class SerializationPdxEntryWrapper<Key extends Serializable>
         return valueJson;
     }
 
-    public void setValueJson(String valueJson)
-    {
-        if(valueJson != null && valueJson.length() > 0)
-            pdx.validateJson(valueJson);
-
-        this.valueJson = valueJson;
-    }//-------------------------------------------
-
-
     public String getKeyClassName()
     {
         return keyClassName;
-    }//-------------------------------------------
+    }
 
-    public void setKeyClassName(String keyClassName)
-    {
-        this.keyClassName = keyClassName;
-    }//-------------------------------------------
 
     protected static boolean isCustom(Object key)
     {
@@ -88,24 +61,24 @@ public class SerializationPdxEntryWrapper<Key extends Serializable>
         String className = key.getClass().getName();
 
         return !className.matches("(float|char|short|double|int|long|byte|boolean|(java.*))");
-    }//-------------------------------------------
+    }
 
     public Key deserializeKey()
     {
        return ClassPath.newInstance(this.keyClassName,this.keyString);
-    }//-------------------------------------------
+    }
 
-    public PdxInstance toPdxInstance()
+    public JsonDocument toJsonDocument()
     {
-        return pdx.fromJSON(this.valueJson);
-    }//-------------------------------------------
+        return GemFireJson.createPdx().fromJSON(this.valueJson);
+    }
 
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SerializationPdxEntryWrapper<?> that = (SerializationPdxEntryWrapper<?>) o;
+        SerializationJsonEntryWrapper<?> that = (SerializationJsonEntryWrapper<?>) o;
         return Objects.equals(keyClassName, that.keyClassName) &&
                 Objects.equals(keyString, that.keyString) &&
                 Objects.equals(valueJson, that.valueJson);

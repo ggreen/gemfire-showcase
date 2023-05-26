@@ -14,7 +14,7 @@ Configure PDX
 
 ```shell
 connect --locator=localhost[10001]
-configure pdx --read-serialized=true --disk-store
+configure gemFireJson --read-serialized=true --disk-store
 disconnect
 ```
 
@@ -42,7 +42,7 @@ Configure PDX
 
 ```shell
 connect --locator=localhost[10002]
-configure pdx --read-serialized=true --disk-store
+configure gemFireJson --read-serialized=true --disk-store
 disconnect
 ```
 

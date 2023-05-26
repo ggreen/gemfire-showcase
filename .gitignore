@@ -33,3 +33,5 @@ dataTx-geode-extensions-core.iml
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 /components/gemfire-extenions-api/src/test/resources/jdbc_config_test.properties
+
+gregoryg7PCFV_locator/

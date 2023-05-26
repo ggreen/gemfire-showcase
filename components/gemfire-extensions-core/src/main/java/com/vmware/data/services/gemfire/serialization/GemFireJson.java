@@ -1,9 +1,11 @@
 package com.vmware.data.services.gemfire.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.geode.pdx.JSONFormatter;
-import org.apache.geode.pdx.JSONFormatterException;
-import org.apache.geode.pdx.PdxInstance;
+import org.apache.geode.cache.client.ClientCacheFactory;
+import org.apache.geode.json.JsonDocument;
+import org.apache.geode.json.JsonDocumentFactory;
+import org.apache.geode.json.JsonParseException;
+import org.apache.geode.json.StorageFormat;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -12,26 +14,31 @@ import java.io.Serializable;
  * @author greg green
  * PDX conversion utility
  */
-public class PDX
+public class GemFireJson
 {
 	/**
 	 * JSON_TYPE_ATTRIBUTE = "@type"
 	 */
 	public static final String JSON_TYPE_ATTRIBUTE = "@type";
 
+
+	private final JsonDocumentFactory factory;
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
+	public GemFireJson(JsonDocumentFactory factory) {
+		this.factory = factory;
+	}
+
+	public static GemFireJson createPdx() {
+		return new GemFireJson(ClientCacheFactory.getAnyInstance().getJsonDocumentFactory(StorageFormat.PDX));
+	}
+
 	public  String toJsonFromNonPdxObject(Object obj)
 	{
 		return new ToJsonFromNonPdxObject().convert(obj);
 	}
 
-	public  String toJSON(PdxInstance pdxInstance, String className)
-	{
 
-		String json = JSONFormatter.toJSON(pdxInstance);
-
-		return addTypeToJson(json, className);
-
-	}//-------------------------------------------
 	public String addTypeToJson(String json, String type)
 	{
 		if(json ==null)
@@ -44,7 +51,7 @@ public class PDX
 			return null;
 
 		StringBuilder prefix = new StringBuilder().append("{\"")
-				.append(PDX.JSON_TYPE_ATTRIBUTE)
+				.append(GemFireJson.JSON_TYPE_ATTRIBUTE)
 				.append("\":\"")
 				.append(type).append("\"");
 
@@ -54,8 +61,9 @@ public class PDX
 
 		json = json.replaceFirst("\\{",prefix.toString());
 		return json;
-	}//-------------------------------------------
-	public  PdxInstance fromJSON(String json)
+	}
+
+	public JsonDocument fromJSON(String json)
 	{
 		try{
 
@@ -66,10 +74,9 @@ public class PDX
 
 			validateJson(json);
 
-			return JSONFormatter.fromJSON(json);
+			return factory.create(json);
 		}
-		catch(JSONFormatterException e){
-
+		 catch (JsonParseException e) {
 			String message = e.getMessage();
 
 			if(e.getCause() != null)
@@ -79,7 +86,7 @@ public class PDX
 
 			throw new IllegalArgumentException(message);
 		}
-	}//-------------------------------------------
+	}
 
 	public  void validateJson(String json)
 	{
@@ -98,12 +105,12 @@ public class PDX
 
 	}
 
-	public  SerializationPdxEntryWrapper toSerializePdxEntryWrapperFromJson(String json)
+	public SerializationJsonEntryWrapper toSerializePdxEntryWrapperFromJson(String json)
 	{
 		try
 		{
 			ObjectMapper om = new ObjectMapper();
-			SerializationPdxEntryWrapper wrapper = om.readValue(json,SerializationPdxEntryWrapper.class);
+			SerializationJsonEntryWrapper wrapper = om.readValue(json, SerializationJsonEntryWrapper.class);
 			return wrapper;
 
 		}
@@ -113,7 +120,7 @@ public class PDX
 		}
 
 
-	}//-------------------------------------------
+	}
 
 	/**
 	 *
@@ -123,31 +130,10 @@ public class PDX
 	 * @param valueClassName the value class name
 	 * @return the wrapper object
 	 */
-	public  <Key extends Serializable> SerializationPdxEntryWrapper toSerializePdxEntryWrapper(Key key, String valueClassName, PdxInstance pdxInstance)
+	public  <Key extends Serializable> SerializationJsonEntryWrapper toSerializePdxEntryWrapper(Key key, String valueClassName, JsonDocument pdxInstance)
 	{
-		return new SerializationPdxEntryWrapper(key,valueClassName,pdxInstance);
+		return new SerializationJsonEntryWrapper(key,valueClassName,pdxInstance);
 	}
-
-	public  PdxInstance fromObject(Object obj)
-	{
-		if(obj instanceof PdxInstance)
-			return (PdxInstance)obj;
-
-
-		try
-		{
-
-			String json = toJsonFromNonPdxObject(obj);
-
-			return JSONFormatter.fromJSON(json);
-
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-
-	}//-------------------------------------------
 
 
 }

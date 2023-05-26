@@ -1,15 +1,13 @@
 package com.vmware.data.solutions.gemfire.sink;
 
-import com.vmware.data.services.gemfire.serialization.PDX;
+import com.vmware.data.services.gemfire.serialization.GemFireJson;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.geode.pdx.PdxInstance;
+import org.apache.geode.json.JsonDocument;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.function.Consumer;
-
-import static java.lang.String.valueOf;
 
 /**
  * @author Gregory Green
@@ -18,19 +16,19 @@ import static java.lang.String.valueOf;
 @Slf4j
 public class GemFireSinkConsumer implements Consumer<String> {
 
-    private final Map<String, PdxInstance> region;
-    private final PDX pdx;
+    private final Map<String, JsonDocument> region;
+    private final GemFireJson gemFireJson;
     private final String keyFieldExpression;
     private final String valuePdxClassName;
 
-    public GemFireSinkConsumer(Map<String, PdxInstance> region,
-                               PDX pdx,
+    public GemFireSinkConsumer(Map<String, JsonDocument> region,
+                               GemFireJson gemFireJson,
                                @Value("${keyFieldExpression:id}")
                                String keyFieldExpression,
                                @Value("${valuePdxClassName:java.lang.Object}")
                                String valuePdxClassName) {
         this.region = region;
-        this.pdx = pdx;
+        this.gemFireJson = gemFireJson;
         this.keyFieldExpression = keyFieldExpression;
         this.valuePdxClassName = valuePdxClassName;
     }
@@ -39,10 +37,10 @@ public class GemFireSinkConsumer implements Consumer<String> {
     public void accept(String json) {
         log.info(json);
 
-        var formattedType = pdx.addTypeToJson(json,valuePdxClassName);
-        var pdxInstance = pdx.fromJSON(formattedType);
-        var key = pdxInstance.getField(keyFieldExpression);
-
-        region.put(valueOf(key),pdxInstance);
+        var formattedType = gemFireJson.addTypeToJson(json,valuePdxClassName);
+//        var pdxInstance = gemFireJson.fromJSON(formattedType);
+                //gemFireJson.fromJSON(formattedType);
+//        var key = pdxInstance..getField(keyFieldExpression);
+//        region.put(valueOf(key),pdxInstance);
     }
 }

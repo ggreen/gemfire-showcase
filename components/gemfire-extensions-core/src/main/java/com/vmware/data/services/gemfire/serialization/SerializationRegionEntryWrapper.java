@@ -11,6 +11,10 @@ package com.vmware.data.services.gemfire.serialization;
  */
 public class SerializationRegionEntryWrapper
 {
+	private Object value;
+	private String valueClassName;
+	private Object key;
+	private String keyClassName;
 	
 	public SerializationRegionEntryWrapper(Object key, Object value)
 	{
@@ -97,8 +101,4 @@ public class SerializationRegionEntryWrapper
 	}
 
 
-	private Object value;
-	private String valueClassName;
-	private Object key;
-	private String keyClassName;
 }

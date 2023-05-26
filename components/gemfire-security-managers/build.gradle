@@ -74,16 +74,13 @@ repositories {
 }
 dependencies {
     implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'com.vmware.gemfire:gemfire-search:1.0.0'
+
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
-//    implementation 'org.apache.shiro:shiro-core:1.9.1'
-
-//    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-lucene', version: '1.0.0'
-//    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-//    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
-    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '2.0.0'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:1.5.1'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.9.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.9.0'

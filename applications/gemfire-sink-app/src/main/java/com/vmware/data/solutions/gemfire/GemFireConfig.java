@@ -1,8 +1,10 @@
 package com.vmware.data.solutions.gemfire;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
-import com.vmware.data.services.gemfire.serialization.PDX;
+import com.vmware.data.services.gemfire.serialization.GemFireJson;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.geode.cache.CacheFactory;
+import org.apache.geode.json.StorageFormat;
 import org.apache.geode.pdx.PdxInstance;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,8 +31,8 @@ public class GemFireConfig {
     private String password;
 
     @Bean
-    PDX pdx()  {
-        return new PDX();
+    GemFireJson pdx()  {
+        return new GemFireJson(gemfireClient().getClientCache().getJsonDocumentFactory(StorageFormat.PDX));
     }
 
     @Bean

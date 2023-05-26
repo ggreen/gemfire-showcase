@@ -18,10 +18,10 @@ public class ToJsonFromNonPdxObject implements Converter<Object,String>
             String json = om.writeValueAsString(obj);
 
 
-            if(!(obj instanceof  SerializationPdxEntryWrapper))
+            if(!(obj instanceof SerializationJsonEntryWrapper))
             {
                 String prefix = new StringBuilder().append("{\"")
-                        .append(PDX.JSON_TYPE_ATTRIBUTE)
+                        .append(GemFireJson.JSON_TYPE_ATTRIBUTE)
                         .append("\":\"")
                         .append(obj.getClass().getName())
                         .append("\", ").toString();
