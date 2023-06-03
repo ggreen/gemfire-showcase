@@ -24,9 +24,11 @@ public class GemFireJson
 
 	private final JsonDocumentFactory factory;
 	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final ToJsonFromNonPdxObject toJsonFromNonPdxConverter;
 
 	public GemFireJson(JsonDocumentFactory factory) {
 		this.factory = factory;
+		this.toJsonFromNonPdxConverter = new ToJsonFromNonPdxObject();
 	}
 
 	public static GemFireJson createPdx() {
@@ -35,7 +37,7 @@ public class GemFireJson
 
 	public  String toJsonFromNonPdxObject(Object obj)
 	{
-		return new ToJsonFromNonPdxObject().convert(obj);
+		return toJsonFromNonPdxConverter.convert(obj);
 	}
 
 
@@ -65,13 +67,10 @@ public class GemFireJson
 
 	public JsonDocument fromJSON(String json)
 	{
-		try{
-
-
-
+		try
+		{
 			 if(json == null || json.length() == 0)
 			 	throw new IllegalArgumentException("json required");
-
 			validateJson(json);
 
 			return factory.create(json);

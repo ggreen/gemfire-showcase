@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class SerializationJsonEntryWrapperTest
 {
 
-    private String key;
+    private String key = "key";
 
     @Mock
     private JsonDocument pdxInstance ;
