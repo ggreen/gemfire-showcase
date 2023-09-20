@@ -119,7 +119,7 @@ public class YoungGenerationGcChartStatsVisitor extends AbstractChartVisitor
 		}
 		
 		String entryName = null;
-		int intValue;
+		Integer intValue;
 		for(Map.Entry<String, NumberedProperty> entry : this.countPerHour.entrySet())
 		{
 			entryName = entry.getValue().getName();
@@ -128,7 +128,14 @@ public class YoungGenerationGcChartStatsVisitor extends AbstractChartVisitor
 			
 			entryName = entryName.replace("amd64 ", "");
 
-			intValue = entry.getValue().getValueInteger();
+			NumberedProperty value = entry.getValue();
+
+			if(value == null)
+				continue;
+
+			intValue = value.getValueInteger();
+			if(intValue == null)
+				continue;
 			
 			if(intValue >= threshold)
 			{
