@@ -78,6 +78,11 @@ if [ -z "$MAX_CONNECTIONS" ]; then
   export MAX_CONNECTIONS=800
 fi
 
+
+if [ -z "$PROMETHEUS_PORT" ]; then
+  export PROMETHEUS_PORT=17001
+fi
+
 export REMOTE_LOCATORS="null"
 
 #Build remote locator connect string
