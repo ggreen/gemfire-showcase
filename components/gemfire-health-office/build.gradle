@@ -1,15 +1,17 @@
-apply plugin: 'signing'
-apply plugin: 'java'
-apply plugin: 'maven-publish'
+plugins {
+    id 'java-library'
+}
 
-sourceCompatibility = 11
-version = '1.0.0'
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+version = '1.0.1-SNAPSHOT'
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
 archivesBaseName = 'gemfire-health-office'
@@ -18,40 +20,8 @@ ext {
     gemFireVersion = '10.0.0'
 }
 
-compileJava   {
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
-}
-
-task myJavadocs(type: Javadoc) {
-    source = sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar) {
-    archiveClassifier.set("javadoc")
-    from javadoc
-}
-
-
-task sourcesJar(type: Jar) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
-}
-
-artifacts { archives sourcesJar, javadocJar }
-
 signing {
     sign(publishing.publications)
-}
-
-jar {
-    manifest {
-        attributes(
-                'Implementation-Title': 'gemfire-health-office',
-                'Can-Redefine-Classes': false,
-                'Can-Set-Native-Method-Prefix': false
-        )
-    }
 }
 
 repositories {
@@ -87,22 +57,15 @@ dependencies {
         }
     }
 
-//    implementation group: 'io.pivotal.services.dataTx', name: 'gemfire-extensions-core', version: '1.0.0'
     implementation project(':components:gemfire-extensions-core')
-
     implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
-//    implementation 'org.apache.shiro:shiro-core:1.9.1'
     implementation 'commons-beanutils:commons-beanutils:1.9.4'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.1'
 
-
-//    implementation group: 'com.vmware.gemfire', name: 'geode-common', version: gemFireVersion
     implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: '1.0.0'
-//    implementation group: 'com.vmware.gemfire', name: 'geode-cq', version: gemFireVersion
-//    implementation group: 'com.vmware.gemfire', name: 'geode-wan', version: gemFireVersion
     implementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
@@ -117,24 +80,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
 
 }
-test {
-    // Enable JUnit 5 (Gradle 4.6+).
-    useJUnitPlatform()
 
-    // Always run tests, even when nothing changed.
-    dependsOn 'cleanTest'
-
-    // Show test results.
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
-
-
-task sourceJar(type: Jar) {
-    classifier "sources"
-    from sourceSets.main.allJava
-}
 
 
 publishing {
@@ -166,8 +112,6 @@ publishing {
                 }
             }
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
         }
     }
     repositories {

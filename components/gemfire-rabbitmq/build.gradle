@@ -1,15 +1,18 @@
-apply plugin: 'signing'
-apply plugin: 'java'
-apply plugin: 'maven-publish'
+plugins {
+    id 'java-library'
+}
 
-sourceCompatibility = 11
-version = '2.0.0'
-
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+version = '2.0.1-SNAPSHOT'
+
 
 group = 'io.pivotal.services.dataTx'
 archivesBaseName = 'gemfire-rabbitmq'
@@ -18,27 +21,6 @@ ext {
     gemFireVersion = '10.0.0'
 }
 
-compileJava   {
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
-}
-
-task myJavadocs(type: Javadoc) {
-    source = sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar) {
-    archiveClassifier.set("javadoc")
-    from javadoc
-}
-
-
-task sourcesJar(type: Jar) {
-    archiveClassifier.set("sources")
-    from sourceSets.main.allSource
-}
-
-artifacts { archives sourcesJar, javadocJar }
 
 signing {
     sign(publishing.publications)
@@ -87,23 +69,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
 }
-test {
-    // Enable JUnit 5 (Gradle 4.6+).
-    useJUnitPlatform()
-
-    // Always run tests, even when nothing changed.
-    dependsOn 'cleanTest'
-
-    // Show test results.
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-}
-
-task sourceJar(type: Jar) {
-    classifier "sources"
-    from sourceSets.main.allJava
-}
 
 
 publishing {
@@ -135,8 +100,6 @@ publishing {
                 }
             }
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
         }
     }
     repositories {
