@@ -320,39 +320,41 @@ export REDUNDANCY_ZONE|The redundancy|$HOSTNAME
 See [https://geode.apache.org/docs/guide/113/configuring/running/firewalls_ports.html](https://geode.apache.org/docs/guide/113/configuring/running/firewalls_ports.html)
 
 
-Variables | Notes | Examples
---------|---------| -------------
-export PULSE_HTTP_PORT|Set the 0 to disable running pulse embedded in locator|0
-export REST_HTTP_PORT|The Rest HTTP port|18080
-export JMX_MANAGER_PORT|The JMX port|11099
-export LOC_MEMBERSHIP_PORT_RANGE||10901-10910
-export LOC_TCP_PORT||10001
-export LOCATOR_PORT||10334
-export LOCATOR_NM||locator
-export CS_PORT||10100
-export CS_TCP_PORT||10002
-export CS_MEMBERSHIP_PORT_RANGE||10801-10810
+| Variables                        | Notes                                                  | Examples    | 
+|----------------------------------|--------------------------------------------------------|-------------| 
+| export PULSE_HTTP_PORT           | Set the 0 to disable running pulse embedded in locator | 0           |
+| export REST_HTTP_PORT            | The Rest HTTP port                                     | 18080       |
+| export JMX_MANAGER_PORT          | The JMX port                                           | 11099       | 
+| export LOC_MEMBERSHIP_PORT_RANGE | Locator membership                                     | 10901-10910 |
+| export LOC_TCP_PORT              | Locator TCP membership port                            | 10001       |
+| export LOCATOR_PORT              | Locator client port                                    | 10334       |
+| export LOCATOR_NM                | Locator name                                           | locator     |
+| export CS_PORT                   | Cache Server client port                               | 10100       |
+| export CS_TCP_PORT               | Cache Server membership port                           | 10002       |
+| export CS_MEMBERSHIP_PORT_RANGE  | Cache Server membership UDP port range                 | 10801-10810 |
+| export PROMETHEUS_LOC_PORT       | Prometheus port for locator                            | 17001       |
+| export PROMETHEUS_DATA_NODE_PORT | Prometheus port for data node                          | 17011       |
 
 
 **Gateway Settings**
 
-[Apache Geode multi site configuration support](https://geode.apache.org/docs/guide/113/topologies_and_comm/multi_site_configuration/chapter_overview.html)
+[GemFire multi site configuration support](https://geode.apache.org/docs/guide/113/topologies_and_comm/multi_site_configuration/chapter_overview.html)
 
-Variables | Notes | Examples
---------|---------| -------------
-export DISTRIBUTED_ID|Cluster unique ID|1
-export REMOTE_DISTRIBUTED_ID|Cluster unique ID|2
-export CS_GW_RECIEVER_PORT|Port to receive gateway traffic|15000-15010
-export REMOTE_LOCATOR_PORT|The remote cluster locator's port|$LOCATOR_PORT
+| Variables                    | Notes                             | Examples      |
+|------------------------------|-----------------------------------|---------------|
+| export DISTRIBUTED_ID        | Cluster unique ID                 | 1             |
+| export REMOTE_DISTRIBUTED_ID | Cluster unique ID                 | 2             |
+| export CS_GW_RECIEVER_PORT   | Port to receive gateway traffic   | 15000-15010   |
+| export REMOTE_LOCATOR_PORT   | The remote cluster locator's port | $LOCATOR_PORT |
 
 
 
 **Misc**
 
-export CS_NM||server
---------|---------| -------------
-export GEMFIRE_HOME||$GEMFIRE_INSTALL_DIR/$GEMFIRE_FOLDER_NM
-export MEMBER_STAT_FILE||"$MEMBER_HOST_NM"_stat.gfd
+| export CS_NM            | Notes | server                                  |
+|-------------------------|-------|-----------------------------------------|
+| export GEMFIRE_HOME     |       | $GEMFIRE_INSTALL_DIR/$GEMFIRE_FOLDER_NM |
+| export MEMBER_STAT_FILE |       | "$MEMBER_HOST_NM"_stat.gfd              |
 
 --------------------------------------------------------------------
 # Security

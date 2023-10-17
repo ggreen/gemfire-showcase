@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #export CLASSPATH=$CLASSPATH:"$GEMFIRE_HOME/lib/*":"$PWD/lib/*"
-export CLASSPATH="$PWD/lib/*"
+export EXT_CLASSPATH="$GEMFIRE_HOME/tools/Modules/gemfire-prometheus-metrics/*:$PWD/lib/*"
 
 #------------------------------
 # Process Locators variable
@@ -81,8 +81,12 @@ if [ -z "$MAX_CONNECTIONS" ]; then
 fi
 
 
-if [ -z "$PROMETHEUS_PORT" ]; then
+if [ -z "$PROMETHEUS_LOC_PORT" ]; then
   export PROMETHEUS_PORT=17001
+fi
+
+if [ -z "$PROMETHEUS_DATA_NODE_PORT" ]; then
+  export PROMETHEUS_DATA_NODE_PORT=17011
 fi
 
 export REMOTE_LOCATORS="null"
