@@ -1,6 +1,6 @@
 # Apache Geode DevOps Bash
 
-The [geode-devOps-bash](https://github.com/vmwarepivotallabs/dataTx-geode-devOps-bash) project is a set of open source scripts to automate the management of [Apache Geode](https://geode.apache.org) using bash UNIX scripts.
+The **gemfire-devOps-bash** project is a set of open source scripts to automate the management of [GemFire](https://www.vmware.com/products/gemfire.html) using bash UNIX scripts.
 
 *Features*
 
@@ -16,39 +16,39 @@ The [geode-devOps-bash](https://github.com/vmwarepivotallabs/dataTx-geode-devOps
 
 The following provides a summary of the main scripts.
 
-Name                   | description
------------------------|----------------------------------------------------------------------
-backupDiskStores.sh    | Example backup for disk stores using the gfsh backup disk-store
-clean.sh               | Clean files and directories in the member's working directory
-compactDiskStores.sh   | Uses the gfsh compact disk-store command (schedule daily off peak)
-configPdx.sh           | Setup PDX to support read-serialized=true with a disk store
-copyLibs.sh	           | Copy lib file changes across cluster members
-encryptPassword.sh     | Generates an encrypted password
-exportAllData.sh       | Exports all region data for each member in parallel
-encryptPassword.sh     | Generate an encrypted password to stored in variables
-gem-downloads.sh       | Reference script for automating Geode/JDK tar ball S3/http download
-gem-install.sh         | Reference script for install of Geode/JDK from downloaded tar balls
-gfsh.sh                | Script that starts the gfsh shell
-importRegionExports.sh | Script that imports all region data exported by exportAllData.sh
-killMember.sh          | Kills all Geode JVM processes running on the current server
-listMemberStatus.sh    | Runs the gfsh list members command
-listRegions.sh         | list all regions in a cluster
-remoteCleanAll.sh      | Runs clean.sh on all members in the cluster
-remoteKillMembers.sh   | Executes killMember.sh on locators and datanodes
-remoteScript.sh        | Wrapper for executing scripts remotely using ssh
-remoteStartCluster.sh  | Starts cluster with all locators and data nodes
-remoteSyncScripts.sh   | Copies needed scripts (ex: startDataNode.sh) to cluster members
-selfSignCert.sh        | Script generates a self signed security keys using JDK keytool
-setup_root_dir.sh      | Setup root install directory and set owners as the $GEM_USER in setenv.sh
-showRegionMetrics.sh   | Execute the gfsh show metric command for a given region
-setenv.sh              | Required to set cluster settings (see examples in env_templates)
-shutdown.sh            | Uses the Geode gfsh shutdown to stop members gracefully
-startDataNode.sh       | Starts a cache server data node on the local server
-startLocator.sh        | Starts a locator on the local server
-stopLocator.sh         | Stop the local running locator
-stopDataNode.sh         | Stop the local running data node
-tailDataNodeLogs.sh     | tail the local data node logs
-tailLocatorLogs.sh     | tail the local locator logs
+| Name                   | description                                                               |
+|------------------------|---------------------------------------------------------------------------|
+| backupDiskStores.sh    | Example backup for disk stores using the gfsh backup disk-store           |
+| clean.sh               | Clean files and directories in the member's working directory             |
+| compactDiskStores.sh   | Uses the gfsh compact disk-store command (schedule daily off peak)        |
+| configPdx.sh           | Setup PDX to support read-serialized=true with a disk store               |
+| copyLibs.sh	           | Copy lib file changes across cluster members                              |
+| encryptPassword.sh     | Generates an encrypted password                                           |
+| exportAllData.sh       | Exports all region data for each member in parallel                       |
+| encryptPassword.sh     | Generate an encrypted password to stored in variables                     |
+| gem-downloads.sh       | Reference script for automating Geode/JDK tar ball S3/http download       |
+| gem-install.sh         | Reference script for install of Geode/JDK from downloaded tar balls       |
+| gfsh.sh                | Script that starts the gfsh shell                                         |
+| importRegionExports.sh | Script that imports all region data exported by exportAllData.sh          |
+| killMember.sh          | Kills all Geode JVM processes running on the current server               |
+| listMemberStatus.sh    | Runs the gfsh list members command                                        |
+| listRegions.sh         | list all regions in a cluster                                             | 
+| remoteCleanAll.sh      | Runs clean.sh on all members in the cluster                               |
+| remoteKillMembers.sh   | Executes killMember.sh on locators and datanodes                          |
+| remoteScript.sh        | Wrapper for executing scripts remotely using ssh                          |
+| remoteStartCluster.sh  | Starts cluster with all locators and data nodes                           |
+| remoteSyncScripts.sh   | Copies needed scripts (ex: startDataNode.sh) to cluster members           |
+| selfSignCert.sh        | Script generates a self signed security keys using JDK keytool            |
+| setup_root_dir.sh      | Setup root install directory and set owners as the $GEM_USER in setenv.sh |
+| showRegionMetrics.sh   | Execute the gfsh show metric command for a given region                   |
+| setenv.sh              | Required to set cluster settings (see examples in env_templates)          |
+| shutdown.sh            | Uses the Geode gfsh shutdown to stop members gracefully                   |
+| startDataNode.sh       | Starts a cache server data node on the local server                       |
+| startLocator.sh        | Starts a locator on the local server                                      |
+| stopLocator.sh         | Stop the local running locator                                            |
+| stopDataNode.sh        | Stop the local running data node                                          |
+| tailDataNodeLogs.sh    | tail the local data node logs                                             |
+| tailLocatorLogs.sh     | tail the local locator logs                                               |
 
 ### Security
 
@@ -221,48 +221,48 @@ Use the *importRegionExports.sh* to import data that was previously exported to 
 
 **User Settings**
 
-Variables | Notes | Examples
---------|---------| -------------
-export GEM_USER|The Geode service account user |gemfire
-export SSH_IDENTITY| the SSH/SCP -i identify|" -i ~/aws/env.pem"
+| Variables           | Notes                          | Examples            |
+|---------------------|--------------------------------|---------------------|
+| export GEM_USER     | The Geode service account user | gemfire             |
+| export SSH_IDENTITY | the SSH/SCP -i identify        | " -i ~/aws/env.pem" |
 
 
 
 **Installation Settings**
 
-Variables | Notes | Examples
---------|---------| -------------
-export ROOT_DIR|The root directory for installation|/opt/pivotal
-export DOWNLOAD_DIR|the software download locations used by gem-install |$ROOT_DIR/download
-export INSTALL_DIR|The installation direcoty |$ROOT_DIR
-export RUNTIME_DIR|The runtime directory root  directoru|$ROOT_DIR/runtime
-export JAVA_INSTALL|The gem-install root Java installation directory|$INSTALL_DIR/java
-export JAVA_FOLDER_NM|The JDK tar ball name when installing|jdk1.8.0_181
-export JAVA_HOME|The Java home |$JAVA_INSTALL/$JAVA_FOLDER_NM
-export GEMFIRE_INSTALL_DIR|The directory where Geode will be installed|$ROOT_DIR/gemfire
-export S3_ROOT|THE HTTP root for the gem-download to find the JDK and Geode tar zips|https://s3.us-east-2.amazonaws.com/geode-gemfire
-export JDK_TAR_BALL|The JAva tar ball file name at the S3/ http ROOT|jdk-8u181-linux-x64.tar.gz
-export GEM_TAR_BALL|The Geode tar ball name|
-export GEMFIRE_FOLDER_NM|The GemFire folder in the tar ball|
+| Variables                  | Notes                                                                 | Examples                                         |
+|----------------------------|-----------------------------------------------------------------------|--------------------------------------------------|
+| export ROOT_DIR            | The root directory for installation                                   | /opt/pivotal                                     |
+| export DOWNLOAD_DIR        | the software download locations used by gem-install                   | $ROOT_DIR/download                               |
+| export INSTALL_DIR         | The installation direcoty                                             | $ROOT_DIR                                        |
+| export RUNTIME_DIR         | The runtime directory root  directoru                                 | $ROOT_DIR/runtime                                |
+| export JAVA_INSTALL        | The gem-install root Java installation directory                      | $INSTALL_DIR/java                                |
+| export JAVA_FOLDER_NM      | The JDK tar ball name when installing                                 | jdk1.8.0_181                                     |
+| export JAVA_HOME           | The Java home                                                         | $JAVA_INSTALL/$JAVA_FOLDER_NM                    |
+| export GEMFIRE_INSTALL_DIR | The directory where Geode will be installed                           | $ROOT_DIR/gemfire                                |
+| export S3_ROOT             | THE HTTP root for the gem-download to find the JDK and Geode tar zips | https://s3.us-east-2.amazonaws.com/geode-gemfire |
+| export JDK_TAR_BALL        | The JAva tar ball file name at the S3/ http ROOT                      | jdk-8u181-linux-x64.tar.gz                       | |
+| export GEM_TAR_BALL        | The Geode tar ball name                                               |                                                  |
+| export GEMFIRE_FOLDER_NM   | The GemFire folder in the tar ball                                    |                                                  |
 
 
 
 **Backup directory**
 
-Variables | Notes | Examples
---------|---------| -------------
-export BACKUP_DIR|The backup directory|$SOFTWARE_DIR/backup
+| Variables         | Notes | Examples |
+|-------------------|---------| ------------- |
+| export BACKUP_DIR |The backup directory|$SOFTWARE_DIR/backup |
 
 **SSL/Security Settings**
 
-Variables | Notes | Examples
---------|---------| -------------
-export SECURITY_DIR|The security directory|$INSTALL_DIR/security
-export CERT_PASSWORD|The self signed password (could be put in the secured environment variable for greater security)|
-export CERT_VALIDITY_DAYS|How long the self signed cert is valid |3600
-export SECURITY_USERNAME||admin
-export SECURITY_PASSWORD||{cryption}....
-export CRYPTION_KEY||EXAMPLE
+| Variables                 | Notes                                                                                            | Examples              |
+|---------------------------|--------------------------------------------------------------------------------------------------|-----------------------|
+| export SECURITY_DIR       | The security directory                                                                           | $INSTALL_DIR/security |
+| export CERT_PASSWORD      | The self signed password (could be put in the secured environment variable for greater security) |
+| export CERT_VALIDITY_DAYS | How long the self signed cert is valid                                                           | 3600                  |
+| export SECURITY_USERNAME  |                                                                                                  | admin                 |
+| export SECURITY_PASSWORD  |                                                                                                  | {cryption}....        |
+| export CRYPTION_KEY       |                                                                                                  | EXAMPLE               |
 
 
 **Runtime Settings**
@@ -295,24 +295,24 @@ export DISK_AUTO_COMPACT|Flag if disk should be auto compress|true
 
 See [https://geode.apache.org/docs/guide/113/managing/logging/setting_up_logging.html](https://geode.apache.org/docs/guide/113/managing/logging/setting_up_logging.html)
 
-Variables | Notes | Examples
---------|---------| -------------
-export ENABLE_TIME_STATISTICS|Never set to true in production|false
-export LOG_LEVEL|the log level (ex: config, error,warn,severe, fine)|config
-export LOG_DISK_LIMIT_MB||5
-export LOG_FILE_LIMIT_MB||1
-export STAT_DISK_LIMIT_MB||5
-export STAT_FILE_LIMIT_MB||5
-export LOC_STATS_FILE||locator_"$MEMBER_HOST_NM".gfs
-export DN_STATS_FILE||datanode_"$MEMBER_HOST_NM".gfs
+| Variables                     | Notes                                               | Examples                       |
+|-------------------------------|-----------------------------------------------------|--------------------------------|
+| export ENABLE_TIME_STATISTICS | Never set to true in production                     | false                          |
+| export LOG_LEVEL              | the log level (ex: config, error,warn,severe, fine) | config                         |
+| export LOG_DISK_LIMIT_MB      |                                                     | 5                              |
+| export LOG_FILE_LIMIT_MB      |                                                     | 1                              |
+| export STAT_DISK_LIMIT_MB     |                                                     | 5                              |
+| export STAT_FILE_LIMIT_MB     |                                                     | 5                              |
+| export LOC_STATS_FILE         |                                                     | locator_"$MEMBER_HOST_NM".gfs  |
+| export DN_STATS_FILE          |                                                     | datanode_"$MEMBER_HOST_NM".gfs |
 
 **Memory**
 
-Variables | Notes | Examples
---------|---------| -------------
-export DATA_NODE_HEAP_SIZE|The data node heap size|500m
-export LOCATOR_HEAP_SIZE|The locator node heap size|200m
-export REDUNDANCY_ZONE|The redundancy|$HOSTNAME
+| Variables                  | Notes                      | Examples  |
+|----------------------------|----------------------------|-----------|
+| export DATA_NODE_HEAP_SIZE | The data node heap size    | 500m      |
+| export LOCATOR_HEAP_SIZE   | The locator node heap size | 200m      |
+| export REDUNDANCY_ZONE     | The redundancy             | $HOSTNAME |
 
 
 **Ports**
