@@ -1,4 +1,4 @@
-# Apache Geode DevOps Bash
+# GemFire DevOps Bash
 
 The **gemfire-devOps-bash** project is a set of open source scripts to automate the management of [GemFire](https://www.vmware.com/products/gemfire.html) using bash UNIX scripts.
 
@@ -26,11 +26,11 @@ The following provides a summary of the main scripts.
 | encryptPassword.sh     | Generates an encrypted password                                           |
 | exportAllData.sh       | Exports all region data for each member in parallel                       |
 | encryptPassword.sh     | Generate an encrypted password to stored in variables                     |
-| gem-downloads.sh       | Reference script for automating Geode/JDK tar ball S3/http download       |
-| gem-install.sh         | Reference script for install of Geode/JDK from downloaded tar balls       |
+| gem-downloads.sh       | Reference script for automating GemFire/JDK tar ball S3/http download     |
+| gem-install.sh         | Reference script for install of GemFire/JDK from downloaded tar balls     |
 | gfsh.sh                | Script that starts the gfsh shell                                         |
 | importRegionExports.sh | Script that imports all region data exported by exportAllData.sh          |
-| killMember.sh          | Kills all Geode JVM processes running on the current server               |
+| killMember.sh          | Kills all GemFire JVM processes running on the current server             |
 | listMemberStatus.sh    | Runs the gfsh list members command                                        |
 | listRegions.sh         | list all regions in a cluster                                             | 
 | remoteCleanAll.sh      | Runs clean.sh on all members in the cluster                               |
@@ -42,7 +42,7 @@ The following provides a summary of the main scripts.
 | setup_root_dir.sh      | Setup root install directory and set owners as the $GEM_USER in setenv.sh |
 | showRegionMetrics.sh   | Execute the gfsh show metric command for a given region                   |
 | setenv.sh              | Required to set cluster settings (see examples in env_templates)          |
-| shutdown.sh            | Uses the Geode gfsh shutdown to stop members gracefully                   |
+| shutdown.sh            | Uses the GemFire gfsh shutdown to stop members gracefully                 |
 | startDataNode.sh       | Starts a cache server data node on the local server                       |
 | startLocator.sh        | Starts a locator on the local server                                      |
 | stopLocator.sh         | Stop the local running locator                                            |
@@ -53,7 +53,7 @@ The following provides a summary of the main scripts.
 ### Security
 
 
-This framework uses the open source dataTx-geode-security-extensions implementation to support a Geode [integrated security manager](https://geode.apache.org/docs/guide/113/managing/security/implementing_security.html).
+This framework uses the open source dataTx-geode-security-extensions implementation to support a GemFire [integrated security manager](https://geode.apache.org/docs/guide/113/managing/security/implementing_security.html).
 
 See [https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions](https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions) for more information.
 
@@ -62,7 +62,7 @@ See [https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions](ht
 
 The scripts expects a *setenv.sh* file to be in the current working directory or root directory of where the scripts are located.
 
-The directory [env_templates](https://github.com/vmwarepivotallabs/dataTx-gemfire-devOps-bash/tree/master/env_templates) directory file contains example *setenv.sh* scripts. These scripts contain all the needed variables to automate the management and installation of a Geode cluster.
+The directory [env_templates](https://github.com/vmwarepivotallabs/dataTx-gemfire-devOps-bash/tree/master/env_templates) directory file contains example *setenv.sh* scripts. These scripts contain all the needed variables to automate the management and installation of a GemFire cluster.
 
 ### Editing configurations
 
@@ -102,7 +102,7 @@ Execute
 
     sudo ./setup_root_dir.sh
 
-Note this installs both Geode and Java. The Java install is a generic LINUX installation zip. If you experience issues with the downloaded Java version, please use an alternate method for installing it on your servers.
+Note this installs both GemFire and Java. The Java install is a generic LINUX installation zip. If you experience issues with the downloaded Java version, please use an alternate method for installing it on your servers.
 
 Update the JAVA_HOME in your setenv.sh as needed.
 
@@ -148,7 +148,7 @@ Uses the *removeStartCluster.sh* to start the cluster.
  servers that will runs these members.
 
 
-JAVA and Geode must be installed on each locator and data node. Geode export GEMFIRE_HOME=$GEMFIRE_INSTALL_DIR/$GEMFIRE_FOLDER_NM must point to a valid install. JAVA_HOME in *setenv.sh* must also be correctly reflected.
+JAVA and GemFire must be installed on each locator and data node. GemFire export GEMFIRE_HOME=$GEMFIRE_INSTALL_DIR/$GEMFIRE_FOLDER_NM must point to a valid install. JAVA_HOME in *setenv.sh* must also be correctly reflected.
 
     ./remoteStartCluster.sh
 
@@ -165,8 +165,8 @@ disk store corruption issues.
 
 ### gfsh
 
-Apache Geode gfsh (pronounced "gee-fish") provides a single  command-line interface. You can launch, manage, and monitor Apache Geode processes, data, and applications.
-For more information on what you can do with gfsh please see the reference documentation available at https://geode.apache.org/docs/guide/113/tools_modules/gfsh/chapter_overview.html)
+GemFire gfsh (pronounced "gee-fish") provides a single  command-line interface. You can launch, manage, and monitor GemFire processes, data, and applications.
+For more information on what you can do with gfsh please see the reference documentation available at https://docs.vmware.com/en/VMware-GemFire/10.0/gf/tools_modules-gfsh-chapter_overview.html)
 
 Gfsh can be run from the command line, ex:
 
@@ -278,22 +278,22 @@ export LOCATOR_HOST|The locator bind address|$MEMBER_HOST_NM
 
 **Disk Stores/Directories**
 
-See [https://geode.apache.org/docs/guide/113/managing/disk_storage/disk_store_configuration_params.html](https://geode.apache.org/docs/guide/113/managing/disk_storage/disk_store_configuration_params.html) for more details
+See [GemFire Disk_Store_configuration](https://docs.vmware.com/en/VMware-GemFire/10.0/gf/managing-disk_storage-disk_store_configuration_params.html) for more details
 
-Variables | Notes | Examples
---------|---------| -------------
-export DISK_STORE_DIR|Directory where disk store data will be stored|DISKSTORES
-export WORK_DIR|The runtime working directory |$RUNTIME_DIR/work
-export PDX_MAX_OPLOG_SIZE_MB|The PDX initial disk size|512
-export DATA_DISK_MAX_OPLOG_SIZE_MB|The data initial disk size|512
-export GW_DISK_MAX_OPLOG_SIZE_MB|The gateway disk store initial disk size|512
-export DISK_STORE_QUEUE_SIZE|The queue size prior to flushing|40
-export DISK_AUTO_COMPACT|Flag if disk should be auto compress|true
+| Variables                          | Notes                                          | Examples          |
+|------------------------------------|------------------------------------------------|-------------------|
+| export DISK_STORE_DIR              | Directory where disk store data will be stored | DISKSTORES        |
+| export WORK_DIR                    | The runtime working directory                  | $RUNTIME_DIR/work |
+| export PDX_MAX_OPLOG_SIZE_MB       | The PDX initial disk size                      | 512               |
+| export DATA_DISK_MAX_OPLOG_SIZE_MB | The data initial disk size                     | 512               |
+| export GW_DISK_MAX_OPLOG_SIZE_MB   | The gateway disk store initial disk size       | 512               |
+| export DISK_STORE_QUEUE_SIZE       | The queue size prior to flushing               | 40                |
+| export DISK_AUTO_COMPACT           | Flag if disk should be auto compress           | true              |
 
 
 **Log/Stats**
 
-See [https://geode.apache.org/docs/guide/113/managing/logging/setting_up_logging.html](https://geode.apache.org/docs/guide/113/managing/logging/setting_up_logging.html)
+See [GemFire Logging Configurations](https://docs.vmware.com/en/VMware-GemFire/10.0/gf/managing-logging-setting_up_logging.html)
 
 | Variables                     | Notes                                               | Examples                       |
 |-------------------------------|-----------------------------------------------------|--------------------------------|
@@ -317,7 +317,7 @@ See [https://geode.apache.org/docs/guide/113/managing/logging/setting_up_logging
 
 **Ports**
 
-See [https://geode.apache.org/docs/guide/113/configuring/running/firewalls_ports.html](https://geode.apache.org/docs/guide/113/configuring/running/firewalls_ports.html)
+See [GemFire Firewall  and Ports](https://docs.vmware.com/en/VMware-GemFire/10.0/gf/configuring-running-firewalls_ports.html)
 
 
 | Variables                        | Notes                                                  | Examples    | 
@@ -338,7 +338,7 @@ See [https://geode.apache.org/docs/guide/113/configuring/running/firewalls_ports
 
 **Gateway Settings**
 
-[GemFire multi site configuration support](https://geode.apache.org/docs/guide/113/topologies_and_comm/multi_site_configuration/chapter_overview.html)
+[GemFire multi site configuration](https://docs.vmware.com/en/VMware-GemFire/10.0/gf/topologies_and_comm-multi_site_configuration-setting_up_a_multisite_system.html)
 
 | Variables                    | Notes                             | Examples      |
 |------------------------------|-----------------------------------|---------------|
@@ -361,11 +361,11 @@ See [https://geode.apache.org/docs/guide/113/configuring/running/firewalls_ports
 
 This framework supports a plugin implementation of the GemFire security manager
 interface. Both LDAP and file properties based implementations are available.
-See the [Apache Geode Security extension project](https://github.com/vmwarepivotallabs/dataTx-geode-security-extensions) for the implementation details.
+See the [GemFire Security extension project](https://github.com/vmwarepivotallabs/dataTx-geode-security-extensions) for the implementation details.
 
-See also [Apache Geode authentication examples](https://geode.apache.org/docs/guide/113/managing/security/authentication_examples.html) for more information.
+See also [GemFire authentication examples](https://docs.vmware.com/en/VMware-GemFire/10.0/gf/managing-security-authentication_examples.html) for more information.
 
-Set the Apache Geode cluster user credentials with the following properties in the setenv.
+Set the GemFire cluster user credentials with the following properties in the setenv.
 
 ```shell script
 export SECURITY_USERNAME=cluster
@@ -706,28 +706,28 @@ export REMOTE_LOCATOR_PORT=10000
 Create docker network
 
 ```shell script
-docker network create geode-network
+docker network create gemfire-network
 ```
 
 ### Locator Docker image
 
 ```shell script
-docker build  -f ./Dockerfile_locator  -t datatx-geode-locator:latest .
+docker build  -f ./Dockerfile_locator  -t datatx-gemfire-locator:latest .
 ```
 
 ```shell script
-docker run --hostname=locator1 --env=LOCATOR1=locator1 -p10334:10334 -p 17070:17070 -p 11099:11099  --network  geode-network datatx-geode-locator:latest
+docker run --hostname=locator1 --env=LOCATOR1=locator1 -p10334:10334 -p 17070:17070 -p 11099:11099  --network  gemfire-network datatx-gemfire-locator:latest
 ```
 
 
 ### Data node Docker image
 
 ```shell script
-docker build  -f ./Dockerfile_dataNode  -t datatx-geode-data-node:latest .
+docker build  -f ./Dockerfile_dataNode  -t datatx-gemfire-data-node:latest .
 ```
 
 ```shell script
-docker run --env=LOCATOR1=locator1  --hostname=server1  -p10100:10100 --network geode-network datatx-geode-data-node:latest
+docker run --env=LOCATOR1=locator1  --hostname=server1  -p10100:10100 --network gemfire-network datatx-gemfire-data-node:latest
 ```
 
 
@@ -745,7 +745,7 @@ docker inspect <CONTAINER-ID>
 ```
 
 ```shell script
-docker run -it --network geode-network apachegeode/geode
+docker run -it --network geode-network gemfire/gemfire
 ```
 
 
@@ -770,44 +770,4 @@ In gfsh
 
 ```shell script
 connect --jmx-manager=locator1[11099]
-```
-
-### kubernetes
-
-The following explains a simple NON-production version
-of an Apache Geode cluster running in Kubernetes. This has been tested a KIND Kubernetes instance.
-
-
-
-Load the Locator and Data Node Docker images
-
-```shell script
-kind load docker-image datatx-geode-locator:latest --name=kind
-kind load docker-image datatx-geode-data-node:latest --name=kind
-```
-
-Deploy Apache Geode Cluster
-
-```shell script
-k apply -f cloud/k8/geode-k8.yaml
-```
-
-
-Get a Bash shell to connect to the cluster
-```shell script
-kubectl exec --stdin --tty geode-0 -- /bin/bash
-```
-
-Execute gfsh
-```
-gfsh
-```
-Connect with user admin/admin
-```
-connect --locator=geode-0[10334]
-```
-
-Create a test region
-```
-gfsh>create region --name=test --type=PARTITION
 ```
