@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  *
@@ -134,11 +135,13 @@ public class TouchFunction implements Function, Declarable {
 
     private static final long serialVersionUID = 8827164389473146995L;
     private static long REPORT_INTERVAL_MS = 10L * 1000L;
+    private final Supplier<CacheTransactionManager> txtMgrSupplier;
     private long targetRate = 10;
     private int batchSize = 100;
 
     private transient final LogWriter logger;
     private final java.util.function.Function<RegionFunctionContext, Region<Object,Object>> regionGetter;
+    private final boolean copyOnRead;
 
     /**
      * Default constructor
@@ -147,13 +150,22 @@ public class TouchFunction implements Function, Declarable {
     {
         this(
                 CacheFactory.getAnyInstance().getLogger(),
-                (regionFunctionContext) -> PartitionRegionHelper.getLocalDataForContext(regionFunctionContext));
+                (regionFunctionContext) -> PartitionRegionHelper.getLocalDataForContext(regionFunctionContext),
+                () -> CacheFactory.getAnyInstance().getCacheTransactionManager(),
+                CacheFactory.getAnyInstance().getCopyOnRead()
+                );
     }
 
-    public TouchFunction(LogWriter logger, java.util.function.Function<RegionFunctionContext, Region<Object,Object>> supplier)
+    public TouchFunction(LogWriter logger,
+                         java.util.function.Function<RegionFunctionContext,
+                                 Region<Object,Object>> supplier,
+                         Supplier<CacheTransactionManager> txtMgrSupplier,
+                         boolean copyOnRead)
     {
         this.logger = logger;
         this.regionGetter = supplier;
+        this.txtMgrSupplier = txtMgrSupplier;
+        this.copyOnRead = copyOnRead;
     }
 
 
@@ -169,7 +181,7 @@ public class TouchFunction implements Function, Declarable {
 
             Set<?> filter = regionFunctionContext.getFilter();
 
-            if (filter == null)
+            if (filter == null || filter.isEmpty())
                 filter = region.keySet();
 
             Object []keys = new Object[filter.size()];
@@ -220,10 +232,10 @@ public class TouchFunction implements Function, Declarable {
             }
         }
 
-        boolean copyOnRead = CacheFactory.getAnyInstance().getCopyOnRead();
+
         // do the touch using transaction semantics so we will not accidentally
         // undo an update that is happening concurrently
-        var tm = CacheFactory.getAnyInstance().getCacheTransactionManager();
+        var tm = txtMgrSupplier.get();
         tm.begin();
         try {
             for(Object key: keys) putGet(region,key, !copyOnRead);
@@ -244,9 +256,8 @@ public class TouchFunction implements Function, Declarable {
     private void processBatchOneAtATime(Region<Object,Object> region, Object[]keys){
         // do the touch using transaction semantics so we will not accidentally
         // undo an update that is happening concurrently
-        boolean copyOnRead = CacheFactory.getAnyInstance().getCopyOnRead();
         for(Object key : keys){
-            CacheTransactionManager tm = CacheFactory.getAnyInstance().getCacheTransactionManager();
+            CacheTransactionManager tm = txtMgrSupplier.get();
             tm.begin();
             try {
                 putGet(region, key, !copyOnRead);
@@ -281,7 +292,7 @@ public class TouchFunction implements Function, Declarable {
 
     @Override
     public boolean hasResult() {
-        return true;
+        return false;
     }
 
     @Override
@@ -336,7 +347,7 @@ public class TouchFunction implements Function, Declarable {
         }
 
         public void report(ResultSender<String> resultSender){
-            String msg = "touched " + touched + "/" + totalEntries + " entries in " + regionName;
+            var msg = "touched " + touched + "/" + totalEntries + " entries in " + regionName;
             logger.info(msg);
             lastReport = System.currentTimeMillis();
             resultSender.sendResult(msg);
@@ -357,7 +368,7 @@ public class TouchFunction implements Function, Declarable {
 
     private static String stackTrace(Throwable t)
     {
-        StringWriter sw = new StringWriter();
+        var sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         t.printStackTrace(pw);
         return sw.toString();
