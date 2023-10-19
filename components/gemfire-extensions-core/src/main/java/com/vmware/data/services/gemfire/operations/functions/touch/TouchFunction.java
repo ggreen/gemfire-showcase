@@ -1,13 +1,14 @@
 package com.vmware.data.services.gemfire.operations.functions.touch;
 
 import org.apache.geode.CopyHelper;
-import org.apache.geode.LogWriter;
 import org.apache.geode.cache.*;
 import org.apache.geode.cache.execute.Function;
 import org.apache.geode.cache.execute.FunctionContext;
+import org.apache.geode.cache.execute.FunctionException;
 import org.apache.geode.cache.execute.RegionFunctionContext;
-import org.apache.geode.cache.execute.ResultSender;
 import org.apache.geode.cache.partition.PartitionRegionHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Supplier;
+
 
 /**
  *
@@ -133,13 +135,33 @@ import java.util.function.Supplier;
 
 public class TouchFunction implements Function, Declarable {
 
-    private static final long serialVersionUID = 8827164389473146995L;
-    private static long REPORT_INTERVAL_MS = 10L * 1000L;
-    private final Supplier<CacheTransactionManager> txtMgrSupplier;
-    private long targetRate = 10;
-    private int batchSize = 100;
+    /**
+     * Report to log report rate per second property
+     */
+    public static final String TOUCH_REPORT_INTERVAL_MS_PROP = "touchReportIntervalMs";
 
-    private transient final LogWriter logger;
+    /**
+     * The property name to control how many touches are done per second
+     */
+    public static final String TOUCH_TARGET_RATE_PER_SEC_FLOW_CONTROL_PROP = "touchTargetRatePerSecFlowControl";
+
+    /**
+     * The property name to control how many touches are done for each batch transaction
+     */
+    public static final String TOUCH_BATCH_SIZE_PROP = "touchBatchSize";
+
+    /**
+     * Error message when not executed on Region
+     */
+    private final static String notRegionFunctionContextError  ="\"TouchFunction must be executed on a region. Ex: execute function --id=TouchFunction --region=/myRegion";
+
+    private static final long serialVersionUID = 8827164389473146995L;
+    private final long reportIntervalMs;
+    private final long targetRatePerSecFlowControl;
+    private final int batchSize;
+
+    private final Supplier<CacheTransactionManager> txtMgrSupplier;
+    private final Logger logger;
     private final java.util.function.Function<RegionFunctionContext, Region<Object,Object>> regionGetter;
     private final boolean copyOnRead;
 
@@ -149,21 +171,40 @@ public class TouchFunction implements Function, Declarable {
     public TouchFunction()
     {
         this(
-                CacheFactory.getAnyInstance().getLogger(),
+                LogManager.getLogger(TouchFunction.class),
                 (regionFunctionContext) -> PartitionRegionHelper.getLocalDataForContext(regionFunctionContext),
                 () -> CacheFactory.getAnyInstance().getCacheTransactionManager(),
-                CacheFactory.getAnyInstance().getCopyOnRead()
+                CacheFactory.getAnyInstance().getCopyOnRead(),
+                getConfigLong(TOUCH_REPORT_INTERVAL_MS_PROP,10L * 1000L),
+                getConfigLong(TOUCH_TARGET_RATE_PER_SEC_FLOW_CONTROL_PROP,10),
+                getConfigInt(TOUCH_BATCH_SIZE_PROP,10)
                 );
     }
 
-    public TouchFunction(LogWriter logger,
+    /**
+     * Creates the touch function instance
+     * @param logger the log4j logger
+     * @param regionFunctionContextSupplier the supplier that provides the region
+     * @param txtMgrSupplier the supplier that provides the transaction manager
+     * @param copyOnRead determine is copy on read is used
+     * @param reportIntervalMs determines how often report to log is executed
+     * @param targetRatePerSecFlowControl controls how many touches are done per second
+     * @param batchSize controls how many touches are done per transcation.
+     */
+    protected TouchFunction(Logger logger,
                          java.util.function.Function<RegionFunctionContext,
-                                 Region<Object,Object>> supplier,
+                                 Region<Object,Object>> regionFunctionContextSupplier,
                          Supplier<CacheTransactionManager> txtMgrSupplier,
-                         boolean copyOnRead)
+                         boolean copyOnRead,
+                         long reportIntervalMs,
+                        long targetRatePerSecFlowControl,
+                        int batchSize)
     {
+        this.reportIntervalMs = reportIntervalMs;
+        this.targetRatePerSecFlowControl = targetRatePerSecFlowControl;
+        this.batchSize = batchSize;
         this.logger = logger;
-        this.regionGetter = supplier;
+        this.regionGetter = regionFunctionContextSupplier;
         this.txtMgrSupplier = txtMgrSupplier;
         this.copyOnRead = copyOnRead;
     }
@@ -173,6 +214,9 @@ public class TouchFunction implements Function, Declarable {
     public void execute(FunctionContext ctx) {
         try
         {
+            if(!(ctx instanceof RegionFunctionContext))
+                throw new FunctionException(notRegionFunctionContextError);
+
             var regionFunctionContext = (RegionFunctionContext) ctx;
             Region<Object,Object> region = regionFunctionContext.getDataSet();
             if (region.getAttributes().getDataPolicy().withPartitioning() ){
@@ -191,36 +235,41 @@ public class TouchFunction implements Function, Declarable {
             var invocation = new Invocation(region.getFullPath(), keys.length);
 
             for(; i+ batchSize < keys.length; i+= batchSize){
-                processBatch(invocation,  region, Arrays.copyOfRange(keys,i,i+ batchSize), regionFunctionContext.<String>getResultSender());
+                processBatch(invocation,  region, Arrays.copyOfRange(keys,i,i+ batchSize));
             }
             // left over batch
             if (i <keys.length){
-                processBatch(invocation,  region,Arrays.copyOfRange(keys,i,keys.length), regionFunctionContext.<String>getResultSender());
+                processBatch(invocation,  region,Arrays.copyOfRange(keys,i,keys.length));
             }
 
-            invocation.lastReport( regionFunctionContext.<String>getResultSender());
+            invocation.lastReport();
         }
-        catch (RuntimeException e)
+        catch(FunctionException e)
         {
             this.logger.error(stackTrace(e));
-
             throw e;
         }
         catch (Exception e)
         {
             this.logger.error(stackTrace(e));
 
-            throw new RuntimeException(e);
+            throw new FunctionException(e);
         }
     }
 
-    private void processBatch(Invocation invocation, Region<Object,Object> region, Object[]keys, ResultSender<String> resultSender){
+    /**
+     * Performance a touch of the region for the provided keys
+     * @param invocation strategy to perform the execution
+     * @param region the region to touch
+     * @param keys the batch of keys
+     */
+    private void processBatch(Invocation invocation, Region<Object,Object> region, Object[]keys){
         // introduce sleep as necessary to throttle to the desired rate
 
-        if ( targetRate > 0){
+        if ( targetRatePerSecFlowControl > 0){
             long currentRate = invocation.getTouchesPerSecond();
-            if (currentRate > targetRate){
-                long targetElapsedMs = (invocation.getTouched() * 1000) / targetRate;
+            if (currentRate > targetRatePerSecFlowControl){
+                long targetElapsedMs = (invocation.getTouched() * 1000) / targetRatePerSecFlowControl;
                 long sleep = targetElapsedMs - invocation.getElapsedMs();
                 if (sleep > 0){
                     try {
@@ -250,14 +299,19 @@ public class TouchFunction implements Function, Declarable {
         invocation.incrementTouched(keys.length);
 
         // now assess whether we need to send back a status report / log a message
-        if (invocation.getTimeSinceLastReport() > REPORT_INTERVAL_MS) invocation.report(resultSender);
+        if (invocation.getTimeSinceLastReport() > reportIntervalMs) invocation.report();
     }
 
+    /**
+     * Perform a touch for keys that previous had a commit
+     * @param region the region to touch
+     * @param keys the touch
+     */
     private void processBatchOneAtATime(Region<Object,Object> region, Object[]keys){
         // do the touch using transaction semantics so we will not accidentally
         // undo an update that is happening concurrently
         for(Object key : keys){
-            CacheTransactionManager tm = txtMgrSupplier.get();
+            var tm = txtMgrSupplier.get();
             tm.begin();
             try {
                 putGet(region, key, !copyOnRead);
@@ -265,6 +319,7 @@ public class TouchFunction implements Function, Declarable {
                 tm = null;
             } catch(CommitConflictException x){
                 // this is OK - it just means someone else updated the key and we don't want to overwrite it
+                logger.info("Note: received a conflict while updating key: %",key," so it will not be overwritten");
             } finally {
                 if (tm != null) tm.rollback();
                 tm = null;
@@ -272,8 +327,14 @@ public class TouchFunction implements Function, Declarable {
         }
     }
 
+    /**
+     * Performance a get and put of a region entry
+     * @param region the region to update
+     * @param key the key to update
+     * @param copy indicate if a copy is needed
+     */
     private void putGet(Region<Object,Object> region, Object key, boolean copy){
-        Object val = region.get(key);
+        var val = region.get(key);
 
         if (val != null){
             if (copy){
@@ -285,29 +346,46 @@ public class TouchFunction implements Function, Declarable {
         }
     }
 
+    /**
+     *
+     * @return "Touch";
+     */
     @Override
     public String getId() {
-        return "Touch";
+        return "TouchFunction";
     }
 
+    /**
+     *
+     * @return false;
+     */
     @Override
     public boolean hasResult() {
         return false;
     }
 
+    /**
+     *
+     * @return true
+     */
     @Override
     public boolean isHA() {
         return true;
     }
 
+    /**
+     *
+     * @return true
+     */
     @Override
     public boolean optimizeForWrite() {
         return true;
     }
 
-    // I'm not certain whether / how Function instances are re-uses within the server so
-    // all invocation related state will be stored in a newly allocated instance of Invocation.
-    // Since there will be one instance per invocation it does not need to be thread safe.
+
+    /**
+     * All invocation related state will be stored in a newly allocated instance of Invocation.
+     */
     private class Invocation {
         private String regionName;
         private long totalEntries;
@@ -346,18 +424,16 @@ public class TouchFunction implements Function, Declarable {
             return System.currentTimeMillis() - lastReport;
         }
 
-        public void report(ResultSender<String> resultSender){
+        public void report(){
             var msg = "touched " + touched + "/" + totalEntries + " entries in " + regionName;
-            logger.info(msg);
             lastReport = System.currentTimeMillis();
-            resultSender.sendResult(msg);
+            logger.info(msg);
         }
 
-        public void lastReport(ResultSender<String> resultSender){
-            String msg = "FINISHED: touched " + touched + "/" + totalEntries + " entries in " + regionName;
-            logger.info(msg);
+        public void lastReport(){
+            var msg = "FINISHED: touched " + touched + "/" + totalEntries + " entries in " + regionName;
             lastReport = System.currentTimeMillis();
-            resultSender.lastResult(msg);
+            logger.info(msg);
         }
     }
 
@@ -366,11 +442,40 @@ public class TouchFunction implements Function, Declarable {
     {
     }
 
-    private static String stackTrace(Throwable t)
+    String stackTrace(Throwable t)
     {
-        var sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        return sw.toString();
+        var writer = new StringWriter();
+        t.printStackTrace(new PrintWriter(writer));
+        return writer.toString();
+    }
+
+    static int getConfigInt(String propertyName, int defaultValue) {
+        var value = System.getProperty(propertyName);
+
+        if(value == null || value.length() ==0 )
+            return defaultValue;
+        return Integer.valueOf(value);
+    }
+
+    static long getConfigLong(String propertyName, long defaultValue) {
+        var value = System.getProperty(propertyName);
+
+        if(value == null || value.length() ==0 )
+            return defaultValue;
+        return Long.valueOf(value);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TouchFunction{");
+        sb.append("reportIntervalMs=").append(reportIntervalMs);
+        sb.append(", targetRate=").append(targetRatePerSecFlowControl);
+        sb.append(", batchSize=").append(batchSize);
+        sb.append(", txtMgrSupplier=").append(txtMgrSupplier);
+        sb.append(", logger=").append(logger);
+        sb.append(", regionGetter=").append(regionGetter);
+        sb.append(", copyOnRead=").append(copyOnRead);
+        sb.append('}');
+        return sb.toString();
     }
 }
