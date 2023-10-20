@@ -1,6 +1,47 @@
+# Touch Function
+
+
+This function allows you to synchronize region data in WAN replicated GemFire clusters.
+The idea of a touch is to do a get and put on each entry in a given GemFire region.
+
+This function has been tested on GemFire version 10.0.1.
+
+You must deploy the function using the gfsh deploy command.
+
+Example.
+
+```shell
+deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/components/gemfire-touch-function/build/libs/gemfire-touch-function-2.0.0-SNAPSHOT.jar
+```
+
+The following is an example of how to execute the TouchFunction on the given "accounts" region in Gfsh.
+
+```shell
+execute function --id=TouchFunction --region=/accounts
+```
+
+The following are system properties that can be used to configure the touch function.
+
+Use the --J gfsh parameter when starting the GemFire server to set the system property.
+
+Example Format
+
+```shell
+start server --name="server" --J=-D<System_Property_Name>=<VALUE>
+```
+
+| System_Property_Name             | Notes                                                                                                  |
+|----------------------------------|--------------------------------------------------------------------------------------------------------|
+| touchReportIntervalMs            | The Report to log report rate per second property                                                      |
+| touchTargetRatePerSecFlowControl | The property name to control how many touches are done per second                                      |
+| touchBatchSize                   | The property name to control how many touches are done for each batch transaction                      |
+| notRegionFunctionContextError    | TouchFunction must be executed on a region. Ex: execute function --id=TouchFunction --region=/myRegion |
+
+
+
 # WAN Replication (Active-Active)
 
-The following explains how to set up two [GemFire](https://www.vmware.com/products/gemfire.html) clusters connected by a 
+The following explains how to set up two [GemFire](https://www.vmware.com/products/gemfire.html) clusters connected by a
 [WAN replication](https://docs.vmware.com/en/VMware-Tanzu-GemFire/9.10/tgf/GUID-topologies_and_comm-multi_site_configuration-setting_up_a_multisite_system.html) gateways. GemFire supports Active-Active data updates when using WAN replication between sites. These instructions demonstrate the functionality.
 
 ## Start Cluster 1
@@ -191,7 +232,7 @@ get --key="NJ"  --region=states
 get --key="LA"  --region=states
 ```
 
-From cluster 2 
+From cluster 2
 ```shell
 connect --locator=[10002]
 execute function --id=TouchFunction --region=/accounts

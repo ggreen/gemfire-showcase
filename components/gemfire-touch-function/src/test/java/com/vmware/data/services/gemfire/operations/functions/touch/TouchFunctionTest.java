@@ -25,6 +25,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Test for TouchFunction
+ * @author gregory green
+ */
 @ExtendWith(MockitoExtension.class)
 class TouchFunctionTest {
 
@@ -155,7 +159,7 @@ class TouchFunctionTest {
 
     @Test
     void isHA() {
-        assertEquals(true, subject.isHA());
+        assertEquals(false, subject.isHA());
     }
 
     @Test

@@ -125,7 +125,7 @@ import java.util.function.Supplier;
 
 
  ```shell
- execute function --id=Touch --region=/test-gw
+ execute function --id=TouchFunction --region=/test-gw
  ```
  </pre>
  *
@@ -365,13 +365,14 @@ public class TouchFunction implements Function, Declarable {
     }
 
     /**
-     *
-     * @return true
+     *  For Functions with isHA false, hasResult must also be false.
+     * @return false
      */
     @Override
     public boolean isHA() {
-        return true;
+        return false;
     }
+
 
     /**
      *
