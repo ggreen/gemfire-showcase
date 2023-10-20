@@ -18,7 +18,8 @@ See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-exten
 | [components/gemfire-health-office](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-health-office)                           | Tools for analyzing GemFire statistics                                                                                                                     |
 | [components/gemfire-http-dotnet-api](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-http-dotnet-api)                       | Wrapper Dotnet Core client that uses the GemFire HTTP API                                                                                                  |
 | [components/gemfire-security-managers](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-security-managers)                   | [GemFire security manager](https://tanzu.vmware.com/developer/data/gemfire/blog/security-manager-basics-authentication-and-authorization/) implementations |
-| [deployments/scripts/gemfire-devOps-bash](deployments/scripts/gemfire-devOps-bash)                                                                    | GemFire cluster operations DevOps management scripts                                                                                                       |   
+| [components/gemfire-touch-function](components/gemfire-touch-function)                                                                                | GemFire function to synchronize region in WAN replicated GemFire clusters                                                                                  |
+| [deployments/scripts/gemfire-devOps-bash](deployments/scripts/gemfire-devOps-bash)                                                                    | GemFire cluster operations DevOps management scripts                                                                                                       |
 
 
 
