@@ -32,6 +32,8 @@ then
   exit 1
 fi
 
+export MEMBER_FULL_HOST_NM=`hostname -s`
+
 mkdir -p $SECURITY_DIR
 
 # -validity 3650 \
@@ -44,9 +46,7 @@ $JAVA_HOME/bin/keytool  -delete -noprompt  -alias gemfire  -keystore $SECURITY_D
 
 
 
-$JAVA_HOME/bin/keytool -genkey -alias gemfire -keyalg RSA -keypass $CERT_PASSWORD -storepass $CERT_PASSWORD -validity $CERT_VALIDITY_DAYS -alias gemfire -dname "CN=trusted" -keysize 2048  -keystore $SECURITY_DIR/keystore.jks
-
-
+$JAVA_HOME/bin/keytool -genkey -alias gemfire -keyalg RSA -keypass $CERT_PASSWORD -storepass $CERT_PASSWORD -validity $CERT_VALIDITY_DAYS -alias gemfire -dname "CN=${MEMBER_FULL_HOST_NM}" -keysize 2048  -keystore $SECURITY_DIR/keystore.jks
 
 
 
@@ -81,6 +81,7 @@ echo "ssl-keystore-type=jks" >> $SECURITY_DIR/gfsecurity.properties
 
 echo "ssl-truststore-password=$CERT_PASSWORD" >> $SECURITY_DIR/gfsecurity.properties
 echo "ssl-enabled-components=$SSL_ENABLED_COMPONENTS" >> $SECURITY_DIR/gfsecurity.properties
+echo "#ssl-endpoint-identification-enabled=true" >> $SECURITY_DIR/gfsecurity.properties
 
 
 echo Created gfsecurity profile file

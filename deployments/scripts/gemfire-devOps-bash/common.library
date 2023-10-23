@@ -57,8 +57,7 @@ do
   STATUS_LOCATOR_NM="$i"_$LOCATOR_NM
   echo Checking if $STATUS_LOCATOR_NM is running
 
-  echo bash $GEMFIRE_HOME/bin/gfsh -e "connect --locator="${i}[$LOCATOR_PORT]" --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties" -e "status locator --name=$STATUS_LOCATOR_NM"
-  running=`$GEMFIRE_HOME/bin/gfsh -e "connect --locator="${i}[$LOCATOR_PORT]" --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties" -e "status locator --name=$STATUS_LOCATOR_NM" | grep "up and running" `
+  running=`$GEMFIRE_HOME/bin/gfsh  -e "connect --locator=${i}[$LOCATOR_PORT] --user=$SECURITY_USERNAME --password=$SECURITY_PASSWORD --security-properties-file=$SECURITY_DIR/gfsecurity.properties"  -e "status locator --name=$STATUS_LOCATOR_NM" | grep 'up and running'   `
 
   if [ -z "$running" ]; then
       echo "Locator ${i}[$LOCATOR_PORT] is not running"
