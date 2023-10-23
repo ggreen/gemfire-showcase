@@ -81,7 +81,9 @@ echo "ssl-keystore-type=jks" >> $SECURITY_DIR/gfsecurity.properties
 
 echo "ssl-truststore-password=$CERT_PASSWORD" >> $SECURITY_DIR/gfsecurity.properties
 echo "ssl-enabled-components=$SSL_ENABLED_COMPONENTS" >> $SECURITY_DIR/gfsecurity.properties
+echo "ssl-truststore-type=jks" >> $SECURITY_DIR/gfsecurity.properties
 echo "#ssl-endpoint-identification-enabled=true" >> $SECURITY_DIR/gfsecurity.properties
+
 
 
 echo Created gfsecurity profile file
