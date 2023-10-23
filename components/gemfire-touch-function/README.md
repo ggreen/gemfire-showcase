@@ -246,3 +246,11 @@ get --key="VMW"  --region=accounts
 get --key="NJ"  --region=states
 get --key="LA"  --region=states
 ```
+
+Also see 
+
+```shell
+connect --locator=[10001]
+wan-copy region --region=/accounts --sender-id=cluster1
+wan-copy region --region=/states --sender-id=cluster1-serial
+```
