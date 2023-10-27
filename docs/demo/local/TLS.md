@@ -66,6 +66,8 @@ start locator --name=<hostname>_locator --bind-address=<hostname> --J=-Djava.rmi
 start server providing argument
 **--security-properties-file=$SECURITY_DIR/gfsecurity.properties**
 
+Example Gfsh Start Server Command
+
 ```shell
 start server --name=<server-name> --locators=<-locator-hostname-name>[10000] --cache-xml-file= --initial-heap=500m --max-heap=500m --dir=<work-dir> --use-cluster-configuration=true --server-port=10100   --log-level=config --start-rest-api=true --J=-Dgemfire.conserve-sockets=false --J=-Dgemfire.max-connections=800 --J=-Dgemfire.tcp-port=10002 --statistic-archive-file=<hostname-name>_stat.gfd --J=-Dgemfire.Query.VERBOSE=true --J=-Dgemfire.QueryService.allowUntrustedMethodInvocation=true --J=-Dgemfire.membership-port-range=10801-10810 --hostname-for-clients=<hostname-name> --J=-Dgemfire.bind-address=<hostname-name> --J=-Dgemfire.http-service-bind-address=<hostname-name>  --J=-Dgemfire.enable-time-statistics=false --J=-Dgemfire.http-service-port=18080   --J=-Dgemfire.log-disk-space-limit=5 --J=-Dgemfire.log-file-size-limit=1 --disable-classloader-isolation=false  --classpath=<gemfire-home>/tools/Modules/gemfire-prometheus-metrics/*:<proj-dir>/lib/* --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.UserSecurityManager  --J=-Dconfig.properties=<proj-dir>/config/users.properties --user=****** --password=******** --J=-Dgemfire.statistic-archive-file=datanode_<hostname-name>.gfs   --J=-D-gemfire.statistic-sampling-enabled=true  --J=-Dgemfire.archive-disk-space-limit=5  --J=-Dgemfire.archive-file-size-limit=5   --J=-Dgemfire.mcast-port=0  --security-properties-file=********    --J=-Dgemfire.redundancy-zone=<hostname-name> --J=-Dgemfire.prometheus.metrics.port=17011
 
