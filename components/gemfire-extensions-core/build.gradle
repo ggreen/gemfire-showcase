@@ -62,14 +62,16 @@ dependencies {
     compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
     compileOnly group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
     compileOnly 'com.vmware.gemfire:gemfire-search:1.0.0'
-    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
-    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+//    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
     compileOnly group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
     compileOnly group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation 'org.postgresql:postgresql:42.5.1'
     implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
+    implementation("com.github.nyla-solutions:nyla.solutions.core:1.5.1") {
+        exclude group: "org.junit.jupiter"
+    }
 
     testImplementation 'org.apache.logging.log4j:log4j-api:2.20.0'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
@@ -85,6 +87,12 @@ dependencies {
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
 
+}
+
+jar {
+    manifest {
+        attributes 'Multi-Release' : 'true'
+    }
 }
 
 shadowJar {
