@@ -1,5 +1,12 @@
 
-Generate password
+Build Fat JAr
+
+```shell
+cd components/gemfire-extensions-core/
+gradle shadowJar
+```
+
+Generate password 
 ```shell
 java -DCRYPTION_KEY=PIVOTAL -classpath deployments/libs/nyla.solutions.core-1.5.1.jar nyla.solutions.core.util.Cryption $POSTGRES_DB_PASSWORD
 ```
