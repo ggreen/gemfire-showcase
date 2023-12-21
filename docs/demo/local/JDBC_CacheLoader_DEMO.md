@@ -3,7 +3,7 @@ Build Fat JAr
 
 ```shell
 cd components/gemfire-extensions-core/
-gradle shadowJar
+gradle clean build shadowJar -x test
 ```
 
 Generate password 
