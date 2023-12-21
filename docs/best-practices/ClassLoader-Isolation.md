@@ -23,7 +23,10 @@ jar {
 
 ## Known Issues
 
-- Exclude including the dependencies: org.apache.logging.log4j, org.slf4j and com.fasterxml.jackson
+Exclude the following dependencies: 
+- org.apache.logging.log4j
+- org.slf4j
+- com.fasterxml.jackson
 
 Example to exclude these dependencies
 
