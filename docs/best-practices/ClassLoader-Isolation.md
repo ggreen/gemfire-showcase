@@ -8,7 +8,7 @@ GemFire members are started with classloader loader isolation enabled by default
 
 Use Java build tools like [Gradle’s shadowJar](https://imperceptiblethoughts.com/shadow/) or [Maven Shade](https://maven.apache.org/plugins/maven-shade-plugin/) plugin to build a Java Jar with the needed dependencies included
 Minimize the dependencies to the essentials needed for needed components
-Verify included dependendences created in the Jar(here is an example to verify the Jar dependencies using gradle: gradle dependencies --configuration runtimeClasspath)
+Verify included dependencies created in the Jar(here is an example to verify the Jar dependencies using gradle: gradle dependencies --configuration runtimeClasspath)
 [Add any needed manifest attribute](https://imperceptiblethoughts.com/shadow/configuration/#configuring-the-jar-manifest) required by included dependencies such as multi-java release attribute “Multi-Release” : true (see below)
 
 
@@ -40,7 +40,7 @@ dependencies {
 }
 ```
 
-This readme provides an example a JDBC Cache Loader that using classloader isolations.
+This readme provides an example an JDBC Cache Loader that using classloader isolations.
 
 https://github.com/ggreen/gemfire-extensions/blob/main/docs/demo/local/JDBC_CacheLoader_DEMO.md
 
