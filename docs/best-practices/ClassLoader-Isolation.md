@@ -6,10 +6,10 @@ GemFire members are started with classloader loader isolation enabled by default
 
 ## Best Practices
 
-Use Java build tools like Gradle’s shadowJar or Maven Shade plugin to build a Java Jar with the needed dependencies included
+Use Java build tools like [Gradle’s shadowJar](https://imperceptiblethoughts.com/shadow/) or [Maven Shade](https://maven.apache.org/plugins/maven-shade-plugin/) plugin to build a Java Jar with the needed dependencies included
 Minimize the dependencies to the essentials needed for needed components
 Verify included dependendences created in the Jar(here is an example to verify the Jar dependencies using gradle: gradle dependencies --configuration runtimeClasspath)
-Add any needed manifest attribute required by include dependencies such as multi-java release attribute “Multi-Release” : true (see below)
+[Add any needed manifest attribute](https://imperceptiblethoughts.com/shadow/configuration/#configuring-the-jar-manifest) required by included dependencies such as multi-java release attribute “Multi-Release” : true (see below)
 
 
 ```groovy
@@ -25,6 +25,20 @@ jar {
 
 - Exclude including the dependencies: org.apache.logging.log4j, org.slf4j and com.fasterxml.jackson
 
+Example to exclude these dependencies
+
+```groovy
+dependencies {
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+    compileOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
+    implementation("com.zaxxer:HikariCP:4.0.3")
+            {
+                exclude group: "org.slf4j"
+            }
+    //.....
+}
+```
 
 This readme provides an example a JDBC Cache Loader that using classloader isolations.
 
