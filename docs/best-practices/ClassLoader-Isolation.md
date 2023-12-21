@@ -43,7 +43,7 @@ dependencies {
 }
 ```
 
-This readme provides an example an JDBC Cache Loader that using classloader isolations.
+This readme provides an example  JDBC Cache Loader that uses classloader isolations.
 
 https://github.com/ggreen/gemfire-extensions/blob/main/docs/demo/local/JDBC_CacheLoader_DEMO.md
 
