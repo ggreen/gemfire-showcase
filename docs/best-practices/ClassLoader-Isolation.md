@@ -14,9 +14,9 @@ GemFire members are started with classloader loader isolation enabled by default
 
 
 ```groovy
-jar {
+shadowJar {
     manifest {
-    attributes 'Multi-Release' : 'true'
+        attributes 'Multi-Release' : 'true'
     }
 }
 ```
