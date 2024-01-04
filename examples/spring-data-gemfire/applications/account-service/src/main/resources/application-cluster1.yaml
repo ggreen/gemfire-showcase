@@ -1,0 +1,9 @@
+spring:
+  data:
+    gemfire:
+      pool:
+        default:
+          locators: localhost[10001]
+#        locators: localhost[10002]
+server:
+  port: 8181

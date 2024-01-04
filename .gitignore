@@ -4,6 +4,11 @@ bin/
 .gradle/
 .gradle
 obj/
+gf1-locator/
+gf2-locator/
+gf2-server/
+gf1-server/
+gf2-server/
 .gradle
 pom.xml.tag
 *.tar
