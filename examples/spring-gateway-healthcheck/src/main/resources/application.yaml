@@ -1,0 +1,43 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: baeldung_route
+          uri: http://baeldung.com
+          predicates:
+            - Path=/baeldung/
+          filters:
+            - StripPrefix=0
+        - id: accounts
+          uri: ${SERVER_URI:http://localhost:8181}
+          predicates:
+            - Path=/accounts/**
+          filters:
+#            - PrefixPath=/accounts
+#            - StripPrefix=1
+#            - name: CircuitBreaker
+#              args:
+#                name: myCircuitBreaker
+#                fallbackUri: forward:/inCaseOfFailureUseThis
+#            - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
+logging:
+  level:
+    reactor:
+      netty: DEBUG
+    org:
+      springframework:
+        web:
+          reactive: DEBUG
+          boot:
+            autoconfigure:
+              web: DEBUG
+        cloud:
+          gateway: DEBUG
+        http:
+          server:
+            reactive: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

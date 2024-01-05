@@ -17,3 +17,25 @@ java -jar examples/spring-data-gemfire/applications/account-service/build/libs/a
 ```shell
 java -jar examples/spring-data-gemfire/applications/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar  --server.port=8282 --spring.data.gemfire.pool.default.locators="localhost[10002]"
 ```
+
+
+
+---------------
+
+```shell
+curl -X 'POST' \
+  'http://localhost:8080/accounts' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "id": "2",
+  "name": "2"
+}'
+```
+
+
+```shell
+curl -X 'GET' \
+  'http://localhost:8080/accounts/2' \
+  -H 'accept: */*'
+```
