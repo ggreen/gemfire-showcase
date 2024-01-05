@@ -1,4 +1,15 @@
+# GemFire Fail-Over Best Practices
 
+The following architecture has been generally been viewed as a more reliable circuit breaker implementation for applications, then this demo application.
+
+In this case, the client can use a standard circuit breaker pattern implementation such as Resilience4j or Hystrix. Failure detection can delegate to an App connected to another GemFire cluster (cluster A to B).
+
+This architecture would also need ACTIVE to ACTIVE WAN replication between the clusters.
+
+![img.png](img.png)
+
+
+# GemFire Fail-over Demonstration
 
 Start Clusters
 
