@@ -10,4 +10,9 @@ class SpringGatewayHealthcheckApplicationTests {
 	void contextLoads() {
 	}
 
+//	configureRewrith()
+//	{
+//		String newPath = pattern.matcher(path).replaceAll(replacement);
+//	}
+
 }
