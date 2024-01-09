@@ -1,8 +1,6 @@
-spring:
-  data:
-    gemfire:
-      pool:
-        default:
-          locators: localhost[10002]
+gemfire:
+  health:
+    region:
+      name: health2
 server:
   port: 8282

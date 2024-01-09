@@ -1,8 +1,8 @@
-package com.vmware.spring.geode.showcase.account.controller;
+package com.vmware.spring.gemfire.showcase.account.controller;
 
-import com.vmware.spring.geode.showcase.account.controller.exceptions.GemFireNotAvailableException;
-import com.vmware.spring.geode.showcase.account.entity.Account;
-import com.vmware.spring.geode.showcase.account.repostories.AccountRepository;
+import com.vmware.spring.gemfire.showcase.account.controller.exceptions.GemFireNotAvailableException;
+import com.vmware.spring.gemfire.showcase.account.repostories.AccountRepository;
+import com.vmware.spring.gemfire.showcase.account.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.geode.cache.client.NoAvailableServersException;

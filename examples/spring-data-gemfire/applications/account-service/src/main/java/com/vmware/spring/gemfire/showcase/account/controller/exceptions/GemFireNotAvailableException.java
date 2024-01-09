@@ -1,4 +1,4 @@
-package com.vmware.spring.geode.showcase.account.controller.exceptions;
+package com.vmware.spring.gemfire.showcase.account.controller.exceptions;
 
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.ErrorResponseException;

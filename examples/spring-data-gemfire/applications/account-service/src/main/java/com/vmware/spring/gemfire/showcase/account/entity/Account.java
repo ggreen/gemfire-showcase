@@ -1,4 +1,4 @@
-package com.vmware.spring.geode.showcase.account.entity;
+package com.vmware.spring.gemfire.showcase.account.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,7 @@
 package com.vmware.spring.gateway.healthcheck.controller;
 
 import com.vmware.spring.gateway.healthcheck.controller.config.GatewayFallbackConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/fallback")
 @ConditionalOnProperty(value="gateway.fallback.enabled", havingValue = "true")
+@Slf4j
 public class FallbackController {
 
         private final GatewayFallbackConfig gatewayFallbackConfig;
@@ -66,10 +68,14 @@ public class FallbackController {
 
         private URI buildFallbackURI(ServerHttpRequest originalRequest) {
 
+            log.warn("Falling back from original request {}",originalRequest);
+
             var newURI = UriComponentsBuilder.fromHttpUrl(
                     gatewayFallbackConfig.getHttpUrl())
                     .port(gatewayFallbackConfig.getPort())
                     .path(originalRequest.getPath().value()).build().toUri();
+
+            log.info("Fallback URI {}",newURI);
 
             return ForwardedHeaderUtils.adaptFromForwardedHeaders(newURI,
                             originalRequest.getHeaders()).build().toUri();

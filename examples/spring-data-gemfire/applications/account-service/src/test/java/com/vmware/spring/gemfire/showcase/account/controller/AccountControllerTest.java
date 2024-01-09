@@ -1,17 +1,16 @@
-package com.vmware.spring.geode.showcase.account.controller;
+package com.vmware.spring.gemfire.showcase.account.controller;
 
-import com.vmware.spring.geode.showcase.account.controller.exceptions.GemFireNotAvailableException;
-import com.vmware.spring.geode.showcase.account.entity.Account;
-import com.vmware.spring.geode.showcase.account.repostories.AccountRepository;
+import com.vmware.spring.gemfire.showcase.account.controller.exceptions.GemFireNotAvailableException;
+import com.vmware.spring.gemfire.showcase.account.entity.Account;
+import com.vmware.spring.gemfire.showcase.account.repostories.AccountRepository;
+import com.vmware.spring.gemfire.showcase.account.utils.GemFireQqUtil;
 import nyla.solutions.core.patterns.creational.generator.JavaBeanGeneratorCreator;
-import org.apache.geode.cache.client.NoAvailableServersException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataAccessResourceFailureException;
 
 import java.util.Optional;
 
@@ -43,8 +42,8 @@ class AccountControllerTest
     @Test
     void throwNoServiceAvailable() {
 
-        DataAccessResourceFailureException exception = new DataAccessResourceFailureException("test",new NoAvailableServersException());
-        when(accountRepository.findById(account.getId())).thenThrow(exception);
+
+        when(accountRepository.findById(account.getId())).thenThrow(GemFireQqUtil.noAvailableServersException());
 
         assertThrows(GemFireNotAvailableException.class,
                 () -> subject.findById(account.getId()));

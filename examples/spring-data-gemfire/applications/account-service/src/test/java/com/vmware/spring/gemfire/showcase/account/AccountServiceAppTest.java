@@ -1,4 +1,4 @@
-package com.vmware.spring.geode.showcase.account;
+package com.vmware.spring.gemfire.showcase.account;
 
 import com.vmware.gemfire.testcontainers.GemFireClusterContainer;
 import org.springframework.test.context.DynamicPropertyRegistry;
