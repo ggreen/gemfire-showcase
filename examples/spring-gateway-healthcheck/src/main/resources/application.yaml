@@ -1,33 +1,3 @@
-spring:
-  cloud:
-    gateway:
-      routes:
-        - id: baeldung_route
-          uri: http://baeldung.com
-          predicates:
-            - Path=/baeldung/
-          filters:
-            - StripPrefix=0
-        - id: accounts
-          uri: ${SERVER_URI_1:http://localhost:8181}
-          predicates:
-            - Path=/accounts/**
-          filters:
-#            - PrefixPath=/accounts
-#            - StripPrefix=1
-            - name: CircuitBreaker
-              args:
-                name: failBackCircuitBreaker
-                fallbackUri: forward:/fallback
-#                fallbackUri: forward:/baeldung/
-#                fallbackUri: forward:http://localhost:8282
-#            - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
-#        - id: accounts-fallback
-#          uri: http://localhost:8282
-#          predicates:
-#            - Path=/fallback/**
-#          filters:
-#            - RewritePath=/fallback/?(?<segment>.*), /accounts/$\{segment}
 logging:
   level:
     reactor:
@@ -44,13 +14,43 @@ logging:
         http:
           server:
             reactive: TRACE
-gateway:
-  fallback:
-    enabled: true
-    httpUrl: http://localhost
-    port: 8282
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+gateway:
+  fallback:
+    enabled: true
+    httpUrl: http://localhost
+    port: 8282
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: accounts
+          uri: ${SERVER_URI_1:http://localhost:8181}
+          predicates:
+            - Path=/accounts/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: failBackCircuitBreaker
+                fallbackUri: forward:/fallback
+                statusCodes:
+                  - 610
+#                fallbackUri: forward:/baeldung/
+#                fallbackUri: forward:http://localhost:8282
+#            - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
+#        - id: accounts-fallback
+#          uri: http://localhost:8282
+#          predicates:
+#            - Path=/fallback/**
+#          filters:
+#            - RewritePath=/fallback/?(?<segment>.*), /accounts/$\{segment}
+#        - id: baeldung_route
+#          uri: http://baeldung.com
+#          predicates:
+#            - Path=/baeldung/
+#          filters:
+#            - StripPrefix=0
