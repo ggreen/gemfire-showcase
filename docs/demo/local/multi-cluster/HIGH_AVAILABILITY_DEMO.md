@@ -129,11 +129,3 @@ Get Account 1
 curl http://localhost:8080/accounts/1
 ```
 
-Check app service to cluster 2
-
-```shell
-curl http://localhost:8282/actuator/health
-```
-
-
-$GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]" -e "shutdown --include-locators"
