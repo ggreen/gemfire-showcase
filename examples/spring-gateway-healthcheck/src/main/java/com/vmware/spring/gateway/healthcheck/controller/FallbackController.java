@@ -1,8 +1,7 @@
 package com.vmware.spring.gateway.healthcheck.controller;
 
-import com.vmware.spring.gateway.healthcheck.controller.config.GatewayFallbackConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +16,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/fallback")
-@ConditionalOnProperty(value="gateway.fallback.enabled", havingValue = "true")
 @Slf4j
 public class FallbackController {
 
-        private final GatewayFallbackConfig gatewayFallbackConfig;
+    private final String httpUrl;
+    private final int port;
 
         private final WebClient webClient;
 
-        public FallbackController(GatewayFallbackConfig gatewayFallbackConfig) {
-            this.gatewayFallbackConfig = gatewayFallbackConfig;
+        public FallbackController( @Value("${gateway.fallback.httpUrl}") String httpUrl,
+                                   @Value("${gateway.fallback.port:0}") int port)
+        {
+            this.httpUrl = httpUrl;
+            this.port = port;
             this.webClient = WebClient.create();
         }
 
@@ -71,8 +73,8 @@ public class FallbackController {
             log.warn("Falling back from original request {}",originalRequest);
 
             var newURI = UriComponentsBuilder.fromHttpUrl(
-                    gatewayFallbackConfig.getHttpUrl())
-                    .port(gatewayFallbackConfig.getPort())
+                    this.httpUrl)
+                    .port(this.port)
                     .path(originalRequest.getPath().value()).build().toUri();
 
             log.info("Fallback URI {}",newURI);

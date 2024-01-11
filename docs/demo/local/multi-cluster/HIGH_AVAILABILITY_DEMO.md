@@ -49,7 +49,7 @@ java -jar examples/spring-data-gemfire/applications/account-service/build/libs/a
 Start Spring Gateway
 
 ```shell
-java -jar examples/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.1-SNAPSHOT.jar
+java -jar examples/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.1-SNAPSHOT.jar --spring.config.location=file:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/examples/spring-gateway-healthcheck/src/main/resources/application.yaml
 ```
 
 
@@ -80,7 +80,7 @@ curl http://localhost:8080/accounts/1
 Save account 2
 
 ```shell
-  curl 'http://localhost:8080/accounts' \
+curl 'http://localhost:8080/accounts' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{

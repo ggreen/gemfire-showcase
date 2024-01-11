@@ -33,24 +33,17 @@ spring:
           predicates:
             - Path=/accounts/**
           filters:
+            #            - PrefixPath=/accounts
+            #            - StripPrefix=1
+            #            - name: CircuitBreaker
+            #              args:
+            #                name: myCircuitBreaker
+            #                fallbackUri: forward:/inCaseOfFailureUseThis
             - name: CircuitBreaker
               args:
                 name: failBackCircuitBreaker
                 fallbackUri: forward:/fallback
                 statusCodes:
                   - 610
-#                fallbackUri: forward:/baeldung/
-#                fallbackUri: forward:http://localhost:8282
-#            - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
-#        - id: accounts-fallback
-#          uri: http://localhost:8282
-#          predicates:
-#            - Path=/fallback/**
-#          filters:
-#            - RewritePath=/fallback/?(?<segment>.*), /accounts/$\{segment}
-#        - id: baeldung_route
-#          uri: http://baeldung.com
-#          predicates:
-#            - Path=/baeldung/
-#          filters:
-#            - StripPrefix=0
+                  - 500
+                  - "NOT_FOUND"
