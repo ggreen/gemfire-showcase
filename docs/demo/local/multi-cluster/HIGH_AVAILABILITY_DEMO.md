@@ -96,36 +96,85 @@ curl -X 'GET' \
   -H 'accept: */*'
 ```
 
-Test Actuator for App Service to cluster 1
-
-- Expected result is 
-```json
-{"status":"UP"}% 
-```
-
+Test Actuator for App Service to cluster 1 expected "UP"
 ```shell
 curl http://localhost:8181/actuator/health
 ```
 
-Stop Cluster One Servers
+Test Actuator for App Service to cluster 2 expected "UP"
+```shell
+curl http://localhost:8282/actuator/health
+```
+
+Stop Cluster 1 Servers
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "shutdown"
 ```
 
-Check app service to cluster 1
-
+Check app service to cluster 1 expected "DOWN"
 ```shell
 curl http://localhost:8181/actuator/health
 ```
-- Expected 
-```json
-{"status":"DOWN"}% 
+
+Test Actuator for App Service to cluster 2 expected "UP"
+```shell
+curl http://localhost:8282/actuator/health
 ```
 
 Get Account 1
-
 ```shell
 curl http://localhost:8080/accounts/1
 ```
 
+
+Get Account 2
+```shell
+curl http://localhost:8080/accounts/2
+```
+
+Server 1
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=gf1-server --use-cluster-configuration=true --server-port=10101   --locators=127.0.0.1[10001] --max-heap=1g   --initial-heap=1g  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1  --J=-Dgemfire.distributed-system-id=1"
+```
+
+Sync data in cluster 2 to 1
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]" -e "wan-copy region --region=/Account --sender-id=Account_Sender_to_1"
+```
+
+Get Account 1
+```shell
+curl http://localhost:8080/accounts/1
+```
+
+Get Account 2
+```shell
+curl http://localhost:8080/accounts/2
+```
+
+Shutdown cluster 2 
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]" -e "shutdown --include-locators"
+```
+Test Actuator for App Service to cluster 1 expected "UP"
+```shell
+curl http://localhost:8181/actuator/health
+```
+
+Test Actuator for App Service to cluster 2 expected "DOWN"
+```shell
+curl http://localhost:8282/actuator/health
+```
+
+Get Account 1
+```shell
+curl http://localhost:8080/accounts/1
+```
+
+Get Account 2
+```shell
+curl http://localhost:8080/accounts/2
+```
