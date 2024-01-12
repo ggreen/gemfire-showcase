@@ -40,7 +40,7 @@ class AccountControllerTest
     }
 
     @Test
-    void throwNoServiceAvailable() {
+    void throwNoServerAvailable() {
 
 
         when(accountRepository.findById(account.getId())).thenThrow(GemFireQqUtil.noAvailableServersException());
@@ -49,7 +49,19 @@ class AccountControllerTest
                 () -> subject.findById(account.getId()));
     }
 
+
     @Test
+    void throwNoLocatorAvailable() {
+
+        when(accountRepository.findById(account.getId())).thenThrow(GemFireQqUtil.noAvailableLocatorsException());
+
+        assertThrows(GemFireNotAvailableException.class,
+                () -> subject.findById(account.getId()));
+    }
+
+
+
+        @Test
     @DisplayName("Given account When save Then Can get account by Id")
     void createRead()
     {

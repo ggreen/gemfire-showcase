@@ -5,6 +5,7 @@ import com.vmware.spring.gemfire.showcase.account.repostories.AccountRepository;
 import com.vmware.spring.gemfire.showcase.account.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.geode.cache.client.NoAvailableLocatorsException;
 import org.apache.geode.cache.client.NoAvailableServersException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,8 @@ public class AccountController
            log.warn("ERROR: {}",e);
 
            var cause = e.getCause();
-           if(cause instanceof NoAvailableServersException nsa){
+           if(cause instanceof NoAvailableServersException ||
+                   cause instanceof NoAvailableLocatorsException){
                throw new GemFireNotAvailableException(e);
            }
            throw e;
