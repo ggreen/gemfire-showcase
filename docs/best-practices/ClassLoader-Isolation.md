@@ -6,7 +6,7 @@ GemFire members are started with classloader loader isolation enabled by default
 
 ## Best Practices
 
-- Use Java build tools like [Gradle’s shadowJar](https://imperceptiblethoughts.com/shadow/) or [Maven Shade](https://maven.apache.org/plugins/maven-shade-plugin/) plugin to build a Java Jar with the needed dependencies included
+- Use Java build tools such as [Gradle’s shadowJar](https://imperceptiblethoughts.com/shadow/) or [Maven Shade](https://maven.apache.org/plugins/maven-shade-plugin/) to create a Java Jar with the needed dependencies included
 - Use compile only option to exclude core GemFire classes (ex: org.apache.geode.* or group: 'com.vmware.gemfire')
 - Minimize the dependencies to the essentials needed for needed components
 - Verify included dependencies created in the Jar(here is an example to verify the Jar dependencies using gradle: gradle dependencies --configuration runtimeClasspath)

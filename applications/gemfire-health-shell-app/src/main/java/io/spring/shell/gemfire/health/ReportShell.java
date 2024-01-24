@@ -62,48 +62,6 @@ class ReportShell
         }
 
     }
-/*
-    @ShellMethod("Builds a complete report based on statistic files")
-    public void htmlReport(String statsFileOrDirPath ,
-                           String reportFilePath,
-                           String dayFilter,
-                   @ShellOption(defaultValue = "") String customTemplateFile ,
-                   @ShellOption(defaultValue = "30")  int avgMemoryHeapThreshold,
-                   @ShellOption(defaultValue = "30") int maxMemoryHeapThreshold,
-                   @ShellOption(defaultValue = "30") int  cpuUsageThreshold,
-                   @ShellOption(defaultValue = "1")  int connectionTimeoutsThreshold,
-                   @ShellOption(defaultValue = "1")   int abandonedReadRequestsThreshold,
-                   @ShellOption(defaultValue = "1")   int failedConnectionAttemptsThreshold,
-                   @ShellOption(defaultValue = "10")   int ioWaitThreshold
-    ) throws IOException {
-        var settings = new ReportingSetting();
-        settings.avgMemoryThreshold = avgMemoryHeapThreshold;
-        settings.maxMemoryThreshold = maxMemoryHeapThreshold;
-        settings.cpuUsageThreshold = cpuUsageThreshold;
-        settings.connectionTimeoutsThreshold  = connectionTimeoutsThreshold;
-        settings.abandonedReadRequestsThreshold = abandonedReadRequestsThreshold;
-        settings.failedConnectionAttemptsThreshold = failedConnectionAttemptsThreshold;
-        settings.ioWaitThreshold = ioWaitThreshold;
-        settings.dayFilter = Day(dayFilter);
-
-        HtmlStatsGeodeReporter reporter = HtmlStatsGeodeReporter(settings)
-
-
-        File statsFileOrDir = Paths.get(statsFileOrDirPath).toFile();
-
-        if(customTemplateFile.length() == 0)
-        {
-            var loadedTemplate =Text.loadTemplate("html");
-            reporter.report(statsFileOrDir, File(reportFilePath), loadedTemplate);
-        }
-        else
-        {
-            var template = IO.readFile(customTemplateFile);
-
-            reporter.report(statsFileOrDir, File(reportFilePath), template);
-        }
-
-    }*/
 
     @ShellMethod("Builds a chart of the MAX JVM Memory Over a Threshold")
     public void chartJvmMaxMemoryAboveThreshold(String outFileImagePath, String inputFilePathDir, @ShellOption(defaultValue = "50") int memoryPercentage) throws IOException {
