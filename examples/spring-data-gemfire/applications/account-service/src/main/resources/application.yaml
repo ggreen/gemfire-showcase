@@ -1,2 +1,5 @@
 spring.application.name: account-rest-service
-
+gemfire:
+  health:
+    region:
+      name: "test"
