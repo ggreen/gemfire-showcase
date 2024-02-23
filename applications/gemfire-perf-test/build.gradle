@@ -61,8 +61,8 @@ repositories {
             ignoreGradleMetadataRedirection()
         }
         credentials {
-            username repoUsername
-            password repoPassword
+            username System.getenv('PIVOTAL_MAVEN_USERNAME')
+            password System.getenv('PIVOTAL_MAVEN_PASSWORD')
         }
     }
 }

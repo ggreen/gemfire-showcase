@@ -68,7 +68,7 @@ class AccountControllerTest
         when(accountRepository.findById(account.getId())).thenReturn(Optional.of(account));
         subject.save(account);
         verify(accountRepository).save(account);
-        assertEquals(account,subject.findById(account.getId()).get());
+        assertEquals(account,subject.findById(account.getId()));
 
     }
 
