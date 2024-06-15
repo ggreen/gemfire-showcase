@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  http-amqp-source
+    app.kubernetes.io/name: http-amqp-source
+  name:  http-amqp-source
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  http-amqp-source
+  template:
+    metadata:
+      labels:
+        name:  http-amqp-source
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
+        instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/otelinst"
+    spec:
+      containers:
+        - env:
+            - name: spring.rabbitmq.host
+              value: rabbitmq-site1
+            - name: server.port
+              value: "8080"
+            - name: cluster
+              value: site1
+            - name: spring_rabbitmq_username
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-site1-default-user
+                  key: username
+            - name: spring.rabbitmq.password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-site1-default-user
+                  key: password
+            - name: management.wavefront.api-token
+              valueFrom:
+                secretKeyRef:
+                  name: wavefront-secret
+                  key: management.wavefront.api-token
+            - name: management.wavefront.uri
+              value: proxy://wavefront-proxy.observability-system.svc.cluster.local:2878
+            - name: management.wavefront.application.name
+              value: http-amqp-source
+            - name: management.wavefront.application.service-name
+              value: http-amqp-source
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60 #wait seconds before performing the first probe
+            periodSeconds: 5 #pecifies that the kubelet should perform a liveness probe every 3 seconds
+            timeoutSeconds: 10 # Number of seconds after which the probe times out.
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60 #wait seconds before performing the first probe
+            periodSeconds: 5 #pecifies that the kubelet should perform a liveness probe every 3 seconds
+            timeoutSeconds: 10 # Number of seconds after which the probe times out.
+            failureThreshold: 60
+          image: cloudnativedata/http-amqp-source:0.0.6-SNAPSHOT
+          name: http-amqp-source
+#          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-amqp-source-service
+spec:
+  selector:
+    name:  http-amqp-source
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer

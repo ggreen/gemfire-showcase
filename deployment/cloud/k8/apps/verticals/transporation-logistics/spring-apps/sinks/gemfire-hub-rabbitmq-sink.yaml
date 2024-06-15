@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  gemfire-sink-app
+  name:  gemfire-sink-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  gemfire-sink-app
+  template:
+    metadata:
+      labels:
+        name:  gemfire-sink-app
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
+        instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/otelinst"
+    spec:
+      containers:
+        - env:
+            - name: server.port
+              value: "8080"
+            - name: spring.application.name
+              value: gemfire-sink-app
+            - name: spring.rabbitmq.host
+              value: rabbitmq-hub
+            - name: spring.rabbitmq.stream.host
+              value: rabbitmq-hub
+            - name: spring.rabbitmq.username
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-hub-user
+                  key: username
+            - name: spring.rabbitmq.password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-hub-user
+                  key: password
+            - name: gemfire.pool.host-addresses
+              value: gemfire1-locator-0:10334
+#            - name: spring.data.gemfire.pool.locators
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: gemfire1-config
+#                  key: locators
+#            - name: cluster
+#              value: hub
+            - name: gemfire.consumer.json
+              value: "true"
+            - name: gemfire.region.region-name
+              value: "Event"
+            - name: gemfire.consumer.key-expression
+              value: "payload.getField('id')"
+            - name: spring.cloud.stream.bindings.input.destination
+              value: event-exchange
+            - name: spring.cloud.stream.bindings.input.group
+              value: gemfire-event
+            - name: spring.cloud.stream.rabbit.bindings.input.consumer.quorum.enabled
+              value: "true"
+            - name: spring.cloud.stream.rabbit.bindings.input.consumer.bindingRoutingKey
+              value: "#"
+              # management.wavefront.api-token
+#            - name: management.wavefront.api-token
+#              valueFrom:
+#                secretKeyRef:
+#                  name: wavefront-secret
+#                  key: management.wavefront.api-token
+#            - name: management.wavefront.uri
+#              value: proxy://wavefront-proxy.observability-system.svc.cluster.local:2878
+            - name: management.wavefront.application.name
+              value: gemfire-sink-app
+            - name: management.wavefront.application.service-name
+              value: gemfire-sink-app
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60 #wait seconds before performing the first probe
+            periodSeconds: 5 #pecifies that the kubelet should perform a liveness probe every 3 seconds
+            timeoutSeconds: 10 # Number of seconds after which the probe times out.
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60 #wait seconds before performing the first probe
+            periodSeconds: 5 #pecifies that the kubelet should perform a liveness probe every 3 seconds
+            timeoutSeconds: 10 # Number of seconds after which the probe times out.
+            failureThreshold: 60
+          image: gemfire/gemfire-sink-rabbit:1.0.1
+          name: gemfire-sink-app
+#          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent

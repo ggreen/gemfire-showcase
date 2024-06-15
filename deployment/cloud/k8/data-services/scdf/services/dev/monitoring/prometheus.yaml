@@ -1,0 +1,1534 @@
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: prometheus-kube-state-metrics
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+spec:
+  privileged: false
+  volumes:
+    - 'secret'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  readOnlyRootFilesystem: false
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: prometheus-node-exporter
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+    - 'hostPath'
+  hostNetwork: true
+  hostIPC: false
+  hostPID: true
+  hostPorts:
+    - min: 0
+      max: 65535
+  runAsUser:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  readOnlyRootFilesystem: false
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: prometheus-kube-prometheus-alertmanager
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: prometheus-kube-prometheus-operator
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  requiredDropCapabilities:
+    - ALL
+  volumes:
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
+    - 'persistentVolumeClaim'
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  runAsUser:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1001
+        max: 1001
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-kube-state-metrics
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-node-exporter
+  namespace: default
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-kube-prometheus-alertmanager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-kube-prometheus-operator
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: alertmanager-prometheus-kube-prometheus-alertmanager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+data:
+  alertmanager.yaml: "Z2xvYmFsOgogIHJlc29sdmVfdGltZW91dDogNW0KcmVjZWl2ZXJzOgotIG5hbWU6ICJudWxsIgpyb3V0ZToKICBncm91cF9ieToKICAtIGpvYgogIGdyb3VwX2ludGVydmFsOiA1bQogIGdyb3VwX3dhaXQ6IDMwcwogIHJlY2VpdmVyOiAibnVsbCIKICByZXBlYXRfaW50ZXJ2YWw6IDEyaAogIHJvdXRlczoKICAtIG1hdGNoOgogICAgICBhbGVydG5hbWU6IFdhdGNoZG9nCiAgICByZWNlaXZlcjogIm51bGwi"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-kube-prometheus-operator
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+data:
+  config-reloader-image: docker.io/bitnami/configmap-reload:0.4.0-debian-10-r55
+  prometheus-config-reloader: docker.io/bitnami/prometheus-operator:0.42.1-debian-10-r0
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-kube-state-metrics
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+rules:
+  - apiGroups: ["certificates.k8s.io"]
+    resources:
+      - certificatesigningrequests
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - configmaps
+    verbs: ["list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - cronjobs
+    verbs: ["list", "watch"]
+  - apiGroups: ["extensions", "apps"]
+    resources:
+      - daemonsets
+    verbs: ["list", "watch"]
+  - apiGroups: ["extensions", "apps"]
+    resources:
+      - deployments
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - endpoints
+    verbs: ["list", "watch"]
+  - apiGroups: ["autoscaling"]
+    resources:
+      - horizontalpodautoscalers
+    verbs: ["list", "watch"]
+  - apiGroups: ["extensions", "networking.k8s.io"]
+    resources:
+      - ingresses
+    verbs: ["list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - limitranges
+    verbs: ["list", "watch"]
+  - apiGroups: ["admissionregistration.k8s.io"]
+    resources:
+      - mutatingwebhookconfigurations
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - namespaces
+    verbs: ["list", "watch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - networkpolicies
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - nodes
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - persistentvolumeclaims
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - persistentvolumes
+    verbs: ["list", "watch"]
+  - apiGroups: ["policy"]
+    resources:
+      - poddisruptionbudgets
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - pods
+    verbs: ["list", "watch"]
+  - apiGroups: ["extensions", "apps"]
+    resources:
+      - replicasets
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - replicationcontrollers
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - resourcequotas
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - secrets
+    verbs: ["list", "watch"]
+  - apiGroups: [""]
+    resources:
+      - services
+    verbs: ["list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - statefulsets
+    verbs: ["list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources:
+      - storageclasses
+    verbs: ["list", "watch"]
+  - apiGroups: ["storage.k8s.io"]
+    resources:
+      - volumeattachments
+    verbs: ["list", "watch"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-kube-state-metrics-psp
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+rules:
+  - apiGroups: ['extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames:
+      - prometheus-kube-state-metrics
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-node-exporter-psp
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+rules:
+  - apiGroups: ['extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames:
+      - prometheus-node-exporter
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-kube-prometheus-alertmanager-psp
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+rules:
+  - apiGroups: ['extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames:
+      - prometheus-kube-prometheus-alertmanager
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-kube-prometheus-operator
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+rules:
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - create
+  - apiGroups:
+      - apiextensions.k8s.io
+    resourceNames:
+      - alertmanagers.monitoring.coreos.com
+      - podmonitors.monitoring.coreos.com
+      - prometheuses.monitoring.coreos.com
+      - prometheusrules.monitoring.coreos.com
+      - servicemonitors.monitoring.coreos.com
+      - thanosrulers.monitoring.coreos.com
+      - probes.monitoring.coreos.com
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+      - update
+  - apiGroups:
+      - monitoring.coreos.com
+    resources:
+      - alertmanagers
+      - alertmanagers/finalizers
+      - prometheuses
+      - prometheuses/finalizers
+      - thanosrulers
+      - thanosrulers/finalizers
+      - servicemonitors
+      - podmonitors
+      - probes
+      - prometheusrules
+    verbs:
+      - '*'
+  - apiGroups:
+      - apps
+    resources:
+      - statefulsets
+    verbs:
+      - '*'
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+      - secrets
+    verbs:
+      - '*'
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - list
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - services/finalizers
+      - endpoints
+    verbs:
+      - get
+      - create
+      - update
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+      - watch
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-kube-prometheus-operator-psp
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+rules:
+  - apiGroups: ['extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames:
+      - prometheus-kube-prometheus-operator
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/metrics
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - nodes/proxy
+      - services
+      - endpoints
+      - pods
+    verbs:
+      - "get"
+      - "list"
+      - "watch"
+  - apiGroups:
+      - extensions
+      - "networking.k8s.io"
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - nonResourceURLs:
+      - "/metrics"
+    verbs:
+      - "get"
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-kube-prometheus-prometheus-psp
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+rules:
+  - apiGroups: ['extensions']
+    resources: ['podsecuritypolicies']
+    verbs: ['use']
+    resourceNames:
+      - prometheus-kube-prometheus-prometheus
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-state-metrics
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-state-metrics
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-state-metrics
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-state-metrics-psp
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-state-metrics-psp
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-state-metrics
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-node-exporter-psp
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-node-exporter-psp
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-node-exporter
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-prometheus-alertmanager-psp
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-prometheus-alertmanager-psp
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-prometheus-alertmanager
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-prometheus-operator
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-prometheus-operator
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-prometheus-operator
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-prometheus-operator-psp
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-prometheus-operator-psp
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-prometheus-operator
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-prometheus-prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-prometheus-prometheus
+    namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-kube-prometheus-prometheus-psp
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-kube-prometheus-prometheus-psp
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-kube-prometheus-prometheus
+    namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-state-metrics
+  namespace: default
+  annotations:
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-node-exporter
+  namespace: default
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+    jobLabel: node-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 9100
+      targetPort: metrics
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-alertmanager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9093
+      targetPort: 9093
+  selector:
+    app: alertmanager
+    alertmanager: prometheus-kube-prometheus-alertmanager
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-coredns
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus-kube-prometheus-coredns
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 9153
+      protocol: TCP
+      targetPort: 9153
+  selector:
+    k8s-app: kube-dns
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-kube-controller-manager
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus-kube-prometheus-kube-controller-manager
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 10252
+      protocol: TCP
+      targetPort: 10252
+  selector:
+    component: kube-controller-manager
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-kube-proxy
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: kube-proxy
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 10249
+      protocol: TCP
+      targetPort: 10249
+  selector:
+    k8s-app: kube-proxy
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-kube-scheduler
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus-kube-prometheus-kube-scheduler
+spec:
+  clusterIP: None
+  ports:
+    - name: http-metrics
+      port: 10251
+      protocol: TCP
+      targetPort: 10251
+  selector:
+    component: kube-scheduler
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-operator
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 9090
+      targetPort: 9090
+      protocol: TCP
+  selector:
+    app: prometheus
+    prometheus: prometheus-kube-prometheus-prometheus
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: prometheus-node-exporter
+  namespace: default
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: node-exporter
+      app.kubernetes.io/instance: prometheus
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+  minReadySeconds: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: node-exporter
+        app.kubernetes.io/instance: prometheus
+        app.kubernetes.io/version: "1.0.1"
+    spec:
+      serviceAccountName: prometheus-node-exporter      
+      securityContext:
+        runAsUser: 1001
+        fsGroup: 1001
+        runAsNonRoot: 
+      containers:
+        - name: node-exporter
+          image: docker.io/bitnami/node-exporter:1.0.1-debian-10-r73
+          imagePullPolicy: IfNotPresent
+          args:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+            - --web.listen-address=0.0.0.0:9100
+            - --collector.filesystem.ignored-fs-types=^(autofs|binfmt_misc|cgroup|configfs|debugfs|devpts|devtmpfs|fusectl|hugetlbfs|mqueue|overlay|proc|procfs|pstore|rpc_pipefs|securityfs|sysfs|tracefs)$
+            - --collector.filesystem.ignored-mount-points=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+          ports:
+            - name: metrics
+              containerPort: 9100
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            failureThreshold: 6
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: metrics
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits: {}
+            requests: {}
+          volumeMounts:
+            - name: proc
+              mountPath: /host/proc
+              readOnly: true
+            - name: sys
+              mountPath: /host/sys
+              readOnly: true
+      hostNetwork: true
+      hostPID: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-kube-state-metrics
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-state-metrics
+      app.kubernetes.io/instance: prometheus
+  replicas: 1
+  strategy:
+    {}
+  minReadySeconds: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kube-state-metrics
+        app.kubernetes.io/instance: prometheus
+        app.kubernetes.io/version: "1.9.7"
+    spec:      
+      securityContext:
+        runAsUser: 1001
+        fsGroup: 1001
+      hostNetwork: true
+      serviceAccountName: prometheus-kube-state-metrics
+      containers:
+        - name: kube-state-metrics
+          image: docker.io/bitnami/kube-state-metrics:1.9.7-debian-10-r73
+          imagePullPolicy: IfNotPresent
+          args:
+            - --collectors=certificatesigningrequests
+            - --collectors=configmaps
+            - --collectors=cronjobs
+            - --collectors=daemonsets
+            - --collectors=deployments
+            - --collectors=endpoints
+            - --collectors=horizontalpodautoscalers
+            - --collectors=ingresses
+            - --collectors=jobs
+            - --collectors=limitranges
+            - --collectors=mutatingwebhookconfigurations
+            - --collectors=namespaces
+            - --collectors=networkpolicies
+            - --collectors=nodes
+            - --collectors=persistentvolumeclaims
+            - --collectors=persistentvolumes
+            - --collectors=poddisruptionbudgets
+            - --collectors=pods
+            - --collectors=replicasets
+            - --collectors=replicationcontrollers
+            - --collectors=resourcequotas
+            - --collectors=secrets
+            - --collectors=services
+            - --collectors=statefulsets
+            - --collectors=storageclasses
+            - --collectors=volumeattachments
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          resources:
+            limits: {}
+            requests: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-kube-prometheus-operator
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: prometheus
+      app.kubernetes.io/component: operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kube-prometheus
+        app.kubernetes.io/instance: prometheus
+        app.kubernetes.io/component: operator
+      annotations:
+    spec:
+      serviceAccountName: prometheus-kube-prometheus-operator
+      securityContext:
+        runAsUser: 1001
+        fsGroup: 1001
+        runAsNonRoot: 
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                topologyKey: "kubernetes.io/hostname"
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: kube-prometheus
+                    app.kubernetes.io/instance: prometheus
+                    app.kubernetes.io/component: operator
+      containers:
+        - name: prometheus-operator
+          image: docker.io/bitnami/prometheus-operator:0.42.1-debian-10-r0
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: CONFIG_RELOADER_IMAGE
+            valueFrom:
+              configMapKeyRef:
+                name: prometheus-kube-prometheus-operator
+                key: config-reloader-image
+          - name: PROMETHEUS_CONFIG_RELOADER
+            valueFrom:
+              configMapKeyRef:
+                name: prometheus-kube-prometheus-operator
+                key: prometheus-config-reloader
+          args:
+            - --kubelet-service=kube-system/prometheus-kube-prometheus-kubelet
+            - --log-format=logfmt
+            - --log-level=info
+            - --logtostderr=true
+            - --localhost=127.0.0.1
+            - --config-reloader-image=$(CONFIG_RELOADER_IMAGE)
+            - --prometheus-config-reloader=$(PROMETHEUS_CONFIG_RELOADER)
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            failureThreshold: 6
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: http
+            failureThreshold: 6
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: prometheus-kube-prometheus-alertmanager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+spec:
+  replicas: 1
+  serviceAccountName: prometheus-kube-prometheus-alertmanager
+  image: docker.io/bitnami/alertmanager:0.21.0-debian-10-r80
+  listenLocal: false
+  externalUrl: http://prometheus-kube-prometheus-alertmanager.default:9093
+  paused: false
+  logFormat: logfmt
+  logLevel: info
+  retention: 120h
+  resources:
+    {}
+  routePrefix: "/"
+  securityContext:
+    runAsUser: 1001
+    fsGroup: 1001
+  podMetadata:
+    labels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: prometheus
+      app.kubernetes.io/component: alertmanager
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: kube-prometheus
+                app.kubernetes.io/instance: prometheus
+                app.kubernetes.io/component: alertmanager
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+spec:
+  replicas: 1
+  serviceAccountName: prometheus-kube-prometheus-prometheus
+  serviceMonitorSelector: {}
+  podMonitorSelector: {}
+  probeSelector: {}
+  alerting:
+    alertmanagers:
+      - namespace: default
+        name: prometheus-kube-prometheus-alertmanager
+        port: http
+        pathPrefix: "/"
+  image: docker.io/bitnami/prometheus:2.21.0-debian-10-r11
+  externalUrl: http://prometheus-kube-prometheus-prometheus.default:9090/
+  paused: false
+  logLevel: info
+  logFormat: logfmt
+  listenLocal: false
+  enableAdminAPI: false
+  resources:
+    {}
+  retention: 10d
+  routePrefix: "/"
+  serviceMonitorNamespaceSelector: {}
+  podMonitorNamespaceSelector: {}
+  probeNamespaceSelector: {}
+  securityContext:
+    runAsUser: 1001
+    fsGroup: 1001
+  ruleNamespaceSelector: {}
+  ruleSelector: {}
+  podMetadata:
+    labels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: prometheus
+      app.kubernetes.io/component: prometheus
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            topologyKey: "kubernetes.io/hostname"
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: kube-prometheus
+                app.kubernetes.io/instance: prometheus
+                app.kubernetes.io/component: prometheus
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-state-metrics
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.9.7"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-state-metrics
+      app.kubernetes.io/instance: prometheus
+  endpoints:
+    - port: http
+  namespaceSelector:
+    matchNames:
+    - default
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-node-exporter
+  namespace: default
+  labels:
+    app.kubernetes.io/name: node-exporter
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/version: "1.0.1"
+spec:
+  jobLabel: jobLabel
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: node-exporter
+      app.kubernetes.io/instance: prometheus
+  endpoints:
+    - port: metrics
+  namespaceSelector:
+    matchNames:
+    - default
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-alertmanager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: alertmanager
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: prometheus
+      app.kubernetes.io/component: alertmanager
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: "/metrics"
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-coredns
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus-kube-prometheus-coredns
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: prometheus-kube-prometheus-coredns
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  endpoints:
+  - port: http-metrics
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-apiserver
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: apiserver
+spec:
+  jobLabel: component
+  selector:
+    matchLabels:
+      component: apiserver
+      provider: kubernetes
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: https
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        serverName: kubernetes
+        insecureSkipVerify: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-kube-controller-manager
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus-kube-prometheus-kube-controller-manager
+spec:
+  jobLabel: component
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: prometheus-kube-prometheus-kube-controller-manager
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  endpoints:
+  - port: http-metrics
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-kube-proxy
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: kube-proxy
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: kube-proxy
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  endpoints:
+    - port: http-metrics
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-kube-scheduler
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus-kube-prometheus-kube-scheduler
+spec:
+  jobLabel: component
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: prometheus-kube-prometheus-kube-scheduler
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  endpoints:
+  - port: http-metrics
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-kubelet
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: kubelet
+spec:
+  jobLabel: k8s-app
+  selector:
+    matchLabels:
+      k8s-app: kubelet
+  namespaceSelector:
+    matchNames:
+      - kube-system
+  endpoints:
+    - port: https-metrics
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        serverName: kubernetes
+        insecureSkipVerify: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+    - port: https-metrics
+      path: /metrics/cadvisor
+      scheme: https
+      tlsConfig:
+        caFile: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        serverName: kubernetes
+        insecureSkipVerify: true
+      bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+      honorLabels: true
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-operator
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: operator
+spec:
+  endpoints:
+    - port: http
+      honorLabels: true
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: prometheus
+      app.kubernetes.io/component: operator
+  namespaceSelector:
+    matchNames:
+      - default
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-kube-prometheus-prometheus
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kube-prometheus
+    app.kubernetes.io/instance: prometheus
+    app.kubernetes.io/component: prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kube-prometheus
+      app.kubernetes.io/instance: prometheus
+      app.kubernetes.io/component: prometheus
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics

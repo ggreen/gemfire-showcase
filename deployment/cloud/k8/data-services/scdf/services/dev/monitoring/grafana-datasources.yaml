@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-datasources
+  labels:
+    app: grafana
+stringData:
+  application.yaml: |-
+    apiVersion: 1
+    datasources:
+    - name: ScdfPrometheus
+      type: prometheus
+      access: proxy
+      org_id: 1
+      url: http://prometheus-operated:9090
+      is_default: true
+      version: 5
+      editable: true
+      read_only: false

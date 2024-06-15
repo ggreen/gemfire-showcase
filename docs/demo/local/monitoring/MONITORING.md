@@ -1,3 +1,10 @@
-‑‑J=-Dgemfire.promethesus.metrics.host=localhost
+Start script
 
-start locator --name=locator1 --port=10334 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7777 --J=-Dgemfire.prometheus.metrics.host=localhost --J=-Dgemfire.prometheus.metrics.interval=15s
+```shell
+.\deployments/scripts/monitoring/start.sh
+```
+
+Or execute from online script
+```shell
+curl https://raw.githubusercontent.com/ggreen/gemfire-extensions/main/deployments/scripts/monitoring/start.sh | bash
+```

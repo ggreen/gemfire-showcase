@@ -1,7 +1,9 @@
 # GemFire Extension 
 
 
-This project contains an API for Java Virtual Machine based languages to access [GemFire](https://tanzu.vmware.com/gemfire). It builds on top of the core GemFire APIs. It provides a simple interface to connect and perform GemFire data access operations.
+This project contains an API for Java Virtual Machine based languages to access [GemFire](https://tanzu.vmware.com/gemfire). It builds on top of the core GemFire APIs. 
+
+It provides a simple interface to connect and perform GemFire data access operations.
 
 
 See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)
@@ -20,7 +22,7 @@ See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-exten
 | [components/gemfire-security-managers](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-security-managers)                   | [GemFire security manager](https://tanzu.vmware.com/developer/data/gemfire/blog/security-manager-basics-authentication-and-authorization/) implementations |
 | [components/gemfire-touch-function](components/gemfire-touch-function)                                                                                | GemFire function to synchronize region in WAN replicated GemFire clusters                                                                                  |
 | [components/functions/gemfire-clear-region-function](components/functions/gemfire-clear-region-function)                                              | GemFire function to clear region data in a GemFire partitioned region                                                                                      |
-| [deployments/scripts/gemfire-devOps-bash](deployments/scripts/gemfire-devOps-bash)                                                                    | GemFire cluster operations DevOps management scripts                                                                                                       |
+| [deployments/scripts/gemfire-devOps-bash](deployment/scripts/gemfire-devOps-bash)                                                                    | GemFire cluster operations DevOps management scripts                                                                                                       |
 
 
 

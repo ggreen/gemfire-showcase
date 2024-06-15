@@ -1,0 +1,2 @@
+export GEMFIRE_OPERATOR_DOWNLOAD_DIR=/Users/devtools/repositories/IMDG/gf-kubernetes
+export POSTGRES_OPERATOR_DOWNLOAD_DIR=/Users/devtools/repositories/RDMS/PostgreSQL/kubernetes/VMware/postgres-for-kubernetes-v1.2.0

@@ -1,0 +1,223 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: spring-cloud-skipper-server
+  name: scdf-skipper
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: spring-cloud-skipper-server
+  name: skipper-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - persistentvolumeclaims
+  - replicationcontrollers
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - secrets
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  - deployments
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+  - patch
+- apiGroups:
+  - extensions
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: spring-cloud-skipper-server
+  name: skipper-rb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: skipper-role
+subjects:
+- kind: ServiceAccount
+  name: scdf-skipper
+---
+apiVersion: v1
+data:
+  application-broker.yaml: |
+    spring:
+      cloud:
+        skipper:
+          server:
+            platform:
+              kubernetes:
+                accounts:
+                  default:
+                    environmentVariables: 'SPRING_CLOUD_CONFIG_ENABLED=false,SPRING_RABBITMQ_HOST=rabbitmq,SPRING_RABBITMQ_PORT=${RABBITMQ_SERVICE_PORT_AMQP},SPRING_RABBITMQ_USERNAME=app,SPRING_RABBITMQ_PASSWORD=CHANGEME'
+  application-database.yaml: "spring:\n  datasource:\n    url: jdbc:postgresql://postgres:5432/postgres\n
+    \   username: postgres\n    password: CHANGEME \n    driverClassName: org.postgresql.Driver\n
+    \   testOnBorrow: true\n    validationQuery: \"SELECT 1\"\n"
+  application.yaml: |
+    spring:
+      cloud:
+        skipper:
+          server:
+            platform:
+              kubernetes:
+                accounts:
+                  default:
+                    limits:
+                      memory: 512Mi
+                      cpu: 400m
+                    requests:
+                      memory: 512Mi
+                      cpu: 200m
+                    readinessProbeDelay: 90
+                    livenessProbeDelay: 120
+          security:
+            authorization:
+              permit-all-paths: "/actuator/health,/actuator/info,/authenticate,/security/info,/features,/assets/**,/dashboard/logout-success-oauth.html"
+  bootstrap.yaml: |
+    spring:
+      cloud:
+        config:
+          enabled: false
+kind: ConfigMap
+metadata:
+  name: skipper-22b9k8bdfg
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: skipper
+    app.kubernetes.io/name: spring-cloud-skipper-server
+    spring-deployment-id: scdf
+  name: skipper
+spec:
+  ports:
+  - port: 80
+    targetPort: 7577
+  selector:
+    app: skipper
+    app.kubernetes.io/name: spring-cloud-skipper-server
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: skipper
+    app.kubernetes.io/name: spring-cloud-skipper-server
+  name: skipper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: skipper
+      app.kubernetes.io/name: spring-cloud-skipper-server
+  template:
+    metadata:
+      labels:
+        app: skipper
+        app.kubernetes.io/name: spring-cloud-skipper-server
+    spec:
+      containers:
+      - env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: database,broker
+        - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+          value: /workspace/runtime/config/
+        - name: SPRING_CLOUD_KUBERNETES_CONFIG_ENABLE_API
+          value: "false"
+        - name: SPRING_CLOUD_KUBERNETES_SECRETS_PATHS
+          value: /workspace/runtime/secrets
+        image: registry.pivotal.io/p-scdf-for-kubernetes/spring-cloud-skipper-server@sha256:4d4fd0ba0bcfd866ae48275121a77674358f724d61286a9c84f33b7afdba709d
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 7577
+          initialDelaySeconds: 90
+          periodSeconds: 30
+        name: skipper
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /actuator/info
+            port: 7577
+          initialDelaySeconds: 60
+          periodSeconds: 15
+        resources:
+          limits:
+            cpu: 1
+            memory: 768Mi
+          requests:
+            cpu: 500m
+            memory: 768Mi
+        volumeMounts:
+        - mountPath: /workspace/runtime/secrets/broker
+          name: broker
+          readOnly: true
+        - mountPath: /workspace/runtime/secrets/database
+          name: database
+          readOnly: true
+        - mountPath: /workspace/runtime/config
+          name: config
+          readOnly: true
+      imagePullSecrets:
+      - name: scdf-image-regcred
+      serviceAccountName: scdf-skipper
+      volumes:
+      - name: broker
+        secret:
+          items:
+          - key: rabbitmq-password
+            path: broker-password
+          secretName: rabbitmq
+      - name: database
+        secret:
+          items:
+          - key: postgresql-password
+            path: database-password
+          secretName: postgresql
+      - configMap:
+          name: skipper-22b9k8bdfg
+        name: config

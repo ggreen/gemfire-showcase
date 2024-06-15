@@ -1,0 +1,153 @@
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: tanzu-hare
+  namespace: rabbitmq-poc
+spec:
+  replicas: 1
+  resources:
+    requests:
+      cpu: "1"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+  imagePullSecrets:
+  - name: tanzu-rabbitmq-registry-creds
+  rabbitmq:
+    additionalPlugins:
+      - rabbitmq_stream
+      - rabbitmq_schema_definition_sync
+      - rabbitmq_schema_definition_sync_prometheus # optional
+      - rabbitmq_standby_replication
+    additionalConfig: |
+      schema_definition_sync.operating_mode = upstream
+      standby.replication.operating_mode = upstream
+      # message stream retention limit (can either be size or time based)
+      standby.replication.retention.size_limit.messages = 5000000000
+      # standby.replication.retention.time_limit.messages = 12h
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers: []
+            securityContext:
+              runAsUser: 999
+              runAsGroup: 999
+              fsGroup: 999
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: tanzu-bunny
+  namespace: rabbitmq-poc
+spec:
+  replicas: 1
+  resources:
+    requests:
+      cpu: "1"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+  imagePullSecrets:
+  - name: tanzu-rabbitmq-registry-creds
+  rabbitmq:
+    additionalPlugins:
+      - rabbitmq_stream
+      - rabbitmq_schema_definition_sync
+      - rabbitmq_schema_definition_sync_prometheus
+      - rabbitmq_standby_replication
+    additionalConfig: |
+      schema_definition_sync.operating_mode = downstream
+      standby.replication.operating_mode = downstream
+      schema_definition_sync.downstream.locals.users = ^default_user_
+      schema_definition_sync.downstream.locals.global_parameters = ^standby
+      # message stream retention limit (can either be size or time based)
+      standby.replication.retention.size_limit.messages = 5000000000
+      # standby.replication.retention.time_limit.messages = 12h
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers: []
+            securityContext:
+              runAsUser: 999
+              runAsGroup: 999
+              fsGroup: 999
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ha-users
+  namespace: rabbitmq-poc
+type: Opaque
+stringData:
+  username: replicator
+  password: supersecret
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: replicator
+  namespace: rabbitmq-poc
+spec:
+  tags:
+  - administrator
+  rabbitmqClusterReference:
+    name: tanzu-hare
+  importCredentialsSecret:
+    name: ha-users
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: replicator.all.rabbitmq-schema-definition-sync
+  namespace: rabbitmq-poc
+spec:
+  vhost: "rabbitmq_schema_definition_sync"
+  userReference:
+    name: "replicator"
+  permissions:
+    write: ".*"
+    configure: ".*"
+    read: ".*"
+  rabbitmqClusterReference:
+    name: tanzu-hare
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: SchemaReplication
+metadata:
+  name: tanzu-hare-upstream
+  namespace: rabbitmq-poc
+spec:
+  upstreamSecret:
+    name: ha-users
+  endpoints: "tanzu-hare:5672"
+  rabbitmqClusterReference:
+    name: tanzu-hare
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: SchemaReplication
+metadata:
+  name: tanzu-bunny-downstream
+  namespace: rabbitmq-poc
+spec:
+  upstreamSecret:
+    name: ha-users
+  endpoints: "tanzu-hare:5672"
+  rabbitmqClusterReference:
+    name: tanzu-bunny
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Vhost
+metadata:
+  name: rabbitmq-schema-definition-sync
+spec:
+  name: rabbitmq_schema_definition_sync
+  rabbitmqClusterReference:
+    name: tanzu-hare
+---

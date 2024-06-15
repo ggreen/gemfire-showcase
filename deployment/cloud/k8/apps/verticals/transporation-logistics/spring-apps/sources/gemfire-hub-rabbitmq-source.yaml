@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  gemfire-source-rabbit
+  name:  gemfire-source-rabbit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  gemfire-source-rabbit
+  template:
+    metadata:
+      labels:
+        name:  gemfire-source-rabbit
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
+        instrumentation.opentelemetry.io/inject-java: "opentelemetry-operator-system/otelinst"
+    spec:
+      containers:
+        - env:
+            - name: server.port
+              value: "8080"
+            - name: gemfire.client.pdx-read-serialized
+              value: "true"
+            - name: gemfire.pool.connect-type
+              value: locator
+            - name: gemfire.pool.host-addresses
+              value: "gemfire1-locator:10334"
+            - name: gemfire.pool.subscription-enabled
+              value: "true"
+            - name: gemfire.region.region-name
+              value: Event
+            - name: gemfire.supplier.query
+              value: ":W"
+            - name: spring.application.name
+              value: gemfire-source-rabbit
+            - name: spring.rabbitmq.host
+              value: rabbitmq-hub
+            - name: spring.rabbitmq.stream.host
+              value: rabbitmq-hub
+            - name: spring.rabbitmq.username
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-hub-user
+                  key: username
+            - name: spring.rabbitmq.password
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-hub-user
+                  key: password
+            - name: spring.data.gemfire.pool.locators
+              valueFrom:
+                configMapKeyRef:
+                  name: gemfire1-config
+                  key: locators
+            - name: cluster
+              value: hub
+            - name: spring.cloud.stream.bindings.output.destination
+              value: event-urgent-exchange
+            - name: spring.cloud.stream.bindings.output.group
+              value: gemfire-event
+            - name: spring.cloud.stream.rabbit.bindings.output.consumer.quorum.enabled
+              value: "true"
+            - name: spring.cloud.stream.rabbit.bindings.output.consumer.bindingRoutingKey
+              value: "#"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60 #wait seconds before performing the first probe
+            periodSeconds: 5 #pecifies that the kubelet should perform a liveness probe every 3 seconds
+            timeoutSeconds: 10 # Number of seconds after which the probe times out.
+            failureThreshold: 60
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 60 #wait seconds before performing the first probe
+            periodSeconds: 5 #pecifies that the kubelet should perform a liveness probe every 3 seconds
+            timeoutSeconds: 10 # Number of seconds after which the probe times out.
+            failureThreshold: 60
+          image: gemfire/gemfire-source-rabbit:1.0.1
+          name: gemfire-source-rabbit

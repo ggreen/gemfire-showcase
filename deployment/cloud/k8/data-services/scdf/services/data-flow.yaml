@@ -1,0 +1,232 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/name: scdf-server
+  name: scdf-data-flow
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: scdf-server
+  name: scdf-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - delete
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - secrets
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - watch
+  - update
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: scdf-server
+  name: scdf-rb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: scdf-role
+subjects:
+- kind: ServiceAccount
+  name: scdf-data-flow
+---
+apiVersion: v1
+data:
+  application-database.yaml: "spring:\n  datasource:\n    url: jdbc:postgresql://postgres:5432/postgres\n
+    \   username: postgres\n    password: CHANGEME \n    driverClassName: org.postgresql.Driver\n
+    \   testOnBorrow: true\n    validationQuery: \"SELECT 1\"\n"
+  application-monitoring.yaml: |
+    management:
+      metrics:
+        export:
+          prometheus:
+            enabled: true
+            rsocket:
+              enabled: true
+              host: scdf-prometheus-proxy
+              port: 7001
+    spring:
+      cloud:
+        dataflow:
+          metrics.dashboard:
+            url: 'http://localhost:3000'
+  application.yaml: |
+    server:
+      port: 8080
+    spring:
+      cloud:
+        dataflow:
+          container:
+            registry-configurations:
+              tanzu-net:
+                registry-host: registry.pivotal.io/p-scdf-for-kubernetes
+                authorization-type: dockeroauth2
+                extra:
+                  "registryAuthUri": https://registry.pivotal.io/p-scdf-for-kubernetes/service/token?service=harbor-registry&scope=repository:{repository}:pull
+          server:
+            uri: http://${SCDF_SERVER_SERVICE_HOST}:${SCDF_SERVER_SERVICE_PORT}
+          features:
+            schedules-enabled: true
+          task:
+            composedtaskrunner:
+              uri: docker://registry.pivotal.io/p-scdf-for-kubernetes/spring-cloud-dataflow-composed-task-runner@sha256:330171a6b7ad591a36704aeab9434b5d86bc9754946d222169c76587e02c7b19
+            platform:
+              kubernetes:
+                accounts:
+                  default:
+                    imagePullSecret: scdf-image-regcred
+                    limits:
+                      memory: 512Mi
+                      cpu: 400m
+                    requests:
+                      memory: 512Mi
+                      cpu: 200m
+          security:
+            authorization:
+              permit-all-paths: "/management/health,/management/info,/authenticate,/security/info,/assets/**,/dashboard/logout-success-oauth.html,/favicon.ico"
+        skipper:
+          client:
+            serverUri: http://${SKIPPER_SERVICE_HOST}:${SKIPPER_SERVICE_PORT}/api
+    maven:
+      remote-repositories:
+        repo1:
+          url: https://repo.spring.io/libs-snapshot
+  bootstrap.yaml: |
+    spring:
+      cloud:
+        config:
+          enabled: false
+kind: ConfigMap
+metadata:
+  name: scdf-server-btbgfggk69
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: scdf-server
+    app.kubernetes.io/name: scdf-server
+    spring-deployment-id: scdf
+  name: scdf-server
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: scdf-server
+    app.kubernetes.io/name: scdf-server
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: scdf-server
+    app.kubernetes.io/name: scdf-server
+  name: scdf-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scdf-server
+      app.kubernetes.io/name: scdf-server
+  template:
+    metadata:
+      labels:
+        app: scdf-server
+        app.kubernetes.io/name: scdf-server
+    spec:
+      containers:
+      - env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: database,monitoring
+        - name: SPRING_CONFIG_ADDITIONAL_LOCATION
+          value: /workspace/runtime/config/
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: SPRING_CLOUD_KUBERNETES_CONFIG_ENABLE_API
+          value: "false"
+        - name: SPRING_CLOUD_KUBERNETES_SECRETS_PATHS
+          value: /workspace/runtime/secrets
+        image: registry.pivotal.io/p-scdf-for-kubernetes/spring-cloud-dataflow-pro-server@sha256:623464297957667f2ac93e8709d4241da02ec1a2b05d2f02571631e0c1a458f7
+        livenessProbe:
+          httpGet:
+            path: /management/health
+            port: 8080
+          initialDelaySeconds: 90
+          periodSeconds: 30
+        name: scdf-server
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /management/info
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 15
+        resources:
+          limits:
+            cpu: 1
+            memory: 768Mi
+          requests:
+            cpu: 500m
+            memory: 768Mi
+        volumeMounts:
+        - mountPath: /workspace/runtime/secrets/database
+          name: database
+          readOnly: true
+        - mountPath: /workspace/runtime/secrets/dockerconfig
+          name: dockerconfig
+          readOnly: true
+        - mountPath: /workspace/runtime/config
+          name: config
+          readOnly: true
+      imagePullSecrets:
+      - name: scdf-image-regcred
+      serviceAccountName: scdf-data-flow
+      volumes:
+      - name: database
+        secret:
+          items:
+          - key: postgresql-password
+            path: database-password
+          secretName: postgresql
+      - name: dockerconfig
+        secret:
+          secretName: scdf-image-regcred
+      - configMap:
+          name: scdf-server-btbgfggk69
+        name: config
