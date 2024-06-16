@@ -8,7 +8,6 @@ import org.springframework.data.gemfire.mapping.annotation.Region;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Region(name = "Account")
 public class Account
 {
     private String id;

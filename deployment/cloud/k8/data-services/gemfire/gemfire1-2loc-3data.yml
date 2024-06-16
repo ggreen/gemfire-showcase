@@ -1,0 +1,45 @@
+apiVersion: gemfire.vmware.com/v1
+kind: GemFireCluster
+metadata:
+  name: gemfire1
+spec:
+  image: gemfire/gemfire:10.1
+  security:
+    tls: {}
+  metrics:
+    emission: Default
+  ingress:
+    gatewayName: gf-gateway
+  persistentVolumeClaim:
+    deleteOnShutdown: true
+  serialization:
+    pdx:
+      readSerialized: true
+  locators:
+    replicas: 2
+    resources:
+      requests:
+        memory: 1Gi
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 2Gi
+    overrides:
+      gemFireProperties:
+        - name: "distributed-system-id"
+          value: "1"
+  servers:
+    replicas: 3
+    resources:
+      requests:
+        memory: 2Gi
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 4Gi
+    overrides:
+      gemFireProperties:
+        - name: "distributed-system-id"
+          value: "1"
+        - name: "start-dev-rest-api"
+          value: "true"

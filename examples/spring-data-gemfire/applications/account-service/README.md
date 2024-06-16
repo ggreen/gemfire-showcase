@@ -27,11 +27,19 @@ mvn package
 ```
 
 
-# Docker
+# Docker building image
 
-```shell script
-docker tag account-rest-service:0.0.1-SNAPSHOT nyla/account-rest-service:0.0.1-SNAPSHOT 
-docker login
-docker push nyla/account-rest-service:0.0.1-SNAPSHOT
+```shell
+cd examples/spring-data-gemfire/applications/account-service
+mvn package
 
+docker build   --platform linux/amd64,linux/arm64 -t account-service-gemfire-showcase:0.0.1-SNAPSHOT .
+#docker build   --platform linux/amd64,linux/arm64 --build-arg JAR_FILE=build/libs/\*.jar -t account-service:0.0.1-SNAPSHOT .
+#docker build  --platform linux/amd64,linux/arm64 -t account-service-gemfire-showcase:0.0.1-SNAPSHOT .
+
+```
+
+```shell
+docker tag account-service-gemfire-showcase:0.0.1-SNAPSHOT cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
+docker push cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
 ```

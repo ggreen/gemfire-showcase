@@ -24,8 +24,8 @@ public class AccountController
         return accountRepository.save(account);
     }
 
-    @GetMapping
-    public Account findById(@RequestParam("id") String id)
+    @GetMapping("{id}")
+    public Account findById(@PathVariable("id") String id)
     {
        try{
            return accountRepository.findById(id).orElse(null);

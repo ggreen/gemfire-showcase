@@ -11,11 +11,13 @@ import org.springframework.data.gemfire.client.ClientRegionFactoryBean;
 import org.springframework.data.gemfire.config.annotation.ClientCacheApplication;
 import org.springframework.data.gemfire.config.annotation.EnableEntityDefinedRegions;
 import org.springframework.data.gemfire.config.annotation.EnableSecurity;
+import org.springframework.data.gemfire.config.annotation.EnablePdx;
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 
 @ClientCacheApplication
 @EnableSecurity
 @Configuration
+@EnablePdx
 @EnableGemfireRepositories
 public class GemFireConf
 {
