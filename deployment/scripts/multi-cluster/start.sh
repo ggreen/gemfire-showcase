@@ -27,4 +27,5 @@ $GEMFIRE_HOME/bin/gfsh -e "start server --name=gf2-server --use-cluster-configur
 $GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]"  -e  "create gateway-receiver" -e  "create gateway-sender --id=Account_Sender_to_1 --parallel=true  --remote-distributed-system-id=1 --enable-persistence=true --enable-batch-conflation=true"
 
 $GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]"  -e  "create region --name=Account --type=PARTITION --gateway-sender-id=Account_Sender_to_1"
+
 $GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]"  -e  "create region --name=health2 --type=PARTITION"

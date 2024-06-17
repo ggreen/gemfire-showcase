@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  spring-gateway-healthcheck
+  name:  spring-gateway-healthcheck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  spring-gateway-healthcheck
+  template:
+    metadata:
+      labels:
+        name:  spring-gateway-healthcheck
+    spec:
+      containers:
+        - env:
+            - name: management.endpoint.health.enabled
+              value: "true"
+            - name: management.endpoint.health.probes.enabled
+              value: "true"
+            - name: server.port
+              value: "8080"
+            - name: gateway.fallback.enabled
+              value: "true"
+            - name: gateway.fallback.httpUrl
+              value: "http://account-service-cluster-b"
+            - name: gateway.fallback.port
+              value: "8080"
+            - name: "SERVER_URI_1"
+              value: "http://account-service-cluster-a:8080"
+          image: cloudnativedata/spring-gateway-healthcheck:0.0.1-SNAPSHOT
+          name: spring-gateway-healthcheck
+#          imagePullPolicy: "Always"
+          imagePullPolicy: "IfNotPresent"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 40
+            timeoutSeconds: 2
+            periodSeconds: 3
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 40
+            timeoutSeconds: 2
+            periodSeconds: 3
+            failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-gateway-healthcheck
+spec:
+  selector:
+    name: spring-gateway-healthcheck
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

@@ -1,0 +1,46 @@
+apiVersion: gemfire.vmware.com/v1
+kind: GemFireCluster
+metadata:
+  name: cluster-b
+spec:
+  image: gemfire/gemfire:10.1
+  security:
+    tls: {}
+  antiAffinityPolicy: None
+  metrics:
+    emission: Default
+  persistentVolumeClaim:
+    deleteOnShutdown: true
+  serialization:
+    pdx:
+      readSerialized: true
+  locators:
+    replicas: 1
+    resources:
+      requests:
+        memory: 1Gi
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 2Gi
+    overrides:
+      gemFireProperties:
+        - name: "distributed-system-id"
+          value: "2"
+        - name: "remote-locators"
+          value: "cluster-a-locator-0.cluster-a-locator.default.svc.cluster.local[10334]"
+  servers:
+    replicas: 2
+    resources:
+      requests:
+        memory: 2Gi
+    persistentVolumeClaim:
+      resources:
+        requests:
+          storage: 4Gi
+    overrides:
+      gemFireProperties:
+        - name: "distributed-system-id"
+          value: "2"
+        - name: "start-dev-rest-api"
+          value: "true"

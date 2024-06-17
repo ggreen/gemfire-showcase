@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  account-service-cluster-b
+  name:  account-service-cluster-b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  account-service-cluster-b
+  template:
+    metadata:
+      labels:
+        name:  account-service-cluster-b
+    spec:
+      containers:
+        - env:
+            - name: management.endpoint.health.enabled
+              value: "true"
+            - name: management.endpoint.health.probes.enabled
+              value: "true"
+            - name: server.port
+              value: "8080"
+            - name: gemfire.health.region.name
+              value: "health2"
+            - name: spring.data.gemfire.pool.locators
+              valueFrom:
+                configMapKeyRef:
+                  name: cluster-b-config
+                  key: locators
+          image: cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
+          name: account-service-gemfire-showcase
+          imagePullPolicy: "Always"
+#          imagePullPolicy: "IfNotPresent"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 40
+            timeoutSeconds: 2
+            periodSeconds: 3
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 40
+            timeoutSeconds: 2
+            periodSeconds: 3
+            failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-service-cluster-b
+spec:
+  selector:
+    name: account-service-cluster-b
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
