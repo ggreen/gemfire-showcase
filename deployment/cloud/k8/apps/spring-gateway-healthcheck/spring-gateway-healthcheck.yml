@@ -25,11 +25,11 @@ spec:
             - name: gateway.fallback.enabled
               value: "true"
             - name: gateway.fallback.httpUrl
-              value: "http://account-service-cluster-b"
+              value: "http://account-service-cluster-b.tanzu-data-site-2.svc.cluster.local"
             - name: gateway.fallback.port
               value: "8080"
             - name: "SERVER_URI_1"
-              value: "http://account-service-cluster-a:8080"
+              value: "http://account-service-cluster-a.tanzu-data-site-1.svc.cluster.local:8080"
           image: cloudnativedata/spring-gateway-healthcheck:0.0.1-SNAPSHOT
           name: spring-gateway-healthcheck
 #          imagePullPolicy: "Always"

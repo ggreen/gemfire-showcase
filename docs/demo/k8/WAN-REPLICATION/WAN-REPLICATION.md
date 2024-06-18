@@ -3,56 +3,27 @@
 ## - Apply configuration to create addition GemFire cluster
 
 
-```shell
-kubectl create namespace tanzu-data-wan
-kubectl config set-context --current --namespace=tanzu-data-wan
-```
-
-
-```shell
-kubectl apply -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_a.yml
-kubectl apply -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_b.yml
-```
-
-
-## Wait for pods (2 Locators gemfire2-locator(0-1) and 2 Data node gemfire2-server(0-2) to be ready  (Control^C to stop)
-
-```shell
-kubectl get pods -w
-```
-
-```shell
-kubectl exec -it cluster-a-locator-0 --  gfsh
-```
-
 
 
 Setup Cluster Gateways
+
 
 ```shell
 ./deployment/cloud/k8/data-services/gemfire/scripts/gf-wan-setup.sh
 ```
 
 ```shell
-kubectl get pods -w
+kubectl get pods -A | grep tanzu-data-site
 ```
 
 ----------------
 
 # Deploy acct services
 
-```shell
-kubectl apply -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-a.yml
-```
-
-```shell
-kubectl apply -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-b.yml
-```
-
 # Deployment Gateway
 
 ```shell
-kubectl apply -f deployment/cloud/k8/apps/spring-gateway-healthcheck/spring-gateway-healthcheck.yml
+
 ```
 
 
@@ -61,9 +32,9 @@ k get pods -w
 ```
 
 ```shell
-export SPRING_GATEWAY_HOST=`kubectl get services spring-gateway-healthcheck --output jsonpath='{.status.loadBalancer.ingress[0].ip}'`
-export ACCT_CLUSTER_A_HOST=`kubectl get services account-service-cluster-a --output jsonpath='{.status.loadBalancer.ingress[0].ip}'`
-export ACCT_CLUSTER_B_HOST=`kubectl get services account-service-cluster-b --output jsonpath='{.status.loadBalancer.ingress[0].ip}'`
+export SPRING_GATEWAY_HOST=`kubectl get services spring-gateway-healthcheck --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-wan`
+export ACCT_CLUSTER_A_HOST=`kubectl get services account-service-cluster-a --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-1`
+export ACCT_CLUSTER_B_HOST=`kubectl get services account-service-cluster-b --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-2`
 ```
 
 
@@ -100,6 +71,13 @@ curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
 }'
 ```
 
+Get Account 1
+```shell
+curl -X 'GET' \
+  "http://$SPRING_GATEWAY_HOST:8080/accounts/1" \
+  -H 'accept: */*'
+```
+
 Get Account 2
 ```shell
 curl -X 'GET' \
@@ -119,20 +97,11 @@ curl http://$ACCT_CLUSTER_B_HOST:8080/actuator/health
 
 Stop Cluster 1 Servers
 
+
 ```shell
-kubectl exec cluster-a-locator-0 --  gfsh -e "connect --locator=cluster-a-locator-0.cluster-a-locator.tanzu-data.svc.cluster.local[10334]" -e "shutdown"
+kubectl delete pod  gemfire-cluster-a-locator-0 gemfire-cluster-a-server-0  gemfire-cluster-a-server-1 --force=true  --namespace=tanzu-data-site-1
 ```
 
-
-Check app service to cluster 1 expected "DOWN"
-```shell
-curl http://$ACCT_CLUSTER_A_HOST:8080/actuator/health
-```
-
-Test Actuator for App Service to cluster 2 expected "UP"
-```shell
-curl http://$ACCT_CLUSTER_B_HOST:8080/actuator/health
-```
 
 Get Account 1
 ```shell
@@ -145,10 +114,31 @@ Get Account 2
 curl http://$SPRING_GATEWAY_HOST:8080/accounts/2
 ```
 
-Server 1
+
+
+Check app service to cluster 1 expected "DOWN" or Internal Error
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "start server --name=gf1-server --use-cluster-configuration=true --server-port=10101   --locators=127.0.0.1[10001] --max-heap=1g   --initial-heap=1g  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1  --J=-Dgemfire.distributed-system-id=1"
+curl http://$ACCT_CLUSTER_A_HOST:8080/actuator/health
 ```
+
+Test Actuator for App Service to cluster 2 expected "UP"
+```shell
+curl http://$ACCT_CLUSTER_B_HOST:8080/actuator/health
+```
+
+Save account another account
+
+
+```shell
+curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "id": "3",
+  "name": "3"
+}'
+```
+
 
 Sync data in cluster 2 to 1
 
@@ -192,14 +182,29 @@ curl http://$SPRING_GATEWAY_HOST:8080/accounts/2
 ```
 
 
+-------------
+
+```shell
+kubectl config set-context --current --namespace=tanzu-data-site-1
+kubectl exec gemfire-cluster-a-locator-0 --  gfsh -e "connect --locator=gemfire-cluster-a-locator-0.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local[10334]" -e "shutdown"
+```
+
+```shell
+kubectl config set-context --current --namespace=tanzu-data-site-2
+kubectl exec gemfire-cluster-b-locator-0 -it --  gfsh 
+```
+
+-e "connect --locator=gemfire-cluster-b-locator-0.gemfire-cluster-b-locator.tanzu-data-site-2.svc.cluster.local[10334]" -e "shutdown"
+
+
 --------------
 
 # Clean
 
 ```shell
-kubectl delete -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_a.yml
-kubectl delete -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_b.yml
-kubectl delete -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-a.yml
-kubectl delete -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-b.yml
+kubectl delete -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_a.yml --namespace=tanzu-data-site-1
+kubectl delete -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-a.yml --namespace=tanzu-data-site-1
+kubectl delete -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_b.yml  --namespace=tanzu-data-site-2
+kubectl delete -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-b.yml  --namespace=tanzu-data-site-2
 kubectl delete -f deployment/cloud/k8/apps/spring-gateway-healthcheck/spring-gateway-healthcheck.yml
 ```

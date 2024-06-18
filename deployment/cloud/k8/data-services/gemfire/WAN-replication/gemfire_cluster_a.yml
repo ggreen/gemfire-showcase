@@ -1,7 +1,7 @@
 apiVersion: gemfire.vmware.com/v1
 kind: GemFireCluster
 metadata:
-  name: cluster-a
+  name: gemfire-cluster-a
 spec:
   image: gemfire/gemfire:10.1
   security:
@@ -27,7 +27,7 @@ spec:
         - name: "distributed-system-id"
           value: "1"
         - name: "remote-locators"
-          value: "cluster-b-locator-0.cluster-b-locator.default.svc.cluster.local[10334]"
+          value: "gemfire-cluster-b-locator-0.gemfire-cluster-b-locator.tanzu-data-site-2.svc.cluster.local[10334]"
   servers:
     replicas: 2
     resources:

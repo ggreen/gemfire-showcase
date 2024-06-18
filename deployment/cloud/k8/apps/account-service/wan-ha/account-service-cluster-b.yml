@@ -27,7 +27,7 @@ spec:
             - name: spring.data.gemfire.pool.locators
               valueFrom:
                 configMapKeyRef:
-                  name: cluster-b-config
+                  name: gemfire-cluster-b-config
                   key: locators
           image: cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
           name: account-service-gemfire-showcase
