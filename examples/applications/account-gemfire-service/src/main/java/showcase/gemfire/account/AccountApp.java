@@ -21,14 +21,14 @@ import java.util.concurrent.locks.ReentrantLock;
 class AccountApp
 {
     public static void main(String[] args) throws Exception {
-        var server = new Server(8082);
-
-        Handler handler = new ServletHandler();
-        server.setHandler(handler);
-
-        handler.addServletWithMapping(AccountRestServlet.class, "/*");
-        server.start();
-        server.join();
+//        var server = new Server(8082);
+//
+//        Handler handler = new ServletHandler();
+//        server.setHandler(handler);
+//
+//        handler.addServletWithMapping(AccountRestServlet.class, "/*");
+//        server.start();
+//        server.join();
 
     }
 }

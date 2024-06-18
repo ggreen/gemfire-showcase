@@ -1,19 +1,19 @@
-logging:
-  level:
-    reactor:
-      netty: DEBUG
-    org:
-      springframework:
-        web:
-          reactive: TRACE
-          boot:
-            autoconfigure:
-              web: TRACE
-        cloud:
-          gateway: TRACE
-        http:
-          server:
-            reactive: TRACE
+#logging:
+#  level:
+#    reactor:
+#      netty: DEBUG
+#    org:
+#      springframework:
+#        web:
+#          reactive: TRACE
+#          boot:
+#            autoconfigure:
+#              web: TRACE
+#        cloud:
+#          gateway: TRACE
+#        http:
+#          server:
+#            reactive: TRACE
 management:
   endpoints:
     web:
@@ -46,4 +46,8 @@ spring:
                 statusCodes:
                   - 610
                   - 500
+                  - 503
                   - "NOT_FOUND"
+            - name: CacheRequestBody
+              args:
+                bodyClass: java.lang.String

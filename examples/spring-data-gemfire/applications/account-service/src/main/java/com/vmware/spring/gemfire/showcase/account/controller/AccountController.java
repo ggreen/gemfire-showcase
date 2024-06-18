@@ -21,6 +21,7 @@ public class AccountController
     @PostMapping
     public Account save(@RequestBody Account account)
     {
+        log.info("Saving account: {}",account);
         return accountRepository.save(account);
     }
 

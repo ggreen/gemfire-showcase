@@ -30,10 +30,11 @@ spec:
               value: "8080"
             - name: "SERVER_URI_1"
               value: "http://account-service-cluster-a.tanzu-data-site-1.svc.cluster.local:8080"
-          image: cloudnativedata/spring-gateway-healthcheck:0.0.1-SNAPSHOT
+#          image: cloudnativedata/spring-gateway-healthcheck:0.0.1-SNAPSHOT
+          image: cloudnativedata/spring-gateway-healthcheck:0.0.2-SNAPSHOT
           name: spring-gateway-healthcheck
-#          imagePullPolicy: "Always"
-          imagePullPolicy: "IfNotPresent"
+          imagePullPolicy: "Always"
+#          imagePullPolicy: "IfNotPresent"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness

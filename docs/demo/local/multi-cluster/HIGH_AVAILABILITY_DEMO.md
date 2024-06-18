@@ -27,7 +27,7 @@ Note: Please change the location of the export GEMFIRE_HOME as needed
 
 ```shell
 export GEMFIRE_HOME=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-10.0.2
-./deployments/scripts/multi-cluster/start.sh
+./deployment/scripts/multi-cluster/start.sh
 ```
 
 
@@ -36,7 +36,7 @@ export GEMFIRE_HOME=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-10.
 Start application that points to cluster 1
 
 ```shell
-java -jar examples/spring-data-gemfire/applications/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health1  --server.port=8181 --spring.data.gemfire.pool.default.locators="localhost[10001]"
+java -jar ./examples/spring-data-gemfire/applications/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health1  --server.port=8181 --spring.data.gemfire.pool.default.locators="localhost[10001]"
 ```
 
 
@@ -49,7 +49,7 @@ java -jar examples/spring-data-gemfire/applications/account-service/build/libs/a
 Start Spring Gateway
 
 ```shell
-java -jar examples/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.1-SNAPSHOT.jar --spring.config.location=file:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-extensions/examples/spring-gateway-healthcheck/src/main/resources/application.yaml
+java -jar examples/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.2-SNAPSHOT.jar --spring.config.location=file:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase/examples/spring-gateway-healthcheck/src/main/resources/application.yaml
 ```
 
 

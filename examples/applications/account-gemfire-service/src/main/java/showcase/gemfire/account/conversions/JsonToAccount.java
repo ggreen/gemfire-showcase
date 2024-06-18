@@ -3,13 +3,14 @@ package showcase.gemfire.account.conversions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nyla.solutions.core.exception.FormatException;
+import showcase.gemfire.account.domain.Account;
 
 import java.util.function.Function;
 
 /**
  * @author Gregory Green
  */
-public class JsonToAccount implements Function<String,Account>
+public class JsonToAccount implements Function<String, Account>
 {
     private final ObjectMapper objectMapper;
 

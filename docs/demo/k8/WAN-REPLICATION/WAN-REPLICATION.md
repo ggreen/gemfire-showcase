@@ -134,8 +134,8 @@ curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": "3",
-  "name": "3"
+  "id": "4",
+  "name": "4"
 }'
 ```
 
