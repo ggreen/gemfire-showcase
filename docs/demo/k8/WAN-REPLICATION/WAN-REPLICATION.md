@@ -1,8 +1,8 @@
 # Recoverability
 
+
+
 ## - Apply configuration to create addition GemFire cluster
-
-
 
 
 Setup Cluster Gateways
@@ -15,6 +15,33 @@ Setup Cluster Gateways
 ```shell
 kubectl get pods -A | grep tanzu-data-site
 ```
+
+## Deploy GemFire management console
+
+```shell
+kubectl create namespace tanzu-data
+kubectl apply -f deployment/cloud/k8/data-services/gemfire/gideonConsole/gemfire-management-console.yml --namespace=tanzu-data
+kubectl wait pod -l=name=gemfire-management-console --for=condition=Ready --timeout=160s --namespace=tanzu-data
+kubectl get services --namespace=tanzu-data
+```
+
+
+Connect Clusters
+
+```properties
+nick-name=gemfire-cluster-a
+host=gemfire-cluster-a-locator-0.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local
+port=7070
+```
+
+```properties
+nick-name=gemfire-cluster-b
+host=gemfire-cluster-b-locator-0.gemfire-cluster-b-locator.tanzu-data-site-2.svc.cluster.local
+port=7070
+```
+
+
+
 
 ----------------
 
@@ -140,7 +167,7 @@ curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
 ```
 
 
-Sync data in cluster 2 to 1
+Manual check Sync data in cluster 2 to 1
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]" -e "wan-copy region --region=/Account --sender-id=Account_Sender_to_1"
