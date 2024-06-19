@@ -46,15 +46,23 @@ Put String 10 character string, 10000 times with the key is generated in the ran
 
 ```shell
 
-java -Xmx1g -Xms1g  -Daction=putString -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10000]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin
+java -Xmx1g -Xms1g  -Daction=putString -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10000]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin
 
 ```
 
 
 ```shell
 cd /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/apache-gemfire-extensions
-java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1-SNAPSHOT.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1
+java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0
 ```
+
+
+Load Testing
+
+```shell
+java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar  --regionName="test"  --threadCount=10  --threadSleepMs=1000  --loopCount=2147483647 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1 --server.port=0
+```
+
 
 
 Throughput putStringThroughput
@@ -62,7 +70,7 @@ Throughput putStringThroughput
 
 
 ```shell
-java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1-SNAPSHOT.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=25005000 --maxCountPerThread=25005000 --valueLength=5 --keyPrefix=T1
+java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=25005000 --maxCountPerThread=25005000 --valueLength=5 --keyPrefix=T1
 ```
 ## Region Get Test
 
@@ -70,5 +78,28 @@ java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-
 Region Get 10,000 times of an entry of the first data entry in the region
 ```shell
 cd /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/apache-gemfire-extensions
-java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1-SNAPSHOT.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000
+```
+
+
+General test
+
+
+```shell
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=2147483647 --threadSleepMs=1000 --server.port=0
+```
+
+
+# Building Docker
+
+```shell
+
+gradle build
+cd applications/gemfire-perf-test
+docker build   --platform linux/amd64,linux/arm64 -t gemfire-perf-test:0.0.2-SNAPSHOT .
+```
+
+```shell
+docker tag gemfire-perf-test:0.0.2-SNAPSHOT cloudnativedata/gemfire-perf-test:0.0.2-SNAPSHOT
+docker push cloudnativedata/gemfire-perf-test:0.0.2-SNAPSHOT
 ```

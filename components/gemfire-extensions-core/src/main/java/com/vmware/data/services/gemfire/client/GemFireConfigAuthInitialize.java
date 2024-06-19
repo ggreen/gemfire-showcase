@@ -2,6 +2,7 @@ package com.vmware.data.services.gemfire.client;
 
 import java.util.Properties;
 
+import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.distributed.DistributedMember;
 import org.apache.geode.security.AuthInitialize;
 import org.apache.geode.security.AuthenticationFailedException;
@@ -17,7 +18,7 @@ import nyla.solutions.core.util.Config;
  * security-password or SECURITY_PASSWORD 
  * 
  * USER_NAME_PROP);
-	    String token = Config.getProperty(TOKEN,"")
+	    String token = settings.getProperty(TOKEN,"")
 	    
    </pre>
  * @author Gregory Green
@@ -30,6 +31,7 @@ implements AuthInitialize, GemFireConfigConstants
 	public static final String SECURITY_USER_PROP = "SECURITY_USERNAME";
 
 	private final GemFireSettings vcapConfig;
+	private Settings settings = Config.settings();
 
 	/**
 	   * Constructor
@@ -56,7 +58,7 @@ implements AuthInitialize, GemFireConfigConstants
 	    Properties props = new Properties();
 	    String username = getSecurityUserName();
 	    String password = getSecurityPassword();
-	    String token = Config.getProperty(TOKEN,"");
+	    String token = settings.getProperty(TOKEN,"");
 	    
 	    
 	     SecuredToken securedToken = vcapConfig.getSecuredToken(username, token);
@@ -76,18 +78,18 @@ implements AuthInitialize, GemFireConfigConstants
 	      props.setProperty(TOKEN, token);
 	      
 	    return props;
-	  }//------------------------------------------------
+	  }
 	protected String getSecurityPassword()
 	{
 
-		String password = Config.getProperty(PASSWORD,Config.getProperty(SECURITY_PASSWORD_PROP,""));
+		String password = settings.getProperty(PASSWORD,settings.getProperty(SECURITY_PASSWORD_PROP,""));
 		return password;
-	}//------------------------------------------------
+	}
 	protected String getSecurityUserName()
 	{
 
-		String username = Config.getProperty(USER_NAME,Config.getProperty(SECURITY_USER_PROP,""));
+		String username = settings.getProperty(USER_NAME,settings.getProperty(SECURITY_USER_PROP,""));
 		return username;
-	}//------------------------------------------------
+	}
 
 }

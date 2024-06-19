@@ -43,7 +43,7 @@ public class RegionCsvStatsVisitor implements StatsVisitor
 		}
 		else
 		{
-			this.statNames = Config.getPropertyStrings(RegionCsvStatsVisitor.class,"statNames",defaultStateNames);
+			this.statNames = Config.settings().getPropertyStrings(RegionCsvStatsVisitor.class,"statNames",defaultStateNames);
 		}
 		csvWriter = new CsvWriter(file);
 	}

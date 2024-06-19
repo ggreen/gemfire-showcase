@@ -38,8 +38,11 @@ import nyla.solutions.core.util.Debugger;
  */
 public class GUnit
 {
-	private final static String location = Config.getProperty("gfsh_location");
-	private final static String runtimeDir = Config.getProperty("runtime_location","runtime");
+	private final static String location = Config.settings().getProperty("gfsh_location");
+	private final static String runtimeDir = Config.settings().getProperty("runtime_location","runtime");
+
+	private final static long   sleepDelay = Config.settings().getPropertyLong(GUnit.class.getName()+".sleepDelay",1000*1); //seconds
+	private final static int    retryCount = Config.settings().getPropertyInteger(GUnit.class,"retryCount",45);
 	
 	public GUnit()
 	{
@@ -115,7 +118,7 @@ public class GUnit
 		System.out.println("ERROR:"+pi.error);
 		
 	}
-	//------------------------------------------------
+
 	public void shutdown()
 	{
 		try(JMX jmx = JMX.connect("localhost", 1099))
@@ -141,7 +144,7 @@ public class GUnit
 		catch(IOException e) {Debugger.printWarn(e);} 
 		
 	
-	}//------------------------------------------------
+	}
 	
 	/**
 	 * Wait for a given member to startup
@@ -176,7 +179,7 @@ public class GUnit
 			 
 			count++;
 		}
-	}// --------------------------------------------------------
+	}
 	/**
 	 * Wait for a given member to startup
 	 * @param jmx the JMX connection
@@ -209,18 +212,16 @@ public class GUnit
 			throw new RuntimeException("member:"+member+" failed to stop after "+retryCount+
 					" checks with a delay of "+sleepDelay+" milliseconds");
 		}
-	}// --------------------------------------------------------
+	}
 	
 	public static void delay() 
 			throws InterruptedException
 	{
 		System.out.println("Sleeping for "+sleepDelay+" milliseconds");
 		Thread.sleep(sleepDelay);
-	}// --------------------------------------------------------
+	}
 	
 	
 
-	private final static long   sleepDelay = Config.getPropertyLong(GUnit.class.getName()+".sleepDelay",1000*1); //seconds
-	private final static int    retryCount = Config.getPropertyInteger(GUnit.class,"retryCount",45);
 	
 }

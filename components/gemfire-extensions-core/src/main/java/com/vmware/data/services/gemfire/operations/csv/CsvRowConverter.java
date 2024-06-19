@@ -26,7 +26,7 @@ public class CsvRowConverter implements Converter<Object, String>
 	/**
 	 * DATE_FORMAT = Config.getProperty("DATE_FORMAT","MM/dd/yyyy HH:mm:ss:SSSS")
 	 */
-	public String DATE_FORMAT = Config.getProperty("DATE_FORMAT","MM/dd/yyyy HH:mm:ss:SSSS");
+	public String DATE_FORMAT = Config.settings().getProperty("DATE_FORMAT","MM/dd/yyyy HH:mm:ss:SSSS");
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override

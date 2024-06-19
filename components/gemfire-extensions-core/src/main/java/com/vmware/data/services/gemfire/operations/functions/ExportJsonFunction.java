@@ -46,7 +46,7 @@ import nyla.solutions.core.util.Config;
  */
 public class ExportJsonFunction  implements Function<Object>
 {
-	private String directoryPath = Config.getProperty(this.getClass(),"directoryPath",".");
+	private String directoryPath = Config.settings().getProperty(this.getClass(),"directoryPath",".");
 	
 	private static String fileSeparator = System.getProperty("file.separator");
 	private static String suffix = ".json";

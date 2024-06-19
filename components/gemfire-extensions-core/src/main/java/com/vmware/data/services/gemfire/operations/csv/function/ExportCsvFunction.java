@@ -49,7 +49,7 @@ public class ExportCsvFunction  implements Function<String[]>
 	 */
 	private static final long serialVersionUID = 5996297280142495515L;
 
-	private String directoryPath = Config.getProperty(EXPORT_DIR_PATH_PROP_NM,".");
+	private String directoryPath = Config.settings().getProperty(EXPORT_DIR_PATH_PROP_NM,".");
 	
 	private static String fileSeparator = System.getProperty("file.separator");
 	private static String suffix = ".csv";

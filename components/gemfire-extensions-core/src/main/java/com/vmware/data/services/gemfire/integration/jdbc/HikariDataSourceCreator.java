@@ -31,8 +31,8 @@ public class HikariDataSourceCreator implements Creator<DataSource>
         if(dataSource != null)
             return dataSource;
 
-        String jdbcUrl = Config.getProperty("JDBC_URL");
-        String driveClassName = Config.getProperty("JDBC_DRIVER_CLASS");
+        String jdbcUrl = Config.settings().getProperty("JDBC_URL");
+        String driveClassName = Config.settings().getProperty("JDBC_DRIVER_CLASS");
 
         try{
 
@@ -41,11 +41,11 @@ public class HikariDataSourceCreator implements Creator<DataSource>
             config.setJdbcUrl(jdbcUrl);
             Class.forName(driveClassName);
             config.setDriverClassName(driveClassName);
-            config.setUsername( Config.getProperty("JDBC_USERNAME")  );
-            config.setPassword( String.valueOf(Config.getPropertyPassword("JDBC_PASSWORD")));
-            config.addDataSourceProperty( "cachePrepStmts" , Config.getPropertyBoolean("cachePrepStmts",true) );
-            config.addDataSourceProperty( "prepStmtCacheSize" ,  Config.getProperty("prepStmtCacheSize","true") );//250
-            config.addDataSourceProperty( "prepStmtCacheSqlLimit" ,  Config.getProperty("prepStmtCacheSqlLimit","2048") );
+            config.setUsername( Config.settings().getProperty("JDBC_USERNAME")  );
+            config.setPassword( String.valueOf(Config.settings().getPropertyPassword("JDBC_PASSWORD")));
+            config.addDataSourceProperty( "cachePrepStmts" , Config.settings().getPropertyBoolean("cachePrepStmts",true) );
+            config.addDataSourceProperty( "prepStmtCacheSize" ,  Config.settings().getProperty("prepStmtCacheSize","true") );//250
+            config.addDataSourceProperty( "prepStmtCacheSqlLimit" ,  Config.settings().getProperty("prepStmtCacheSqlLimit","2048") );
             this.dataSource = new HikariDataSource( config );
 
             return this.dataSource;

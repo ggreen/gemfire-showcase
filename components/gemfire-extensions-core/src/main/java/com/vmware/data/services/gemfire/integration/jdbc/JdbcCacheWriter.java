@@ -5,6 +5,7 @@ import nyla.solutions.core.patterns.jdbc.BindVariableInterpreter;
 import nyla.solutions.core.patterns.jdbc.Sql;
 import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Debugger;
+import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.cache.CacheWriterException;
 import org.apache.geode.cache.EntryEvent;
 import org.apache.geode.cache.util.CacheWriterAdapter;
@@ -28,6 +29,7 @@ public class JdbcCacheWriter<K,V> extends CacheWriterAdapter<K,V>
     private final Creator<DataSource> dataSourceCreator;
     private final Sql sql;
     private final Logger logger;
+    private final Settings settings = Config.settings();
 
     public JdbcCacheWriter()
     {
@@ -68,7 +70,7 @@ public class JdbcCacheWriter<K,V> extends CacheWriterAdapter<K,V>
         {
             try(Connection connection = dataSource.getConnection())
             {
-                String jdbcSql = Config.getProperty("JDBC_CACHE_WRITER_"+regionName.toUpperCase()+"_SQL");
+                String jdbcSql = settings.getProperty("JDBC_CACHE_WRITER_"+regionName.toUpperCase()+"_SQL");
 
                 logger.info("JDBC SQL {}",jdbcSql);
 

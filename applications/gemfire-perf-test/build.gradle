@@ -1,13 +1,13 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.4'
-    id 'io.spring.dependency-management' version '1.1.3'
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
 archivesBaseName = 'gemfire-perf-test'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
@@ -15,7 +15,8 @@ java {
 
 
 ext {
-    gemFireVersion = '10.0.1'
+    springBootForGemFireVersion = '1.0.1'
+    vmwareGemFireVersion = '10.0.0'
 }
 
 tasks.named('test') {
@@ -27,17 +28,23 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: "1.0.0"
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: "1.0.0"
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
 
     implementation project(':components:gemfire-extensions-core')
+    implementation "com.vmware.gemfire:spring-boot-3.1-gemfire-10.1:$springBootForGemFireVersion"
+//    implementation "com.vmware.gemfire:gemfire-core:$vmwareGemFireVersion"
+    implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.1"
+    implementation "com.vmware.gemfire:gemfire-core:10.1.1"
+    implementation "com.vmware.gemfire:gemfire-cq:10.1.1"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.github.nyla-solutions:nyla.solutions.core:1.5.1'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.2.1'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

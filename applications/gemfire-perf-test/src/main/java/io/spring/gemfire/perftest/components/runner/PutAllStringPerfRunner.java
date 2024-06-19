@@ -21,10 +21,10 @@ public class PutAllStringPerfRunner implements  Runnable{
     @Resource(name = "perfTestRegion")
     private Region<String, String> region;
 
-    private Map<String, String> map;
+    private final Map<String, String> map;
 
     public PutAllStringPerfRunner(
-            @Value("${batchSize}")int batchSize,
+            @Value("${batchSize}") int batchSize,
             @Value("${keyPadLength}")
             int keyPadLength,
             @Value("${valueLength}")
@@ -37,6 +37,13 @@ public class PutAllStringPerfRunner implements  Runnable{
         this.valueLength = valueLength;
         this.seedText = seedText;
 
+        map = MapTextCreator.builder().size(batchSize)
+                .keyPadLength(keyPadLength)
+                .valueLength(valueLength)
+                .seedText(seedText)
+                .build().create();
+
+
     }
 
     public void setRegion(Region<String, String> region) {
@@ -45,14 +52,15 @@ public class PutAllStringPerfRunner implements  Runnable{
 
 
     void init() {
-        map = MapTextCreator.builder().size(batchSize)
-                .keyPadLength(keyPadLength)
-                .valueLength(valueLength)
-                .seedText(seedText)
-                .build().create();
+
+        init();
     }
 
     public void run() {
         region.putAll(map);
+    }
+
+    Map<String, String> getMap(){
+        return map;
     }
 }

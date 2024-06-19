@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.cache.client.ClientCacheFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,6 +72,7 @@ public class GemFireSettings
 	private static GemFireSettings instance = null;
 	private final String envContent;
 	private static final Pattern regExpPattern = Pattern.compile("(.*)\\[(\\d*)\\].*");
+	private final Settings settings = Config.settings();
 
 	private int port;
 
@@ -100,7 +102,7 @@ public class GemFireSettings
 		
 		port = 10334;
 		
-		host = Config.getProperty(GemFireConfigConstants.LOCATOR_HOST_PROP,"");
+		host = settings.getProperty(GemFireConfigConstants.LOCATOR_HOST_PROP,"");
 		
 		if (host.trim().length() == 0)
 		{
@@ -113,7 +115,7 @@ public class GemFireSettings
 		}
 		else
 		{
-			port = Config.getPropertyInteger(GemFireConfigConstants.LOCATOR_PORT_PROP,10334).intValue();
+			port = settings.getPropertyInteger(GemFireConfigConstants.LOCATOR_PORT_PROP,10334).intValue();
 			
 			if(host.trim().length() == 0)
 				throw new ConfigException(GemFireConfigConstants.LOCATOR_PORT_PROP+" configuration property required");
@@ -216,7 +218,7 @@ public class GemFireSettings
 			if(locators == null || locators.isEmpty())
 			{
 				//get for LOCATORS env
-				String locatorsConfig = Config.getProperty(GemFireConfigConstants.LOCATORS_PROP,"");
+				String locatorsConfig = settings.getProperty(GemFireConfigConstants.LOCATORS_PROP,"");
 				if(locatorsConfig.length() == 0)
 					return null;
 	

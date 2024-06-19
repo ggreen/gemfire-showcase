@@ -76,7 +76,7 @@ class GemFireClientBuilderTest
         Builder actual = subject.password("password".toCharArray());
         assertNotNull(actual);
 
-        assertEquals("password",Config.getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP));
+        assertEquals("password",Config.settings().getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP));
 
     }
 }

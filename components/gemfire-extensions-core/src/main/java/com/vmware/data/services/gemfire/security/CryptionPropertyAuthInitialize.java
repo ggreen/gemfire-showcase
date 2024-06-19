@@ -19,6 +19,8 @@ import nyla.solutions.core.util.settings.Settings;
 public class CryptionPropertyAuthInitialize implements AuthInitialize
 //TODO:, SecurityConstants
 {
+	private static Settings settings = Config.settings();
+
 	/**
 	 * FunctionAttribute password cryption prefix
 	 * CRYPTION_PREFIX = "{cryption}"
@@ -30,7 +32,7 @@ public class CryptionPropertyAuthInitialize implements AuthInitialize
 	{
 		// TODO Auto-generated method stub
 		
-	}// ------------------------------------------------
+	}
 	/**
 	 * 
 	 * @return an new instance CryptionPropertyAuthInitialize
@@ -38,7 +40,7 @@ public class CryptionPropertyAuthInitialize implements AuthInitialize
 	public static AuthInitialize create() 
 	{
 		    return new CryptionPropertyAuthInitialize();
-	}// ------------------------------------------------
+	}
 	/**
 	 *  Initialize with the given set of security properties and return the credentials for the peer/client as properties.
 	 *  @param properties the security properties (see SecurityConstants PROP values)
@@ -89,13 +91,11 @@ public class CryptionPropertyAuthInitialize implements AuthInitialize
 			throw new AuthenticationFailedException(e.getMessage());
 		}
 		
-	}// ------------------------------------------------	
+	}
 
 	//@Override
 	public void init(LogWriter systemLogger, LogWriter securityLogger)
 			throws AuthenticationFailedException
 	{
-	}// ------------------------------------------------
-	private static Settings settings = Config.getSettings();
-	//private ResourceBundle config = ResourceBundle.getBundle("config");
+	}
 }

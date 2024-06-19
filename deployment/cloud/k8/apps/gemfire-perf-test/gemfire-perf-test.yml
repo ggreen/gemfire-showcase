@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  gemfire-perf-test
+  name:  gemfire-perf-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  gemfire-perf-test
+  template:
+    metadata:
+      labels:
+        name:  gemfire-perf-test
+    spec:
+      containers:
+        - env:
+            - name: action
+              value: "putAndGetAndQuery"
+            - name: regionName
+              value: "test"
+            - name: batchSize
+              value: "10"
+            - name: keyPadLength
+              value: "10"
+            - name: valueLength
+              value: "10"
+            - name: seedText
+              value: "PERF-TEST"
+            - name: queryByKey
+              value: "select key from /test.entries where key = $1"
+            - name: loopCount
+              value: "2147483647"
+            - name: threadSleepMs
+              value: "1000"
+            - name: server.port
+              value: "8080"
+            - name: spring.data.gemfire.pool.locators
+              valueFrom:
+                configMapKeyRef:
+                  name: gemfire1-config
+                  key: locators
+          image: cloudnativedata/gemfire-perf-test:0.0.2-SNAPSHOT
+          name: gemfire-perf-test
+          imagePullPolicy: "Always"
+#          imagePullPolicy: "IfNotPresent"

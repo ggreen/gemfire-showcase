@@ -31,7 +31,7 @@ public interface GemFireConfigConstants
 	/**
 	 * PDX_READ_SERIALIZED default false
 	 */
-	public final static  boolean PDX_READ_SERIALIZED = Config.getPropertyBoolean("PDX_READ_SERIALIZED",false);
+	public final static  boolean PDX_READ_SERIALIZED = Config.settings().getPropertyBoolean("PDX_READ_SERIALIZED",false);
 
 	/**
 	 * SSL_KEYSTORE_STORE_DIR_PROP = "SSL_KEYSTORE_STORE_DIR"

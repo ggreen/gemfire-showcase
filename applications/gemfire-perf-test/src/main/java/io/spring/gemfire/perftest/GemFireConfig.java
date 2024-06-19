@@ -1,6 +1,7 @@
 package io.spring.gemfire.perftest;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
+import com.vmware.data.services.gemfire.io.QuerierService;
 import org.apache.geode.cache.Region;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,12 @@ public class GemFireConfig {
                 .password(password.toCharArray())
                 .clientName(applicationName)
                 .build();
+    }
+
+    @Bean
+    QuerierService querierService(GemFireClient gemFireClient)
+    {
+        return gemFireClient.getQuerierService();
     }
 
     @Bean("perfTestRegion")

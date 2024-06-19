@@ -92,7 +92,7 @@ public class GemFireClient
 	{
 		this.cachingProxy = cachingProxy;
 			
-		String name = Config.getProperty(GemFireConfigConstants.NAME_PROP, GemFireClient.class.getSimpleName());
+		String name = Config.settings().getProperty(GemFireConfigConstants.NAME_PROP, GemFireClient.class.getSimpleName());
 		
 		//check for exists client cache
 		ClientCache cache = null;
@@ -112,7 +112,7 @@ public class GemFireClient
 		}catch(Exception e)
 		{Debugger.println(e.getMessage());}
 		
-		String className = Config.getProperty(
+		String className = Config.settings().getProperty(
 			GemFireConfigConstants.PDX_SERIALIZER_CLASS_NM_PROP,
 			EnhancedReflectionSerializer.class.getName());
 		
@@ -134,9 +134,9 @@ public class GemFireClient
 			factory.setPoolSubscriptionEnabled(true)
 			.setPdxSerializer(pdxSerializer)
 			.setPdxReadSerialized(GemFireConfigConstants.PDX_READ_SERIALIZED)
-			.setPoolPRSingleHopEnabled(Config.getPropertyBoolean(
+			.setPoolPRSingleHopEnabled(Config.settings().getPropertyBoolean(
 				GemFireConfigConstants.POOL_PR_SINGLE_HOP_ENABLED_PROP,true))
-			.set("log-level", Config.getProperty("log-level","config"))
+			.set("log-level", Config.settings().getProperty("log-level","config"))
 			.set("name", name);
 			
 			//.addPoolLocator(host, port)
@@ -178,15 +178,15 @@ public class GemFireClient
 		
 		props.setProperty("ssl-keystore",(sslFile != null) ?  sslFile.getAbsolutePath(): "");
 
-		props.setProperty("ssl-keystore-password",Config.getPropertyEnv("ssl-keystore-password",""));
+		props.setProperty("ssl-keystore-password",Config.settings().getProperty("ssl-keystore-password",""));
 		
 		props.setProperty("ssl-truststore",sslTrustStoreFilePath);
-		props.setProperty("ssl-protocols",Config.getPropertyEnv("ssl-protocols",""));
-		props.setProperty("ssl-truststore-password",Config.getPropertyEnv("ssl-truststore-password",""));
-		props.setProperty("ssl-keystore-type",Config.getPropertyEnv("ssl-keystore-type","")   );
-		props.setProperty("ssl-ciphers",Config.getPropertyEnv("ssl-ciphers",""));
-		props.setProperty("ssl-require-authentication",Config.getPropertyEnv("ssl-require-authentication","")  );
-		props.setProperty("ssl-enabled-components", Config.getPropertyEnv("ssl-enabled-components",""));
+		props.setProperty("ssl-protocols",Config.settings().getProperty("ssl-protocols",""));
+		props.setProperty("ssl-truststore-password",Config.settings().getProperty("ssl-truststore-password",""));
+		props.setProperty("ssl-keystore-type",Config.settings().getProperty("ssl-keystore-type","")   );
+		props.setProperty("ssl-ciphers",Config.settings().getProperty("ssl-ciphers",""));
+		props.setProperty("ssl-require-authentication",Config.settings().getProperty("ssl-require-authentication","")  );
+		props.setProperty("ssl-enabled-components", Config.settings().getProperty("ssl-enabled-components",""));
 		
 	}//------------------------------------------------
 
@@ -199,7 +199,7 @@ public class GemFireClient
 	private static File saveEnvFile(String configPropFilePath)
 	throws IOException
 	{
-		String sslKeystorePath = Config.getProperty(configPropFilePath,"");
+		String sslKeystorePath = Config.settings().getProperty(configPropFilePath,"");
 
 		String fileName = Paths.get(sslKeystorePath).toFile().getName();
 
@@ -209,7 +209,7 @@ public class GemFireClient
 		byte[] bytes = IO.readBinaryClassPath(sslKeystorePath);
 
 
-		String sslDirectory = Config.getProperty(GemFireConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP,".");
+		String sslDirectory = Config.settings().getProperty(GemFireConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP,".");
 		File sslDirectoryFile = Paths.get(sslDirectory).toFile();
 
 		if(!sslDirectoryFile.exists())
@@ -500,10 +500,10 @@ public class GemFireClient
 		if(gemFireClient != null)
 			return gemFireClient;
 		
-		boolean cachingProxy = Config.getPropertyBoolean(GemFireConfigConstants.USE_CACHING_PROXY_PROP,false);
+		boolean cachingProxy = Config.settings().getPropertyBoolean(GemFireConfigConstants.USE_CACHING_PROXY_PROP,false);
 		
 		gemFireClient = new GemFireClient(cachingProxy,
-		Config.getProperty(GemFireConfigConstants.PDX_CLASS_PATTERN_PROP,".*"));
+		Config.settings().getProperty(GemFireConfigConstants.PDX_CLASS_PATTERN_PROP,".*"));
 		
 		return gemFireClient;
 	}//------------------------------------------------

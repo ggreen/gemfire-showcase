@@ -6,6 +6,7 @@ import nyla.solutions.core.patterns.jdbc.Sql;
 import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Debugger;
 import nyla.solutions.core.util.JavaBean;
+import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.cache.CacheLoader;
 import org.apache.geode.cache.CacheLoaderException;
 import org.apache.geode.cache.LoaderHelper;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.Map;
+
 
 /**
  *
@@ -71,6 +73,7 @@ public class JdbcCacheLoader<K, V> implements CacheLoader<K, V>
     private Class<?> regionValueClass = null;
     private final Sql sql;
     private final Logger logger;
+    private final Settings settings = Config.settings();
 
     public JdbcCacheLoader()
     {
@@ -115,7 +118,7 @@ public class JdbcCacheLoader<K, V> implements CacheLoader<K, V>
 
             if (sqlText == null) {
                 regionName = helper.getRegion().getName().toUpperCase();
-                this.sqlText = Config.getProperty("JDBC_CACHE_LOADER_" + regionName + "_SQL");
+                this.sqlText = settings.getProperty("JDBC_CACHE_LOADER_" + regionName + "_SQL");
             }
 
             Object result;
@@ -124,7 +127,7 @@ public class JdbcCacheLoader<K, V> implements CacheLoader<K, V>
                 if (regionName == null)
                     regionName = helper.getRegion().getName().toUpperCase();
 
-                this.regionValueClass = ClassPath.toClass(Config.getProperty("JDBC_LOADER_" + regionName + "_CLASS"));
+                this.regionValueClass = ClassPath.toClass(Config.settings().getProperty("JDBC_LOADER_" + regionName + "_CLASS"));
             }
 
             try (Connection connection = dataSource.getConnection()) {

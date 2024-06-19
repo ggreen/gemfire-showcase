@@ -29,7 +29,7 @@ public class JdbcJsonPdxLoader implements CacheLoader<String,PdxInstance> {
     {
         this(new HikariDataSourceCreator(),
                 json -> { return JSONFormatter.fromJSON(json);},
-                Config.getSettings());
+                Config.settings());
     }
     public JdbcJsonPdxLoader(Creator<DataSource> dataSourceCreator,  Function<String, PdxInstance> function, Settings settings) {
         this.dataSourceCreator = dataSourceCreator;

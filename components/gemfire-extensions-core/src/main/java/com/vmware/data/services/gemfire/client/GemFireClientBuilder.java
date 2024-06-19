@@ -10,6 +10,7 @@ import nyla.solutions.core.io.IO;
 import nyla.solutions.core.operations.ClassPath;
 import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Debugger;
+import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.cache.CacheClosedException;
 import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.client.ClientCacheFactory;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * GemFireClientBuilder
@@ -52,6 +54,7 @@ public class GemFireClientBuilder  implements Builder
     private String sslEnabledComponents = "";
     private String sslDirectory = ".";
     private static final Pattern regExpPattern = Pattern.compile("(.*)\\[(\\d*)\\].*");
+    private final Settings settings = Config.settings();
 
     GemFireClientBuilder()
     {}
@@ -184,7 +187,7 @@ public class GemFireClientBuilder  implements Builder
         props.setProperty("ssl-require-authentication",sslRequireAuthentication);
         props.setProperty("ssl-enabled-components", sslEnabledComponents);
 
-    }//------------------------------------------------
+    }
 
     private File saveEnvFile(String configPropFilePath)
     throws IOException
@@ -228,12 +231,12 @@ public class GemFireClientBuilder  implements Builder
 
     String getUserName()
     {
-        return Config.getProperty(GemFireConfigAuthInitialize.SECURITY_USER_PROP,"");
+        return settings.getProperty(GemFireConfigAuthInitialize.SECURITY_USER_PROP,"");
     }
 
     char[] getPassword()
     {
-        return  Config.getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP,"").toCharArray();
+        return  settings.getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP,"").toCharArray();
     }
 
     public List<URI> getUris()

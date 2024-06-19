@@ -26,7 +26,7 @@ public class JdbcJsonCacheWriter extends CacheWriterAdapter<String, PdxInstance>
 
     public JdbcJsonCacheWriter()
     {
-        this(new HikariDataSourceCreator(), pdx -> {return JSONFormatter.toJSON(pdx);}, Config.getSettings());
+        this(new HikariDataSourceCreator(), pdx -> {return JSONFormatter.toJSON(pdx);}, Config.settings());
     }
     public JdbcJsonCacheWriter(Creator<DataSource> creator, Function<PdxInstance, String> converter, Settings settings) {
         this.creator = creator;

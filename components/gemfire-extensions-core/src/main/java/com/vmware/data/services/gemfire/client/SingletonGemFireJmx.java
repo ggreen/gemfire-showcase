@@ -20,6 +20,9 @@ public class SingletonGemFireJmx
 {
 	private static JMX jmx = null;
 
+	private static String locatorJmxHost = Config.settings().getProperty(SingletonGemFireJmx.class,"locatorJmxHost");
+	private static int locatorJmxPort = Config.settings().getPropertyInteger(SingletonGemFireJmx.class,"locatorJmxPort").intValue();
+
 	/**
 	 * 
 	 * @param directory the directory the clear
@@ -39,7 +42,8 @@ public class SingletonGemFireJmx
 				throw new SystemException("cannot delete:"+file);
 				
 		}
-	}// --------------------------------------------------------
+	}
+
 	/**
 	 * Close and recreate the JMX connect
 	 * @return the JMX connection
@@ -71,7 +75,8 @@ public class SingletonGemFireJmx
 		}
 					
 		return getJmx();
-	}// --------------------------------------------------------
+	}
+
 	/**
 	 * Connect/Reconnect to a locator host/port
 	 * @param locatorHost the locator host
@@ -111,7 +116,8 @@ public class SingletonGemFireJmx
 		SingletonGemFireJmx.setLocatorPort(locatorPort);
 			
 		return getJmx();
-	}// --------------------------------------------------------
+	}
+
 	
 	public synchronized static JMX getJmx()
 	{
@@ -164,6 +170,5 @@ public class SingletonGemFireJmx
 		SingletonGemFireJmx.locatorJmxPort = locatorPort;
 	}
 
-	private static String locatorJmxHost = Config.getProperty(SingletonGemFireJmx.class,"locatorJmxHost");
-	private static int locatorJmxPort = Config.getPropertyInteger(SingletonGemFireJmx.class,"locatorJmxPort").intValue();
+
 }
