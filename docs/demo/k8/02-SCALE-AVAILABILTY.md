@@ -339,9 +339,20 @@ kubectl get pods -w  --namespace=tanzu-data
 
 ---------------------------------
 
+Clean
+
+
+```shell
+kubectl delete -f deployment/cloud/k8/apps/gemfire-perf-test/gemfire-perf-test.yml   --namespace=tanzu-data
+```
+
 ```shell
 k delete pod gemfire1-server-1  --namespace=tanzu-data
 ```
+```shell
+kubectl exec -it gemfire1-locator-0 -- gfsh -e "connect --locator=gemfire1-locator-0.gemfire1-locator.tanzu-data.svc.cluster.local[10334]" -e "destroy region --name=test"
+```
+
 
 Clean up
 ```shell

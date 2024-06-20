@@ -2,15 +2,15 @@
 
 
 ```shell
-curl -X POST http://localhost:9090/gemfire-vectordb/v1/indexes -H "Content-Type: application/json" -d '{"name": "quickstart"}'
+curl -X POST http://localhost:8590/gemfire-vectordb/v1/indexes -H "Content-Type: application/json" -d '{"name": "quickstart"}'
 ```
 ```shell
-curl http://localhost:9090/gemfire-vectordb/v1/indexes/quickstart
+curl http://localhost:8590/gemfire-vectordb/v1/indexes/quickstart
 ```
 
 
 ```shell
-curl -X POST http://localhost:9090/gemfire-vectordb/v1/indexes/quickstart/embeddings \
+curl -X POST http://localhost:8590/gemfire-vectordb/v1/indexes/quickstart/embeddings \
   -H "Content-Type: application/json" \
   -d '[
   {
@@ -36,15 +36,21 @@ curl -X POST http://localhost:9090/gemfire-vectordb/v1/indexes/quickstart/embedd
 ]'
 ```
 
-
-Testing
+Review Embeddings
 
 ```shell
-curl http://localhost:9090/gemfire-vectordb/v1/indexes/quickstart
+curl http://localhost:8590/gemfire-vectordb/v1/indexes/quickstart
 ```
+
+Testing
 
 Search
 
 ```shell
-curl -X POST http://localhost:9090/gemfire-vectordb/v1/indexes/quickstart/query -H "Content-Type: application/json" -d '{"vector": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], "top-k": 3}'
+curl -X POST http://localhost:8590/gemfire-vectordb/v1/indexes/quickstart/query -H "Content-Type: application/json" -d '{"vector": [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], "top-k": 3}'
+```
+
+Query in GMC
+```shell
+select * from /quickstart
 ```

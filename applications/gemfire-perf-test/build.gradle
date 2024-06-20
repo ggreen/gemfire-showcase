@@ -35,7 +35,8 @@ dependencies {
 //    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
 
     implementation project(':components:gemfire-extensions-core')
-    implementation "com.vmware.gemfire:spring-boot-3.1-gemfire-10.1:$springBootForGemFireVersion"
+//    implementation project(':components:gemfire-extensions-core')
+    compileOnly "com.vmware.gemfire:spring-boot-3.1-gemfire-10.1:$springBootForGemFireVersion"
 //    implementation "com.vmware.gemfire:gemfire-core:$vmwareGemFireVersion"
     implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.1"
     implementation "com.vmware.gemfire:gemfire-core:10.1.1"
