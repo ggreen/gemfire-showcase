@@ -99,8 +99,8 @@ publishing {
             name = "CentralMaven" //  optional target repository name
             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username = ossrhUsername
-                password = ossrhPassword
+                username System.getenv('PIVOTAL_MAVEN_USERNAME')
+                password System.getenv('PIVOTAL_MAVEN_PASSWORD')
             }
         }
     }
