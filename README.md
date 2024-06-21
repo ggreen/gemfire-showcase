@@ -1,12 +1,16 @@
 # GemFire Extension 
 
 
-This project contains an API for Java Virtual Machine based languages to access [GemFire](https://tanzu.vmware.com/gemfire). It builds on top of the core GemFire APIs. 
-
-It provides a simple interface to connect and perform GemFire data access operations.
+This project contains example APIs, applications, design patterns implementations and documentation for enabling the use of [GemFire](https://tanzu.vmware.com/gemfire).
 
 
-See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)
+## Prerequisites
+
+
+- Java 17
+- Gradle  8.4 or higher
+- vmware-gemfire-10.1.0 or higher
+
 
 
 # Sub Projects
@@ -22,14 +26,12 @@ See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-exten
 | [components/gemfire-security-managers](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-security-managers)                   | [GemFire security manager](https://tanzu.vmware.com/developer/data/gemfire/blog/security-manager-basics-authentication-and-authorization/) implementations |
 | [components/gemfire-touch-function](components/gemfire-touch-function)                                                                                | GemFire function to synchronize region in WAN replicated GemFire clusters                                                                                  |
 | [components/functions/gemfire-clear-region-function](components/functions/gemfire-clear-region-function)                                              | GemFire function to clear region data in a GemFire partitioned region                                                                                      |
-| [deployments/scripts/gemfire-devOps-bash](deployment/scripts/gemfire-devOps-bash)                                                                    | GemFire cluster operations DevOps management scripts                                                                                                       |
+| [deployments/scripts/gemfire-devOps-bash](deployment/scripts/gemfire-devOps-bash)                                                                     | GemFire cluster operations DevOps management scripts                                                                                                       |
 
 
+## Building Source Code
 
-
-## Build Jar
-
-Set Pivotal Maven Repository user credentials
+Set up Maven Repository user credentials
 See https://gemfire.dev/quickstart/java/
 
 ```shell
@@ -37,17 +39,33 @@ export PIVOTAL_MAVEN_USERNAME=$HARBOR_USER
 export PIVOTAL_MAVEN_PASSWORD=$HARBOR_PASSWORD
 ```
 
-# Starting a GemFire Cluster Locally
+Building source code
 
-
-In GFfsh
-
-Start Locator 
 ```shell
-start locator --name=localhost --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
+gradle  build
 ```
 
-Start Server
+# GemFire Best Practices and Documentation
+
+The following are documented best practices based on GemFire lessons learned.
+
+| Subject                                                                | Notes                                               |
+|------------------------------------------------------------------------|-----------------------------------------------------|
+| [Class loader isolation](docs/best-practices/ClassLoader-Isolation.md) | GemFire server-side modules class loader guidelines |  
+| [GemFire on Kubernetes Demos](docs/demo/k8)                            | GemFire, apps and services on Kubernetes Demos      |
+| [GemFire Demos](docs/demo/local)                                       | Demos for various features                          |
+
+--------------------------------------
+# Starting a GemFire Cluster Locally
+Set the GEMFIRE_HOME environment to the installation directory of GemFire.
+
+Example
 ```shell
-start server --name=server1 --server-bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1 --jmx-manager-hostname-for-clients=127.0.0.1 --bind-address=127.0.0.1 --http-service-bind-address=127.0.0.1 --locators=127.0.0.1[10334]
+export GEMFIRE_HOME=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-10.1.0
+```
+
+See local startup script 
+
+```shell
+./deployment/local/gemfire/start.sh
 ```

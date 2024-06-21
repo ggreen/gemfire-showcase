@@ -1,10 +1,13 @@
 # GemFire Extension Core
 
-This project contains an API for Java Virtual Machine based languages to access [Apache Geode](https://geode.apache.org/)/[GemFire](https://tanzu.vmware.com/gemfire). It builds on top of the core GemFire APIs. It provides a simple interface to connect and perform GemFire data access operations.
+It builds on top of the core GemFire APIs.
 
-# GemFire Extension
+It provides a simple interface to connect and perform GemFire data access operations.
 
 See [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)
+
+
+# GemFire Extension
 
 **Simple Configuration**
 
@@ -16,7 +19,7 @@ It provides out of box security credential login support. The username and passw
 It  supports loading keystore/trustores from the application CLASSPATH for SSL/TLS communication with the GemFire cluster.
 
 
-This implement is based on the legacy [Apache Geode/GemFire Enterprise Data Integration framework](https://github.com/nyla-solutions/gedi-geode) open source implementation.
+This implement is based on the legacy [GemFire Enterprise Data Integration framework](https://github.com/nyla-solutions/gedi-geode) open source implementation.
 
 ## GemFireClient API Developer Guide
 
@@ -88,11 +91,11 @@ see the properties below.
 
 -------------------------------------------------
 
-**Get a Apache Geode/GemFire Connection**
+**Get a GemFire Connection**
 
 	GemFireClient gemFireClient = GemFireClient.connect()
 
-Get the Apache Geode/GemFire client cache
+Get the GemFire client cache
 
 	ClientCache cache = gemFireClient.getClientCache();
 
