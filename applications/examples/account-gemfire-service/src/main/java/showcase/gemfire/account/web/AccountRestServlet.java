@@ -1,5 +1,6 @@
 package showcase.gemfire.account.web;
 
+import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ import java.util.function.Function;
 /**
  * @author Gregory Green
  */
-public class AccountRestServlet extends HttpServlet
+public class AccountRestServlet extends HttpServlet implements Servlet
 {
     private final AccountRepository repository;
     private final Function<Account,String> accountToJson;
