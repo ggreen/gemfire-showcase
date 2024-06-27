@@ -68,7 +68,7 @@ curl "http://localhost:8080/accounts" \
 }'
 ```
 
-Read Accouint
+Read Account
 
 ```shell
 curl http://localhost:8080/accounts/4
