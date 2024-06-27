@@ -1,10 +1,10 @@
 # Account GemFire Service
 
 
-This project provide an example of REST Service that support Create, Read, Update and Delete 
-operation on Tanzu GemFire.
+This project provides an example REST Service for Create, Read, Update and Delete (CRUD)
+operations on [Tanzu GemFire](https://tanzu.vmware.com/gemfire).
 
-It uses Jetty as an embedded Web Server.
+It uses [Jetty](https://jetty.org/index.html) as an embedded Web Server.
 
 
 ## Building Source Code
