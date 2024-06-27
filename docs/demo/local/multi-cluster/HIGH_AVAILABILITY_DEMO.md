@@ -36,14 +36,14 @@ export GEMFIRE_HOME=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-10.
 Start application that points to cluster 1
 
 ```shell
-java -jar ./examples/spring-data-gemfire/applications/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health1  --server.port=8181 --spring.data.gemfire.pool.default.locators="localhost[10001]"
+java -jar ./examples/spring-data-gemfire/applications/userAccount-service/build/libs/userAccount-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health1  --server.port=8181 --spring.data.gemfire.pool.default.locators="localhost[10001]"
 ```
 
 
 Start application that points to cluster 2
 
 ```shell
-java -jar examples/spring-data-gemfire/applications/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health2    --server.port=8282 --spring.data.gemfire.pool.default.locators="localhost[10002]"
+java -jar examples/spring-data-gemfire/applications/userAccount-service/build/libs/userAccount-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health2    --server.port=8282 --spring.data.gemfire.pool.default.locators="localhost[10002]"
 ```
 
 Start Spring Gateway
@@ -58,7 +58,7 @@ java -jar examples/spring-gateway-healthcheck/build/libs/spring-gateway-healthch
 # Testing
 
 
-Save account 1
+Save userAccount 1
 
 ```shell
 curl -X 'POST' \
@@ -77,7 +77,7 @@ Get Account 1
 curl http://localhost:8080/accounts/1
 ```
 
-Save account 2
+Save userAccount 2
 
 ```shell
 curl 'http://localhost:8080/accounts' \

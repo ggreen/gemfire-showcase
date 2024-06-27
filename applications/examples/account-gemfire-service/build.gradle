@@ -49,35 +49,27 @@ repositories {
     }
 }
 dependencies {
+    implementation platform('com.vmware.gemfire:gemfire-all-bom:10.0.0')
     compileOnly 'org.projectlombok:lombok:1.18.32'
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
-
-    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
-    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'org.apache.logging.log4j:log4j-api'
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core'
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-common'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq'
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
+    implementation 'org.slf4j:slf4j-api'
     implementation("com.github.nyla-solutions:nyla.solutions.core:2.2.1") {
     }
-
-//    implementation 'org.eclipse.jetty.websocket:javax-websocket-server-impl:9.4.54.v20240208'
-
-//    implementation 'org.eclipse.jetty:jetty-server:12.0.10'
-
     implementation 'jakarta.websocket:jakarta.websocket-api:2.1.0'
     implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.0.10'
 
     implementation project(':components:gemfire-extensions-core')
-//    implementation 'org.eclipse.jetty.http3:jetty-http3-server:12.0.10-SNAPSHOT'
-
     testImplementation 'org.apache.logging.log4j:log4j-api:2.20.0'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
-
-    testImplementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    testImplementation group: 'com.vmware.gemfire', name: 'gemfire-core'
     testImplementation 'com.vmware.gemfire:gemfire-search:1.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation("org.assertj:assertj-core:3.24.2")

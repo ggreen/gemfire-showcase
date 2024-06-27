@@ -26,7 +26,7 @@ Create regions
 
 Start Application
 
-See [example account service](examples/spring-data-gemfire/applications/account-service)
+See [example userAccount service](examples/spring-data-gemfire/applications/userAccount-service)
 
 
 ```shell

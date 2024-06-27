@@ -60,8 +60,8 @@ k get pods -w
 
 ```shell
 export SPRING_GATEWAY_HOST=`kubectl get services spring-gateway-healthcheck --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-wan`
-export ACCT_CLUSTER_A_HOST=`kubectl get services account-service-cluster-a --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-1`
-export ACCT_CLUSTER_B_HOST=`kubectl get services account-service-cluster-b --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-2`
+export ACCT_CLUSTER_A_HOST=`kubectl get services userAccount-service-cluster-a --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-1`
+export ACCT_CLUSTER_B_HOST=`kubectl get services userAccount-service-cluster-b --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-2`
 ```
 
 
@@ -72,7 +72,7 @@ echo ACCT_CLUSTER_B_HOST=$ACCT_CLUSTER_B_HOST
 ```
 
 
-Save account 1
+Save userAccount 1
 
 ```shell
 curl -X 'POST' \
@@ -86,7 +86,7 @@ curl -X 'POST' \
 ```
 
 
-Save account 2
+Save userAccount 2
 
 ```shell
 curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
@@ -153,7 +153,7 @@ Test Actuator for App Service to cluster 2 expected "UP"
 curl http://$ACCT_CLUSTER_B_HOST:8080/actuator/health
 ```
 
-Save account another account
+Save userAccount another userAccount
 
 
 ```shell
@@ -230,8 +230,8 @@ kubectl exec gemfire-cluster-b-locator-0 -it --  gfsh
 
 ```shell
 kubectl delete -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_a.yml --namespace=tanzu-data-site-1
-kubectl delete -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-a.yml --namespace=tanzu-data-site-1
+kubectl delete -f deployment/cloud/k8/apps/userAccount-service/wan-ha/userAccount-service-cluster-a.yml --namespace=tanzu-data-site-1
 kubectl delete -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_b.yml  --namespace=tanzu-data-site-2
-kubectl delete -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-b.yml  --namespace=tanzu-data-site-2
+kubectl delete -f deployment/cloud/k8/apps/userAccount-service/wan-ha/userAccount-service-cluster-b.yml  --namespace=tanzu-data-site-2
 kubectl delete -f deployment/cloud/k8/apps/spring-gateway-healthcheck/spring-gateway-healthcheck.yml
 ```

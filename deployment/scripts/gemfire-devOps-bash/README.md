@@ -223,7 +223,7 @@ Use the *importRegionExports.sh* to import data that was previously exported to 
 
 | Variables           | Notes                          | Examples            |
 |---------------------|--------------------------------|---------------------|
-| export GEM_USER     | The Geode service account user | gemfire             |
+| export GEM_USER     | The Geode service userAccount user | gemfire             |
 | export SSH_IDENTITY | the SSH/SCP -i identify        | " -i ~/aws/env.pem" |
 
 

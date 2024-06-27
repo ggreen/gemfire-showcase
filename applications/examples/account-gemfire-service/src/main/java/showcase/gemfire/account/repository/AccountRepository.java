@@ -1,15 +1,15 @@
 package showcase.gemfire.account.repository;
 
-import showcase.gemfire.account.domain.Account;
+import showcase.gemfire.account.domain.UserAccount;
 
 public interface AccountRepository {
-    Account create(Account account);
+    UserAccount create(UserAccount userAccount);
 
-    Account findById(Long accountId);
+    UserAccount findById(Long accountId);
 
-    Account update(Account account);
+    UserAccount update(UserAccount userAccount);
 
     boolean deleteAccountById(Long accountId);
 
-    Account save(Account account);
+    UserAccount save(UserAccount userAccount);
 }

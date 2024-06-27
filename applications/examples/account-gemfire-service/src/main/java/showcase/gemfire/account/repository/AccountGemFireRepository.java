@@ -3,11 +3,10 @@ package showcase.gemfire.account.repository;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
 import com.vmware.data.services.gemfire.io.QuerierService;
-import lombok.RequiredArgsConstructor;
 import nyla.solutions.core.util.Debugger;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.query.Struct;
-import showcase.gemfire.account.domain.Account;
+import showcase.gemfire.account.domain.UserAccount;
 
 import java.util.Collection;
 
@@ -16,16 +15,16 @@ import java.util.Collection;
  */
 public class AccountGemFireRepository implements AccountRepository
 {
-    private final Region<Long, Account> accountRegion;
+    private final Region<Long, UserAccount> userAccountRegion;
     private final QuerierService querierService;
 
     public AccountGemFireRepository()
     {
         try {
-            GemFireClient geodeClient = GemFireClient.connect();
+            GemFireClient gemfireClient = GemFireClient.connect();
 
-            accountRegion = geodeClient.getRegion("accounts");
-            this.querierService = geodeClient.getQuerierService();
+            userAccountRegion = gemfireClient.getRegion("UserAccount");
+            this.querierService = gemfireClient.getQuerierService();
         }
         catch (RuntimeException e) {
             e.printStackTrace();
@@ -33,59 +32,59 @@ public class AccountGemFireRepository implements AccountRepository
         }
     }
 
-    public AccountGemFireRepository(Region<Long, Account> accountRegion, QuerierService queryService)
+    public AccountGemFireRepository(Region<Long, UserAccount> userAccountRegion, QuerierService queryService)
     {
-        this.accountRegion = accountRegion;
+        this.userAccountRegion = userAccountRegion;
         this.querierService = queryService;
     }
 
     @Override
-    public Account create(Account account)
+    public UserAccount create(UserAccount userAccount)
     {
         Debugger.println(this,"create account");
-        populateTimestamp(account);
+        populateTimestamp(userAccount);
 
-        this.accountRegion.create(getAccountId(account),account);
-        return account;
+        this.userAccountRegion.create(getAccountId(userAccount), userAccount);
+        return userAccount;
     }
 
 
     @Override
-    public Account findById(Long accountId)
+    public UserAccount findById(Long accountId)
     {
-        Debugger.println(this,"read account");
-        return accountRegion.get(accountId);
+        Debugger.println(this,"read account accountId");
+        return userAccountRegion.get(accountId);
     }
 
     @Override
-    public Account update(Account account)
+    public UserAccount update(UserAccount userAccount)
     {
         Debugger.println(this,"update account");
-        populateTimestamp(account);
-        accountRegion.put(getAccountId(account),account);
-        return account;
+        populateTimestamp(userAccount);
+        userAccountRegion.put(getAccountId(userAccount), userAccount);
+        return userAccount;
     }
 
     @Override
     public boolean deleteAccountById(Long accountId)
     {
         Debugger.println(this,"delete account");
-        accountRegion.remove(accountId);
+        userAccountRegion.remove(accountId);
         return true;
     }
 
-    private Long getAccountId(Account account)
+    private Long getAccountId(UserAccount userAccount)
     {
-        Long id = account.getId();
+        Long id = userAccount.getId();
         if(id == null)
             throw new IllegalArgumentException("account.id required");
         return id;
     }
 
     @Override
-    public Account save(Account account)
+    public UserAccount save(UserAccount userAccount)
     {
-        return update(account);
+        return update(userAccount);
     }
 
     public Long[] selectMaxAccountIdAndTimestamp()
@@ -106,9 +105,9 @@ public class AccountGemFireRepository implements AccountRepository
 
     }
 
-    private void populateTimestamp(Account account)
+    private void populateTimestamp(UserAccount userAccount)
     {
-        if(account.getCurrentTimestamp() == null)
-            account.setCurrentTimestamp(System.currentTimeMillis());
+        if(userAccount.getCurrentTimestamp() == null)
+            userAccount.setCurrentTimestamp(System.currentTimeMillis());
     }
 }

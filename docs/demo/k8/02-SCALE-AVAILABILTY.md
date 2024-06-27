@@ -79,7 +79,7 @@ kubectl exec -it gemfire1-locator-0 -- gfsh -e "connect --locator=gemfire1-locat
 ##  - Deploy Account Service GemFire client
 
 ```shell
-kubectl apply -f deployment/cloud/k8/apps/account-service/account-service.yml  --namespace=tanzu-data
+kubectl apply -f deployment/cloud/k8/apps/userAccount-service/userAccount-service.yml  --namespace=tanzu-data
 ```
 
 Example Yaml
@@ -89,17 +89,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run:  account-service-gemfire-showcase
-  name:  account-service-gemfire-showcase
+    run:  userAccount-service-gemfire-showcase
+  name:  userAccount-service-gemfire-showcase
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name:  account-service-gemfire-showcase
+      name:  userAccount-service-gemfire-showcase
   template:
     metadata:
       labels:
-        name:  account-service-gemfire-showcase
+        name:  userAccount-service-gemfire-showcase
     spec:
       containers:
         - env:
@@ -114,8 +114,8 @@ spec:
                 configMapKeyRef:
                   name: gemfire1-config
                   key: locators
-          image: cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
-          name: account-service-gemfire-showcase
+          image: cloudnativedata/userAccount-service-gemfire-showcase:0.0.1-SNAPSHOT
+          name: userAccount-service-gemfire-showcase
           imagePullPolicy: "Always"
 #          imagePullPolicy: "IfNotPresent"
           livenessProbe:
@@ -138,10 +138,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: account-service-gemfire-showcase
+  name: userAccount-service-gemfire-showcase
 spec:
   selector:
-    name: account-service-gemfire-showcase
+    name: userAccount-service-gemfire-showcase
   ports:
     - protocol: TCP
       port: 8080
@@ -150,7 +150,7 @@ spec:
 ```
 
 
-##  - use the watch command util the application account-rest-service pod state is ready   (Control^C to stop)
+##  - use the watch command util the application userAccount-rest-service pod state is ready   (Control^C to stop)
 
 ```shell
  kubectl get pods -w  --namespace=tanzu-data
@@ -159,14 +159,14 @@ spec:
 ##  - Get the service IP app to be accessed using port 8080
 
 ```shell
-export API_HTTP_HOST=`kubectl get services account-service-gemfire-showcase --output jsonpath='{.status.loadBalancer.ingress[0].ip}'  --namespace=tanzu-data`
+export API_HTTP_HOST=`kubectl get services userAccount-service-gemfire-showcase --output jsonpath='{.status.loadBalancer.ingress[0].ip}'  --namespace=tanzu-data`
 ```
 
 ```shell
 echo $API_HTTP_HOST
 ```
 
-##  - Write account data
+##  - Write userAccount data
 
 ```shell
 curl -X 'POST' \
@@ -176,7 +176,7 @@ curl -X 'POST' \
 -d '{ "id": "1", "name": "Acct 1" }'  ; echo
 ```
 
-##  - Read account data
+##  - Read userAccount data
 
 ```shell
 curl -X 'GET' "http://$API_HTTP_HOST:8080/accounts/1" -H 'accept: */*'  ; echo
@@ -214,11 +214,11 @@ kubectl get pods -w  --namespace=tanzu-data
 ```
 
 
-##  - Try to Read account 
+##  - Try to Read userAccount 
 
 If in different shell
 ```shell
-export API_HTTP_HOST=`kubectl get services account-service-gemfire-showcase --output jsonpath='{.status.loadBalancer.ingress[0].ip}'  --namespace=tanzu-data`
+export API_HTTP_HOST=`kubectl get services userAccount-service-gemfire-showcase --output jsonpath='{.status.loadBalancer.ingress[0].ip}'  --namespace=tanzu-data`
 ```
 
 ```shell
@@ -290,13 +290,13 @@ kubectl edit gemfirecluster gemfire1  --namespace=tanzu-data
 kubectl get pods -w  --namespace=tanzu-data
 ```
 
-##  - Try to Read account
+##  - Try to Read userAccount
 
 ```shell
 curl -X 'GET' "http://$API_HTTP_HOST:8080/accounts/1" -H 'accept: */*'  ; echo
 ```
 
-##  - Write account data
+##  - Write userAccount data
 
 ```shell
 curl -X 'POST' \

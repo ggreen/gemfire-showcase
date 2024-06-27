@@ -23,7 +23,7 @@ export GF2_TLS_PASSWORD=$(kubectl -n default get secret gemfire2-cert -o=jsonpat
 kubectl exec -it gemfire1-locator-0 -- gfsh -e "connect --locator=gemfire1-locator-0.gemfire1-locator.default.svc.cluster.local[10334] --trust-store=/certs/truststore.p12 --trust-store-password=$GF1_TLS_PASSWORD --key-store=/certs/keystore.p12 --key-store-password=$GF1_TLS_PASSWORD" -e "create gateway-receiver"
 ```
 
-## - Gateway sender from cluster 2 to cluster 1 for account region
+## - Gateway sender from cluster 2 to cluster 1 for userAccount region
 
 
 ```shell
@@ -67,7 +67,7 @@ k apply -f cloud/k8/apps/wan/app-wan2.yml
 ## - Export port of the spring-geode-kotlin-transaction-wan2 app
 
 ```shell
-kubectl port-forward deployment/account-location-rest-service-wan2 9290:8080
+kubectl port-forward deployment/userAccount-location-rest-service-wan2 9290:8080
 ```
 
 
@@ -89,7 +89,7 @@ curl -X 'POST' \
 'http://localhost:9290/accounts' \
 -H 'accept: */*' \
 -H 'Content-Type: application/json' \
--d '{ "account": { "id": "WAN", "name": "Account WAN" }, "location": { "id": "WAN", "address": "123 WAN Street-WAN", "city": "NYC", "stateCode": "NY","zipCode": "55555"} }'  ; echo
+-d '{ "userAccount": { "id": "WAN", "name": "Account WAN" }, "location": { "id": "WAN", "address": "123 WAN Street-WAN", "city": "NYC", "stateCode": "NY","zipCode": "55555"} }'  ; echo
 ```
 
 ## - Read the WAN replicated data from cluster 1

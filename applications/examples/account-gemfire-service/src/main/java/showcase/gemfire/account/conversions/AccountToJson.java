@@ -3,14 +3,14 @@ package showcase.gemfire.account.conversions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nyla.solutions.core.exception.FormatException;
-import showcase.gemfire.account.domain.Account;
+import showcase.gemfire.account.domain.UserAccount;
 
 import java.util.function.Function;
 
 /**
  * @author Gregory Green
  */
-public class AccountToJson implements Function<Account,String>
+public class AccountToJson implements Function<UserAccount,String>
 {
     private final ObjectMapper objectMapper;
 
@@ -24,10 +24,10 @@ public class AccountToJson implements Function<Account,String>
     }
 
     @Override
-    public String apply(Account account)
+    public String apply(UserAccount userAccount)
     {
         try {
-            return objectMapper.writeValueAsString(account);
+            return objectMapper.writeValueAsString(userAccount);
         }
         catch (JsonProcessingException e) {
             throw new FormatException(e);

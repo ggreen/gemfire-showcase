@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>account-service</artifactId>
+	<artifactId>userAccount-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>account-service</name>
-	<description>account-service</description>
+	<name>userAccount-service</name>
+	<description>userAccount-service</description>
 	<properties>
 		<java.version>17</java.version>
 		<springDataForGemFire.version>1.0.1</springDataForGemFire.version>
