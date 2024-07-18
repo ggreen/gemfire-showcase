@@ -4,7 +4,7 @@ plugins {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
@@ -17,7 +17,7 @@ allprojects {
 }
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-touch-function'
+archivesBaseName = 'gemfire-clear-region-function'
 
 ext {
     gemFireVersion = '10.1.0'
