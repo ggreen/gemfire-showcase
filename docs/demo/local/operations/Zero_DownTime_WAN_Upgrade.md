@@ -1,27 +1,42 @@
 # Zero DownTime Upgrade
 
 
-Blue Setup
+The following documentation a GemFire Upgrade using 
+a Blue Green deployment with WAN Replications
+
+High Level Steps
+
+- Deploy GemFire Cluster B with regions and GemFire [Gateway Receiver](https://docs.vmware.com/en/VMware-GemFire/10.1/gf/topologies_and_comm-multi_site_configuration-setting_up_a_multisite_system.html)
+- Configure Cluster A regions/Gateway Senders (see details to updating [without](https://docs.vmware.com/en/VMware-GemFire/10.1/gf/topologies_and_comm-multi_site_configuration-setting_up_a_multisite_system.html) the cluster configuration service)
+  - Use dedicated parallel sender for partitioned regions
+  - Serial used for replicated regions or maintaining order of event processing
+- Backup Cluster A -> Restore -> Cluster B
+  - ONLY restore server diskstore
+  - DO NOT restore cluster 1 locator cluster configurations
+- Deploy Apps <GemFire-Clients> to Cluster B
+- Use Gateway or Load Balance to redirect App traffic from Cluster A to Cluster B
+- Shutdown Apps <GemFire-Clients> to Cluster A
+- Shutdown Cluster A after a successful migration
+
+
+---------------------
+
+# Local Demo Instructions
 
 Goto project root
-
-
 Example
 ```shell
 cd /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
 ```
 
+Start Blue Cluster (cluster 1)
 ```shell
 source deployment/upgrades/blue-setenv.sh
 ./deployment/upgrades/blue_start.sh
 ```
 
 
-```shell
-$GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "list members"
-```
-
-Create Region
+Create Region in blue cluster 
 
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "create region --name=accounts --type=PARTITION_REDUNDANT_PERSISTENT"
@@ -35,6 +50,7 @@ $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "put --re
 -------------------------------------
 
 ## Start Green Cluster
+
 In Gfsh (new Terminal Shell)
 
 ```shell
