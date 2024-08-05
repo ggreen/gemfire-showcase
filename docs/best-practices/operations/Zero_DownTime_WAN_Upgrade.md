@@ -1,5 +1,5 @@
-# Zero DownTime Upgrade
-
+# GemFire Zero Down Time Upgrade
+## Blue Green - Backup/restore
 
 The following documentation a GemFire Upgrade using 
 a Blue Green deployment with WAN Replications
@@ -18,7 +18,7 @@ High Level Steps
 - Shutdown Apps <GemFire-Clients> to Cluster A
 - Shutdown Cluster A after a successful migration
 
-
+![gf-upgrade-wan.png](imgs/gf-upgrade-wan.png)
 ---------------------
 
 # Local Demo Instructions
