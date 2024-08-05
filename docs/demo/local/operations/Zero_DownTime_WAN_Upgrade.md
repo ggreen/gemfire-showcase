@@ -86,50 +86,50 @@ Add Gateway to Blue Cluster
 
 ## Create Gateway receiver to cluster 1
 
+Create Gateway Sender
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=[10001]" -e "create gateway-sender --id=cluster2 --parallel=true --remote-distributed-system-id=2 --enable-persistence=true"
 ```
 
+Add Data
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "put --region=/accounts --key=1 --value="account-1-A""
 ```
+
+Add Gateway Sender to Region
 
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=[10001]" -e "alter region --name=/accounts  --gateway-sender-id=cluster2"
 ```
 
+Update Data
+
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "put --region=/accounts --key=1 --value="account-1-B""
 ```
 
-Stop Locator
+Stop Blue Cluster Locator
 
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=[10001]" -e "stop locator --name=gf1-locator"
 ```
 
-Start Locator to remote locators
+Start BLUE Locator with remote locators to Green Cluster
 ```shell
 cd $GF_DIR/gf-cluster/blue
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "start locator --name=gf1-locator --J=-Dgemfire.remote-locators=127.0.0.1[10002] --enable-cluster-configuration=true --connect=false --port=10001  --J=-Dgemfire.jmx-manager-port=1099 --max-heap=250m --initial-heap=250m --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1"
 ```
 
-Verify members
-
-```shell
-$GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "list members"
-```
 
 
-Restart Gateway Receiver
 
-Green Cluster
+Restart  Green Cluster Gateway Receiver
 ```shell
 $GEMFIRE_GREEN_HOME/bin/gfsh -e "connect --locator=localhost[10002]"  -e "stop gateway-receiver"
 $GEMFIRE_GREEN_HOME/bin/gfsh -e "connect --locator=localhost[10002]"  -e "start gateway-receiver"
 ```
 
-Blue Cluster
+Restart Blue Cluster Gateway Sender
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "stop gateway-sender --id=cluster2"
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "start gateway-sender --id=cluster2"
@@ -142,21 +142,17 @@ $GEMFIRE_GREEN_HOME/bin/gfsh -e "connect --locator=localhost[10002]"  -e "list g
 ```
 
 
-## Backup Old Cluster
-
+## Backup Blue Cluster
 
 Backup Blue Cluster
 
 ```shell
 mkdir -p $GF_DIR/gf-cluster/blue/backup
-```
-
-```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "backup disk-store --dir=$GF_DIR/gf-cluster/blue/backup"
 ```
 
 
-Stop Green Cluster
+Shutdown Green Cluster
 
 ```shell
 $GEMFIRE_GREEN_HOME/bin/gfsh -e "connect --locator=localhost[10002]" -e "shutdown --include-locators=true"
@@ -167,6 +163,16 @@ Blue Cluster -> Edit restore.sh to copy disk stores to green cluster
 ```shell
 vi $GF_DIR/gf-cluster/blue/backup/*/*/restore.sh
 ```
+Example restore.sh
+
+```
+# Restore data
+rm -rf '/Users/devtools/repositories/IMDG/gemfire/runtime/zero-downtime-upgrade/gf-cluster/green/gf1-server/'
+mkdir -p '/Users/devtools/repositories/IMDG/gemfire/runtime/zero-downtime-upgrade/gf-cluster/green/gf1-server/.'
+cp -rp 'diskstores/DEFAULT_95216c211a9444a5-8c10326d5c720b26/dir0'/* '/Users/devtools/repositories/IMDG/gemfire/runtime/zero-downtime-upgrade/gf-cluster/green/gf1-server/.'
+```
+
+
 
 Run modified restores.sh on ONLY the servers
 
@@ -181,18 +187,6 @@ cd ../*gf2_server*/
 ./restore.sh
 ```
 
-Example restore.sh
-
-```shell
-
-
-# Restore data
-rm -rf '/Users/devtools/repositories/IMDG/gemfire/runtime/zero-downtime-upgrade/gf-cluster/green/gf1-server/'
-mkdir -p '/Users/devtools/repositories/IMDG/gemfire/runtime/zero-downtime-upgrade/gf-cluster/green/gf1-server/.'
-cp -rp 'diskstores/DEFAULT_95216c211a9444a5-8c10326d5c720b26/dir0'/* '/Users/devtools/repositories/IMDG/gemfire/runtime/zero-downtime-upgrade/gf-cluster/green/gf1-server/.'
-```
-
-
 -----
 
 Restart Cluster Green
@@ -204,19 +198,17 @@ $GEMFIRE_GREEN_HOME/bin/gfsh -e "start locator --name=gf1-locator --J=-Dgemfire.
 ```
 
 
-Server 1
+Start Green Cluster Server 1
 ```shell
 cd $GF_DIR/gf-cluster/green
 $GEMFIRE_GREEN_HOME/bin/gfsh -e "start server --name=gf1-server  --J=-Dgemfire.distributed-system-id=2   --use-cluster-configuration=true --server-port=10201   --locators=127.0.0.1[10002] --max-heap=1g   --initial-heap=1g  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1" &
 ```
 
-Server 2
+Start Green Cluster Server 2
 ```shell
 cd $GF_DIR/gf-cluster/green
 $GEMFIRE_GREEN_HOME/bin/gfsh -e "start server --name=gf2-server  --J=-Dgemfire.distributed-system-id=2   --use-cluster-configuration=true --server-port=10202   --locators=127.0.0.1[10002] --max-heap=1g   --initial-heap=1g  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1"
 ```
-
-
 
 ------------------------------------------
 # WAN Replication - Parallel - Testing
@@ -228,12 +220,11 @@ Verify --value="account-1-B"
 $GEMFIRE_GREEN_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "get --region=/accounts --key=1"
 ```
 
-
+Update Value
 
 ```shell
 $GEMFIRE_BLUE_HOME/bin/gfsh -e "connect --locator=localhost[10001]" -e "put --region=/accounts --key=1 --value="account-1-C""
 ```
-
 
 Verify value=account-1-C
 
