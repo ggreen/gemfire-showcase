@@ -4,9 +4,6 @@ import com.vmware.data.services.gemfire.operations.functions.strategies.GetRegio
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.execute.Function;
 import org.apache.geode.cache.execute.FunctionContext;
-import org.apache.geode.cache.execute.FunctionException;
-import org.apache.geode.cache.execute.RegionFunctionContext;
-import org.apache.geode.cache.query.*;
 
 import java.util.Collection;
 

@@ -3,7 +3,7 @@ package com.vmware.data.services.gemfire.operations.functions.strategies;
 import org.apache.geode.cache.execute.FunctionContext;
 import org.apache.geode.cache.execute.FunctionException;
 import org.apache.geode.cache.execute.RegionFunctionContext;
-import org.apache.geode.cache.query.*;
+import org.apache.geode.cache.query.QueryService;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -13,7 +13,7 @@ public class QueryFromFunctionContext implements Function<FunctionContext, Colle
 
     @Override
     public Collection<Object> apply(FunctionContext functionContext) {
-        QueryService queryService = getQueryService(functionContext);
+        QueryService queryService = functionContext.getCache().getQueryService();
 
         String oql = getOql(functionContext);
         try {
@@ -28,11 +28,15 @@ public class QueryFromFunctionContext implements Function<FunctionContext, Colle
     }
 
     private String getOql(FunctionContext functionContext) {
-        return ((String[])functionContext.getArguments())[0];
-    }
 
-    private QueryService getQueryService(FunctionContext functionContext) {
-        return ((RegionFunctionContext)functionContext).getCache().getQueryService();
+        Object args = functionContext.getArguments();
+        if(!(args instanceof  String[]))
+            throw new FunctionException("Function arguments type must be String[]");
 
+        String[] arguments = (String[])args;
+
+        if(arguments.length == 0)
+            throw new FunctionException("Function arguments type must be String[]");
+        return arguments[0];
     }
 }
