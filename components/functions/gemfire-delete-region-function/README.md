@@ -1,4 +1,4 @@
-# Delete Functions
+# Delete Function
 
 
 This function allows you to delete region data in a GemFire region based on a query of keys.
