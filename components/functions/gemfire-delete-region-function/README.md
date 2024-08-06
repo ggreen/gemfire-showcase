@@ -109,7 +109,7 @@ Note: Commas in OQL must be encoded with {COMMA}
 execute function --id=DeleteFunction --region=/TestClear --arguments="select key from /TestClear.entries where value in SET ('1'{COMMA}'2')"
 ```
 
-Get data values should be null
+Get data values 1 records with key=3
 
 ```shell
 query --query="select key from /TestClear.entries "
