@@ -3,6 +3,7 @@ package com.vmware.data.services.gemfire.operations.functions.strategies;
 import org.apache.geode.cache.Cache;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.execute.FunctionContext;
+import org.apache.geode.cache.execute.FunctionException;
 import org.apache.geode.cache.execute.RegionFunctionContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -49,14 +51,18 @@ class GetRegionFromFunctionContextTest {
     }
 
     @Test
-    void execute_whenFunctionContext() {
+    void execute_whenFunctionContext_thenException() {
 
         String[] args = {"region"};
-        when(functionContext.getArguments()).thenReturn(args);
-        when(cache.getRegion(anyString())).thenReturn(region);
 
-        var actual = subject.apply(functionContext);
+        try {
+            var actual = subject.apply(functionContext);
+            fail("No allowed");
+        }
+        catch (FunctionException e)
+        {
+            assertThat(e.getMessage()).contains("region");
+        }
 
-        assertThat(actual).isEqualTo(region);
     }
 }

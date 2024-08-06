@@ -118,7 +118,7 @@ class QueryFromFunctionContextTest {
 
     }
 
-    @DisplayName("Given function context witho region and no owl When apply Then return results")
+    @DisplayName("Given function context without region and no owl When apply Then return results")
     @Test
     void apply_onRegionArgs() throws FunctionDomainException, TypeMismatchException, QueryInvocationTargetException, NameResolutionException {
 
@@ -133,5 +133,28 @@ class QueryFromFunctionContextTest {
         var actual = subject.apply(rfc);
         assertEquals(expected, actual);
 
+    }
+
+    @Test
+    void apply_exceptionWithOql() throws FunctionDomainException, TypeMismatchException, QueryInvocationTargetException, NameResolutionException {
+
+        String oql = "select * from /Region";
+
+        String[] args= {oql};
+        when(rfc.getCache()).thenReturn(cache);
+        when(cache.getQueryService()).thenReturn(qs);
+        when(rfc.getArguments()).thenReturn(args);
+        when(qs.newQuery(anyString())).thenReturn(query);
+        when(query.execute(any(RegionFunctionContext.class))).thenThrow(new RuntimeException("Query error"));
+
+        try{
+
+            subject.apply(rfc);
+            fail("Not allowed");
+        }
+        catch (FunctionException e)
+        {
+            assertThat(e.getMessage()).contains(oql);
+        }
     }
 }

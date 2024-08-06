@@ -17,7 +17,7 @@ allprojects {
 }
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-clear-region-function'
+archivesBaseName = 'gemfire-delete-region-function'
 
 ext {
     gemFireVersion = '10.1.0'
