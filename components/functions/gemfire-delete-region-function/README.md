@@ -10,8 +10,10 @@ This function has been tested with the following
 
 ## Build Jar
 
-Set Pivotal Maven Repository user credentials as environment variables.
+Set GemFire Maven Repository user credentials as environment variables.
 See https://gemfire.dev/quickstart/java/
+
+Example
 
 ```shell
 export PIVOTAL_MAVEN_USERNAME=$HARBOR_USER
@@ -104,12 +106,14 @@ execute function --id=DeleteFunction --region=/TestClear --arguments="select key
 ```
 
 
-Note: Commas in OQL must be encoded with {COMMA}
+Note: In Gfsh, Commas in OQL must be encoded with {COMMA}
+
+Example:
 ```shell
 execute function --id=DeleteFunction --region=/TestClear --arguments="select key from /TestClear.entries where value in SET ('1'{COMMA}'2')"
 ```
 
-Get data values 1 records with key=3
+When you query the data, there will be 1 record with key=3
 
 ```shell
 query --query="select key from /TestClear.entries "
