@@ -47,13 +47,9 @@ public class GemFireLuceneSearchTest
 		
 		assertNull(searcher.saveSearchResultsWithPageKeys(null,pageRegion));
 		
-		TextPageCriteria criteria = new TextPageCriteria();
+		TextPageCriteria criteria = TextPageCriteria.builder().id("test").query("test")
+				.regionName("region").indexName("index").defaultField("field").limit(100).build();
 		assertNull(searcher.saveSearchResultsWithPageKeys(criteria,pageRegion));
-		
-		criteria.setIndexName("TestIndex");
-		criteria.setQuery("test");
-		criteria.setId("test");
-		criteria.setDefaultField("test");
 		
 		assertNotNull(searcher.saveSearchResultsWithPageKeys(criteria,pageRegion));
 		

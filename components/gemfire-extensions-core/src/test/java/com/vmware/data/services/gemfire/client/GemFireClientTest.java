@@ -17,7 +17,10 @@ import org.apache.geode.pdx.PdxWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collection;
 import java.util.Properties;
@@ -29,6 +32,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Gregory Geen
  */
+@ExtendWith(MockitoExtension.class)
 public class GemFireClientTest
 {
     private GemFireClient subject;
@@ -39,6 +43,8 @@ public class GemFireClientTest
     private Region<?,?> cachingProxyRegion;
     private AttributesMutator<?, ?> attributesMutator;
     private QuerierService querier;
+    @Mock
+    private TextPageCriteria criteria;
 
 
     @Test
@@ -115,7 +121,7 @@ public class GemFireClientTest
 
         assertTrue( props.keySet().stream().anyMatch(k -> k.toString().startsWith("ssl")),"Has ssl");
 
-    }//------------------------------------------------
+    }
 
     @Test
     public void getRegion()
@@ -125,7 +131,8 @@ public class GemFireClientTest
         Region<Object, Object> region = subject.getRegion("test");
         assertNotNull(region);
         verify(proxyRegionfactory).create(ArgumentMatchers.anyString());
-    }//------------------------------------------------
+    }
+
     @Test
     public void testing_get_region_with_loader()
             throws Exception
@@ -137,7 +144,7 @@ public class GemFireClientTest
         verify(region).getAttributesMutator();
         verify(attributesMutator).setCacheLoader((CacheLoader)loader);
 
-    }//------------------------------------------------
+    }
 
     public void testWithCachingProxy()
     {
@@ -197,7 +204,6 @@ public class GemFireClientTest
     @Test
     void searchWithPageKeys() throws Exception
     {
-        TextPageCriteria criteria = new TextPageCriteria();
         FuncExe funcExe = mock(FuncExe.class);
         subject.searchWithPageKeys(criteria,funcExe);
         verify(funcExe).exe(ArgumentMatchers.any());

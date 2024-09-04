@@ -1,13 +1,73 @@
 package com.vmware.data.services.gemfire.lucene;
 
 
+import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
-import nyla.solutions.core.patterns.iteration.PageCriteria;
 
-public class TextPageCriteria extends PageCriteria
+public class TextPageCriteria implements Serializable
 {
 
+	private static final String DEFAULT_PAGE_REGION_NM = "Paging";
+
+	private int size;
+	private final String id;
+	private final String query;
+	private final String regionName;
+	private String pageRegionName = DEFAULT_PAGE_REGION_NM;
+	private final String indexName;
+	private final String defaultField;
+	private int beginIndex;
+	private String sortField;
+	private boolean sortDescending = false;
+
+	private Set<?> filter;
+	private final int limit;
+
+	public boolean isKeysOnly() {
+		return keysOnly;
+	}
+
+	public void setKeysOnly(boolean keysOnly) {
+		this.keysOnly = keysOnly;
+	}
+
+	private boolean keysOnly;
+
+	public TextPageCriteria(String id, String query, String regionName, String indexName, String defaultField, int limit) {
+        this.id = id;
+        this.query = query;
+        this.regionName = regionName;
+        this.defaultField = defaultField;
+		this.beginIndex = 0;
+		this.indexName = indexName;
+        this.limit = limit;
+    }
+
+	public static TextPageCriteriaBuilder builder() {
+		return new TextPageCriteriaBuilder();
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public int getBeginIndex() {
+		return beginIndex;
+	}
+
+	public void setBeginIndex(int beginIndex) {
+		this.beginIndex = beginIndex;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
 
 	/**
 	 * 
@@ -41,35 +101,7 @@ public class TextPageCriteria extends PageCriteria
 	{
 		return defaultField;
 	}
-	/**
-	 * @param query the query to set
-	 */
-	public void setQuery(String query)
-	{
-		this.query = query;
-	}
-	/**
-	 * @param regionName the regionName to set
-	 */
-	public void setRegionName(String regionName)
-	{
-		this.regionName = regionName;
-	}
-	/**
-	 * @param indexName the indexName to set
-	 */
-	public void setIndexName(String indexName)
-	{
-		this.indexName = indexName;
-	}
-	/**
-	 * @param defaultField the defaultField to set
-	 */
-	public void setDefaultField(String defaultField)
-	{
-		this.defaultField = defaultField;
-	}
-	
+
 	
 	/**
 	 * @return the sortField
@@ -146,14 +178,6 @@ public class TextPageCriteria extends PageCriteria
 	{
 		return limit;
 	}
-	/**
-	 * @param limit the limit to set
-	 */
-	public void setLimit(int limit)
-	{
-		this.limit = limit;
-	}
-
 
 
 	/* (non-Javadoc)
@@ -175,88 +199,40 @@ public class TextPageCriteria extends PageCriteria
 		result = prime * result + ((sortField == null) ? 0 : sortField.hashCode());
 		return result;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+
 	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TextPageCriteria other = (TextPageCriteria) obj;
-		if (defaultField == null)
-		{
-			if (other.defaultField != null)
-				return false;
-		}
-		else if (!defaultField.equals(other.defaultField))
-			return false;
-		if (filter == null)
-		{
-			if (other.filter != null)
-				return false;
-		}
-		else if (!filter.equals(other.filter))
-			return false;
-		if (indexName == null)
-		{
-			if (other.indexName != null)
-				return false;
-		}
-		else if (!indexName.equals(other.indexName))
-			return false;
-		if (limit != other.limit)
-			return false;
-		if (pageRegionName == null)
-		{
-			if (other.pageRegionName != null)
-				return false;
-		}
-		else if (!pageRegionName.equals(other.pageRegionName))
-			return false;
-		if (query == null)
-		{
-			if (other.query != null)
-				return false;
-		}
-		else if (!query.equals(other.query))
-			return false;
-		if (regionName == null)
-		{
-			if (other.regionName != null)
-				return false;
-		}
-		else if (!regionName.equals(other.regionName))
-			return false;
-		if (sortDescending != other.sortDescending)
-			return false;
-		if (sortField == null)
-		{
-			if (other.sortField != null)
-				return false;
-		}
-		else if (!sortField.equals(other.sortField))
-			return false;
-		return true;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TextPageCriteria that = (TextPageCriteria) o;
+		return size == that.size && beginIndex == that.beginIndex && sortDescending == that.sortDescending && limit == that.limit && Objects.equals(id, that.id) && Objects.equals(query, that.query) && Objects.equals(regionName, that.regionName) && Objects.equals(pageRegionName, that.pageRegionName) && Objects.equals(indexName, that.indexName) && Objects.equals(defaultField, that.defaultField) && Objects.equals(sortField, that.sortField) && Objects.equals(filter, that.filter);
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("TextPageCriteria{");
+		sb.append("size=").append(size);
+		sb.append(", id='").append(id).append('\'');
+		sb.append(", query='").append(query).append('\'');
+		sb.append(", regionName='").append(regionName).append('\'');
+		sb.append(", pageRegionName='").append(pageRegionName).append('\'');
+		sb.append(", indexName='").append(indexName).append('\'');
+		sb.append(", defaultField='").append(defaultField).append('\'');
+		sb.append(", beginIndex=").append(beginIndex);
+		sb.append(", sortField='").append(sortField).append('\'');
+		sb.append(", sortDescending=").append(sortDescending);
+		sb.append(", filter=").append(filter);
+		sb.append(", limit=").append(limit);
+		sb.append('}');
+		return sb.toString();
+	}
 
+	public int getEndIndex()
+	{
+		return this.beginIndex + size;
+	}
 
-	private String query;
-	private String regionName;
-	private String pageRegionName;
-	private String indexName;
-	private String defaultField;
-	private String sortField;
-	private boolean sortDescending = false;
-	
-	//private String id;
-	//private int pageSize;
-	private Set<?> filter;
-	private int limit;
-	//private int pageNumber ;
+	public boolean getKeysOnly() {
+		return keysOnly;
+	}
 }

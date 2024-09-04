@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.geode.cache.GemFireCache;
@@ -20,7 +21,8 @@ import org.apache.geode.cache.lucene.LuceneServiceProvider;
 
 import nyla.solutions.core.data.MapEntry;
 import nyla.solutions.core.util.BeanComparator;
-import nyla.solutions.core.util.Debugger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -32,13 +34,17 @@ import nyla.solutions.core.util.Debugger;
 
 public class TextPolicySearchStrategy
 {
-    /**
-     * @param gemFireCache the cache
-     */
+    private Logger log = LogManager.getLogger(TextPolicySearchStrategy.class);
+
+    public TextPolicySearchStrategy(Supplier<LuceneService> supplier)
+    {
+        this(supplier.get());
+    }
+
     public TextPolicySearchStrategy(GemFireCache gemFireCache)
     {
         this(LuceneServiceProvider.get(gemFireCache));
-    }//------------------------------------------------
+    }
 
     /**
      * @param luceneService the luceneService
@@ -46,7 +52,7 @@ public class TextPolicySearchStrategy
     public TextPolicySearchStrategy(LuceneService luceneService)
     {
         this.luceneService = luceneService;
-    }//------------------------------------------------
+    }
 
     public <K, V> Collection<String> saveSearchResultsWithPageKeys(TextPageCriteria criteria,
                                                                    LuceneQueryProvider queryProvider,
@@ -54,7 +60,7 @@ public class TextPolicySearchStrategy
                                                                    Region<String, Collection<K>> pageKeysRegion)
     {
         return saveSearchResultsWithPageKeys(criteria, queryProvider.toString(), filter, pageKeysRegion);
-    }//------------------------------------------------
+    }
 
     public <K, V> Collection<String> saveSearchResultsWithPageKeys(TextPageCriteria criteria, String query,
                                                                    Predicate<LuceneResultStruct<K, V>> filter,
@@ -82,7 +88,7 @@ public class TextPolicySearchStrategy
         catch (LuceneQueryException e) {
             throw new FunctionException(e);
         }
-    }//------------------------------------------------
+    }
 
     /**
      * @param criteria      the text page criteria
@@ -117,16 +123,16 @@ public class TextPolicySearchStrategy
                                            criteria.getDefaultField());
 
 
-        Debugger.println("criteria:" + criteria);
+        log.info("criteria:{}", criteria);
 
         List<LuceneResultStruct<K, V>> list = luceneQuery.findResults();
 
         if (list == null || list.isEmpty()) {
-            Debugger.println(new StringBuilder().append(criteria.getId()).append(" lucene results cnt:0"));
+            log.info(new StringBuilder().append(criteria.getId()).append(" lucene results cnt:0"));
             return null;
         }
 
-        Debugger.println(new StringBuilder().append(criteria.getId()).append(" lucene results cnt:").append(list.size()));
+        log.info(new StringBuilder().append(criteria.getId()).append(" lucene results cnt:").append(list.size()));
 
 
         if (filter != null) {
@@ -137,7 +143,7 @@ public class TextPolicySearchStrategy
         if (list.isEmpty())
             return null;
 
-        Debugger.println(new StringBuilder().append(criteria.getId()).append(" FILTERED lucene results cnt:").append(list.size()));
+        log.info(new StringBuilder().append(criteria.getId()).append(" FILTERED lucene results cnt:").append(list.size()));
 
 
         String sortField = criteria.getSortField();

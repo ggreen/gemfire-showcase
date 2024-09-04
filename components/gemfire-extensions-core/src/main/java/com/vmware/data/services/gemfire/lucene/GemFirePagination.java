@@ -27,7 +27,7 @@ public class GemFirePagination
 		String pageKey = toPageKey(id, pageNumber);
 		
 		return (Collection)pageRegion.get(pageKey);
-	}// --------------------------------------------------------------
+	}
 	
 	
 	/**
@@ -66,7 +66,7 @@ public class GemFirePagination
 		 
 		 keys.trimToSize();
 		return keys;
-	}// --------------------------------------------------------------
+	}
 	/***
 	 * 
 	 * @param id the ID
@@ -76,7 +76,7 @@ public class GemFirePagination
 	public static String toPageKey(String id,int pageNumber)
 	{
 		return new StringBuilder().append(id).append("-").append(pageNumber).toString();
-	}// --------------------------------------------------------------
+	}
 	
 	/**
 	 * @param <K> the key class
