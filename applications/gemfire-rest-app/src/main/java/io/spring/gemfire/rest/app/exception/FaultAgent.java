@@ -7,8 +7,6 @@ import org.apache.geode.cache.client.ServerOperationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import nyla.solutions.core.util.Debugger;
-
 @Component
 public class FaultAgent
 {
@@ -40,11 +38,9 @@ public class FaultAgent
 	    	}
 	    	
 	        dataError.setPath(request.getRequestURI());
-	        dataError.setStackTrace(Debugger.stackTrace(e));
+	        dataError.setStackTrace(String.valueOf(e));
 	        response.setStatus(500);
 	        
-	        
-
 	        return dataError;
 	    }
 }

@@ -36,15 +36,15 @@ repositories {
     mavenLocal()
 
     maven {
-        url "https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire"
+        url "https://packages.broadcom.com/artifactory/gemfire/"
         metadataSources {
             mavenPom()
             artifact()
             ignoreGradleMetadataRedirection()
         }
         credentials {
-            username System.getenv('PIVOTAL_MAVEN_USERNAME')
-            password System.getenv('PIVOTAL_MAVEN_PASSWORD')
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_MAVEN_PASSWORD')
         }
     }
 }
@@ -134,17 +134,17 @@ publishing {
         mavenCentral()
         maven {
             credentials {
-                username System.getenv('PIVOTAL_MAVEN_USERNAME')
-                password System.getenv('PIVOTAL_MAVEN_PASSWORD')
+                username System.getenv('BROADCOM_MAVEN_USERNAME')
+                password System.getenv('BROADCOM_MAVEN_PASSWORD')
             }
-            url = uri("https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire")
+            url = uri("https://packages.broadcom.com/artifactory/gemfire/")
         }
         maven {
             name = "CentralMaven" //  optional target repository name
             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username System.getenv('PIVOTAL_MAVEN_USERNAME')
-                password System.getenv('PIVOTAL_MAVEN_PASSWORD')
+                username System.getenv('BROADCOM_MAVEN_USERNAME')
+                password System.getenv('BROADCOM_MAVEN_PASSWORD')
             }
         }
     }

@@ -8,6 +8,7 @@ import io.spring.gemfire.rest.app.exception.DataServiceSystemException;
 import io.spring.gemfire.rest.app.exception.FaultAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.RegionDestroyedException;
 import org.apache.geode.cache.client.ServerOperationException;
@@ -22,21 +23,15 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/region")
+@RequiredArgsConstructor
 public class GemFireRegionRestService
 {
-    @Autowired
-    GemFireClient gemfire;
-
-    @Autowired
-    FaultAgent faultAgent;
-
-    ObjectMapper objectMapper = new ObjectMapper();
+    private final GemFireClient gemfire;
     private final PdxService pdxService;
+    private final FaultAgent faultAgent;
 
-	public GemFireRegionRestService(PdxService pdxService)
-	{
-		this.pdxService = pdxService;
-	}
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
 	/**
      * Put a new records
@@ -68,7 +63,7 @@ public class GemFireRegionRestService
             e.printStackTrace();
             throw e;
         }
-    }//------------------------------------------------
+    }
 
     /**
      * Delete a region entry by a key
@@ -84,7 +79,7 @@ public class GemFireRegionRestService
 
         Object obj = region.remove(key);
 
-    }//------------------------------------------------
+    }
 
     /**
      * Get a value by a given key
@@ -130,7 +125,7 @@ public class GemFireRegionRestService
 
             throw new DataServiceSystemException(e.getMessage(), e);
         }
-    }//------------------------------------------------
+    }
     /**
      * HAndling exceptions in general for REST responses
      * @param request the HTTP request
@@ -150,5 +145,5 @@ public class GemFireRegionRestService
     private DataError handleException(HttpServletRequest request, HttpServletResponse response, Exception e)
     {
         return faultAgent.handleException(request, response, e);
-    }//------------------------------------------------
+    }
 }

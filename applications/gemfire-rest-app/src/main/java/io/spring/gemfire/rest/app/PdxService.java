@@ -3,13 +3,11 @@ package io.spring.gemfire.rest.app;
 import com.vmware.data.services.gemfire.serialization.GemFireJson;
 import org.apache.geode.json.JsonDocument;
 import org.apache.geode.json.JsonDocumentFactory;
-import org.apache.geode.pdx.PdxInstance;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Gregory Green
  */
-@Component
 public class PdxService
 {
     private final GemFireJson gemFireJson;

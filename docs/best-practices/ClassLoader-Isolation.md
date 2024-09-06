@@ -64,7 +64,7 @@ repositories {
     mavenLocal()
 
     maven {
-        url "https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire"
+        url "https://packages.broadcom.com/artifactory/gemfire/"
         metadataSources {
             mavenPom()
             artifact()

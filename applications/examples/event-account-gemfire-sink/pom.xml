@@ -122,7 +122,7 @@
 		<repository>
 			<id>gemfire-release-repo</id>
 			<name>Pivotal GemFire Release Repository</name>
-			<url>https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire</url>
+			<url>https://packages.broadcom.com/artifactory/gemfire/</url>
 		</repository>
 	</repositories>
 </project>

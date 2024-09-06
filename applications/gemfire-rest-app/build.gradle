@@ -26,9 +26,9 @@ dependencies {
     implementation project(':components:gemfire-extensions-core')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.0.1'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation  'com.github.nyla-solutions:nyla.solutions.core:2.2.1'
 }
 
 
@@ -46,17 +46,16 @@ configurations {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url 'https://repo.spring.io/milestone' }
     maven {
-        url "https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire"
+        url "https://packages.broadcom.com/artifactory/gemfire/"
         metadataSources {
             mavenPom()
             artifact()
             ignoreGradleMetadataRedirection()
         }
         credentials {
-            username System.getenv('PIVOTAL_MAVEN_USERNAME')
-            password System.getenv('PIVOTAL_MAVEN_PASSWORD')
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_MAVEN_PASSWORD')
         }
     }
 }

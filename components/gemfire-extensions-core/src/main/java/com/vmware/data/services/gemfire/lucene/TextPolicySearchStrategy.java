@@ -102,9 +102,8 @@ public class TextPolicySearchStrategy
                                               Predicate<LuceneResultStruct<K, V>> filter) throws LuceneQueryException
     {
 
-        String query = queryProvider.getQuery(null).toString();
 
-        return executeQuery(criteria, query, filter);
+        return executeQuery(criteria, criteria.getQuery(), filter);
     }
 
     public <K, V> List<Map.Entry<K, V>> executeQuery(TextPageCriteria criteria, String query,

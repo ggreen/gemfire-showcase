@@ -3,28 +3,39 @@ package io.spring.gemfire.rest.app;
 import static org.mockito.Mockito.*;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
+import io.spring.gemfire.rest.app.exception.FaultAgent;
 import org.apache.geode.cache.Region;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 
+@ExtendWith(MockitoExtension.class)
 public class GemFireRegionRestServiceTest
 {
-	GemFireClient gemfire;
-	Region<Object,Object> geodeRegion;
-	GemFireRegionRestService subject;
-	String region = "test";
+	private GemFireRegionRestService subject;
+
+	@Mock
+	private GemFireClient gemFireClient;
+
+	@Mock
+	private Region<Object,Object> gemFireRegion;
+
+	@Mock
+	private FaultAgent faultAgent;
+	@Mock
+	private PdxService pdxService;
+
+	private String region = "test";
 
 	@BeforeEach
 	public void setUp()
 	{
-		gemfire = mock(GemFireClient.class);
-		geodeRegion = mock(Region.class);
-		when(gemfire.getRegion(anyString())).thenReturn(geodeRegion);
+		when(gemFireClient.getRegion(anyString())).thenReturn(gemFireRegion);
 
-		PdxService pdxService = mock(PdxService.class);
-		subject = new GemFireRegionRestService(pdxService);
-		subject.gemfire = gemfire;
+		subject = new GemFireRegionRestService(gemFireClient, pdxService,faultAgent);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -35,9 +46,9 @@ public class GemFireRegionRestServiceTest
 		String key = "key";
 		String value = "{\"@type\" : \"package\"}";
 
-
+		when(gemFireClient.getRegion(anyString())).thenReturn(gemFireRegion);
 		subject.putEntry(region, key, value);
-		verify(geodeRegion).put(any(),any());
+		verify(gemFireRegion).put(any(),any());
 	}
 
 	@Test
@@ -46,7 +57,7 @@ public class GemFireRegionRestServiceTest
 		String key = "expected";
 		String type = "type";
 		String results = subject.getValueByKey(region, key, type);
-		verify(geodeRegion).get(any());
+		verify(gemFireRegion).get(any());
 	}
 
 	@Test
@@ -59,7 +70,7 @@ public class GemFireRegionRestServiceTest
 
 		region = "test";
 		subject.delete(region, key);
-		verify(geodeRegion).remove(any());
+		verify(gemFireRegion).remove(any());
 	}
 
 }

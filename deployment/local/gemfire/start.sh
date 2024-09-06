@@ -10,3 +10,14 @@ curl http://localhost:7778/metrics
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --name=Account --type=PARTITION --enable-statistics=true"
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --name=UserAccount --type=PARTITION --enable-statistics=true"
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --name=Location --type=PARTITION --enable-statistics=true"
+
+## simpleIndex uses default Lucene StandardAnalyzer
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create lucene index --name=simpleIndex --region=example-search-region --field=firstName,lastName"
+
+## analyzerIndex uses both the default StandardAnalyzer and the KeywordAnalyzer
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create lucene index --name=analyzerIndex --region=example-search-region --field=lastName,email --analyzer=DEFAULT,org.apache.lucene.analysis.core.KeywordAnalyzer"
+
+## nestedObjectIndex will index on nested objects or collection objects
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create lucene index --name=nestedObjectIndex --region=example-search-region --field=contacts.phoneNumbers --serializer=org.apache.geode.cache.lucene.FlatFormatSerializer"
+
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=example-search-region --type=PARTITION --enable-statistics=true"

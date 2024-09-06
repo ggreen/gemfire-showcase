@@ -1,11 +1,10 @@
 package com.vmware.data.services.gemfire.lucene;
 
-import nyla.solutions.core.patterns.creational.generator.JavaBeanGeneratorCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.String.valueOf;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TextPageCriteriaBuilderTest {
 
