@@ -16,8 +16,8 @@ See https://gemfire.dev/quickstart/java/
 Example
 
 ```shell
-export PIVOTAL_MAVEN_USERNAME=$HARBOR_USER
-export PIVOTAL_MAVEN_PASSWORD=$HARBOR_PASSWORD
+export BROADCOM_MAVEN_USERNAME=$HARBOR_USER
+export BROADCOM_MAVEN_PASSWORD=$HARBOR_PASSWORD
 ```
 
 Change directory to components from the root project directory

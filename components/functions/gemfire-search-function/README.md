@@ -1,7 +1,44 @@
 # Clear Remove Function
 
 
-This function test a GemFire search region data in a GemFire partitioned region.
+This a example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
+
+
+The format of the result uses the LuceneResultStruct object with the follow definition.
+
+```java
+public interface LuceneResultStruct<K, V> {
+    K getKey();
+
+    V getValue();
+
+    float getScore();
+}
+```
+
+The following are example inputs arguments in a list of strings
+
+- id = arguments[0];
+- indexName = arguments[1];
+- defaultField = arguments[2]; 
+- query = arguments[3]; 
+- limit = arguments[4]
+- pageSize = arguments[5] // default 100
+- keysOnly= arguments[6] //default false
+
+Note: Arguments in gfsh are separated by ","
+
+Example Search in gfsh
+
+- Search by first and last name with a limit 100 each have pageSize 1
+
+```shell
+execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,1'
+```
+
+Note the function always returns first number of records based on page size
+
+
 This function has been tested with the following
 
 - GemFire version 10.1.0 
@@ -14,8 +51,8 @@ Set GemFire Maven Repository user credentials as environment variables.
 See https://gemfire.dev/quickstart/java/
 
 ```shell
-export PIVOTAL_MAVEN_USERNAME=$HARBOR_USER
-export PIVOTAL_MAVEN_PASSWORD=$HARBOR_PASSWORD
+export BROADCOM_MAVEN_USERNAME=$HARBOR_USER
+export BROADCOM_MAVEN_PASSWORD=$HARBOR_PASSWORD
 ```
 
 Change directory to components from the root project directory
@@ -47,34 +84,14 @@ Example:
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase/components/functions/gemfire-search-function/build/libs/gemfire-search-function-1.0.0-SNAPSHOT.jar"
 ```
 
-```shell
-cd $GEMFIRE_HOME/bin
-./gfsh 
-```
+Start a generic GemFire Rest application to load JSON data into a region.
 
 ```shell
 java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSHOT.jar
 ```
 
-```json
-{
-  "@type": "java.lang.Object",
-  "firstName" :  "John",
-  "lastName" :  "Doe",
-  "email" : "jdoe@jdoe.jdoe", 
-  "contacts" : {
-    "phoneNumbers" : ["555-555-5555", "111-111-1111"],
-    "address" : "1 Straight street",
-    "cityTown" : "JC",
-    "stateProvince" : "NJ",
-    "zip" : "55555",
-    "country" : "US"
-  }
-}
 
-```
-
-
+Load JSON John Doe JSON
 ```shell
 curl -X 'POST' \
   'http://localhost:8080/region/example-search-region/1' \
@@ -95,7 +112,7 @@ curl -X 'POST' \
   }
 }'
 ```
-
+Load JSON Jill Doe JSON
 
 ```shell
 curl -X 'POST' \
@@ -120,27 +137,25 @@ curl -X 'POST' \
 
 The following is an example of how to execute the function on the given a region in Gfsh.
 
-id=0, indexName=1, defaultField=2, query=3, limit=4
-
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100'"
 ```
 
-Limit 1, pageSize 1 then get first page
+Testing paging
+
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,1'"
 ```
 
 
-Get Second page
-
-
-Get data values should be null
+Get First Page
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "get --key=user1-1 --region=/Paging"
 ```
+
+Get Second Page
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "get --key=user1-2 --region=/Paging"
