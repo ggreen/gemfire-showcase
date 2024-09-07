@@ -17,7 +17,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-
+/**
+ * GemFire function that using GemFire Search based on Apache Lucene.
+ * @author gregory green
+ */
 public class GemFireSearchFunction implements Function<Object>
 {
 	private static final long serialVersionUID = 1L;
