@@ -24,7 +24,7 @@ import java.util.*;
  *
  * @author Gregory Green
  */
-//@RestController
+@RestController
 @RequestMapping("/query")
 public class GemFireQueryServiceController
 {
