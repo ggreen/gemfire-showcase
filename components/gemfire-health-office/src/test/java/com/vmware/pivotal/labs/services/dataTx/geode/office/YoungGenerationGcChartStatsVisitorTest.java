@@ -1,7 +1,6 @@
 package com.vmware.pivotal.labs.services.dataTx.geode.office;
 
-import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceInst;
-import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceType;
+import com.vmware.pivotal.labs.services.dataTx.geode.office.stats.statInfo.*;
 import nyla.solutions.core.data.clock.Day;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,9 +10,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class YoungGenerationGcChartStatsVisitorTest {
-    ResourceInst resourceInst;
-    ResourceType resourceType;
-    Day dayFilter = Day.today();
+    private ResourceInst resourceInst;
+    private ResourceType resourceType;
+    private Day dayFilter = Day.today();
 
     @BeforeEach
     void setUp() {

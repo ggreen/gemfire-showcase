@@ -37,7 +37,6 @@ public class CpuAboveThresholdChartStatsVisitorTest
 
         Chart chart = toChart.convert(Paths.get("src/test/resources/stats").toFile());
 
-
         IO.delete(new File("target/reports/cpu.png"));
 
         IO.mkdir("target/reports");

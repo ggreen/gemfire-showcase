@@ -56,10 +56,79 @@ cd $GEMFIRE_HOME/bin
 java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSHOT.jar
 ```
 
-The following is an example of how to execute the function on the given a region in Gfsh.
+```json
+{
+  "@type": "java.util.HashMap",
+  "firstName" :  "John",
+  "lastName" :  "Doe",
+  "email" : "jdoe@jdoe.jdoe", 
+  "contacts" : {
+    "phoneNumbers" : ["555-555-5555", "111-111-1111"],
+    "address" : "1 Straight street",
+    "cityTown" : "JC",
+    "stateProvince" : "NJ",
+    "zip" : "55555",
+    "country" : "US"
+  }
+}
+
+```
+
 
 ```shell
-execute function --id=ClearRegionRemoveAllFunction --region=/TestClear
+curl -X 'POST' \
+  'http://localhost:8080/region/example-search-region/1' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "@type": "java.util.HashMap",
+  "firstName" :  "John",
+  "lastName" :  "Doe",
+  "email" : "jdoe@jdoe.jdoe", 
+  "contacts" : {
+    "phoneNumbers" : ["555-555-5555", "111-111-1111"],
+    "address" : "1 Straight street",
+    "cityTown" : "JC",
+    "stateProvince" : "NJ",
+    "zip" : "55555",
+    "country" : "US"
+  }
+}'
+```
+
+
+```shell
+curl -X 'POST' \
+  'http://localhost:8080/region/example-search-region/2' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "@type": "java.util.HashMap",
+  "firstName" :  "Jill",
+  "lastName" :  "Doe",
+  "email" : "jdoe@jdoe.jdoe", 
+  "contacts" : {
+    "phoneNumbers" : ["222-222-2222", "333-333-3333"],
+    "address" : "2 Straight street",
+    "cityTown" : "JC",
+    "stateProvince" : "NJ",
+    "zip" : "55551",
+    "country" : "US"
+  }
+}'
+```
+
+The following is an example of how to execute the function on the given a region in Gfsh.
+
+            id = argsStrings[0];
+            query = argsStrings[1];
+            regionName = argsStrings[2];
+            indexName = argsStrings[3];
+            defaultField = argsStrings[4];
+            String limitText = argsStrings[5];
+
+```shell
+execute function --id=LuceneSearchFunction --region=/example-search-region --arguments="user1,firstName:nope~ OR lastName:D~,example-search-region,simpleIndex,firstName,100"
 ```
 
 Get data values should be null

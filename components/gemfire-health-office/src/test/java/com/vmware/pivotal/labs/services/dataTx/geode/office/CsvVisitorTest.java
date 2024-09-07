@@ -1,7 +1,7 @@
 package com.vmware.pivotal.labs.services.dataTx.geode.office;
 
-import com.vmware.data.services.gemfire.operations.stats.GfStatsReader;
-import com.vmware.data.services.gemfire.operations.stats.statInfo.*;
+import com.vmware.pivotal.labs.services.dataTx.geode.office.stats.GfStatsReader;
+import com.vmware.pivotal.labs.services.dataTx.geode.office.stats.statInfo.*;
 import nyla.solutions.core.data.clock.Day;
 import nyla.solutions.core.io.csv.CsvWriter;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,16 +17,16 @@ import static org.mockito.Mockito.*;
 
 class CsvVisitorTest
 {
-    Day dayFilter = Day.today();
-    CsvWriter mockWriter;
-    CsvVisitor subject;
-    StatValue statValue;
-     ResourceInst resourceInst;
-    GfStatsReader statReader;
-    ArchiveInfo archiveInfo;
-    ResourceType resourceType;
-    StatDescriptor statDescription;
-    String expectedStatName = "expectStatName";
+    private Day dayFilter = Day.today();
+    private CsvWriter mockWriter;
+    private CsvVisitor subject;
+    private StatValue statValue;
+    private ResourceInst resourceInst;
+    private GfStatsReader statReader;
+    private ArchiveInfo archiveInfo;
+    private ResourceType resourceType;
+    private StatDescriptor statDescription;
+    private String expectedStatName = "expectStatName";
     private String expectedResourceInstName = "resourceName";
     private final String skipResourceInstRegExp = "RegionStats-managementRegionStats";
 
