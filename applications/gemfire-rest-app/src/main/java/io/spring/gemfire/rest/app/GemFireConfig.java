@@ -2,6 +2,7 @@ package io.spring.gemfire.rest.app;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
 import com.vmware.data.services.gemfire.io.QuerierService;
+import io.spring.gemfire.rest.app.service.PdxService;
 import org.apache.geode.json.StorageFormat;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class GemFireConfig {
 
     @Bean
-    GemFireClient geodeClient()
+    GemFireClient gemFireClient()
     {
         return GemFireClient.connect();
     }

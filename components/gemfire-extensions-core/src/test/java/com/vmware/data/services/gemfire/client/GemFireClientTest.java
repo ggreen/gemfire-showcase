@@ -1,8 +1,6 @@
 package com.vmware.data.services.gemfire.client;
 
 import com.vmware.data.services.gemfire.io.QuerierService;
-import com.vmware.data.services.gemfire.io.function.FuncExe;
-import com.vmware.data.services.gemfire.lucene.TextPageCriteria;
 import nyla.solutions.core.util.Config;
 import org.apache.geode.cache.AttributesMutator;
 import org.apache.geode.cache.CacheLoader;
@@ -14,12 +12,10 @@ import org.apache.geode.cache.execute.RegionFunctionContext;
 import org.apache.geode.pdx.PdxReader;
 import org.apache.geode.pdx.PdxSerializer;
 import org.apache.geode.pdx.PdxWriter;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collection;
@@ -43,8 +39,6 @@ public class GemFireClientTest
     private Region<?,?> cachingProxyRegion;
     private AttributesMutator<?, ?> attributesMutator;
     private QuerierService querier;
-    @Mock
-    private TextPageCriteria criteria;
 
 
     @Test
@@ -190,23 +184,6 @@ public class GemFireClientTest
         assertNotNull(results);
 
         verify(querier).query(ArgumentMatchers.anyString(), ArgumentMatchers.any(RegionFunctionContext.class));
-    }
-
-    @Test
-    void searchWithPageKeys_returnsNull() throws Exception
-    {
-        TextPageCriteria criteria = null;
-        FuncExe funcExe = mock(FuncExe.class);
-        Assertions.assertNull(subject.searchWithPageKeys(criteria,funcExe));
-
-    }
-
-    @Test
-    void searchWithPageKeys() throws Exception
-    {
-        FuncExe funcExe = mock(FuncExe.class);
-        subject.searchWithPageKeys(criteria,funcExe);
-        verify(funcExe).exe(ArgumentMatchers.any());
     }
 
     @Test

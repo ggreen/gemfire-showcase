@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmware.data.services.gemfire.demo.ComplexObject;
 import com.vmware.data.services.gemfire.demo.SimpleObject;
 import nyla.solutions.core.security.user.data.UserProfile;
-import org.apache.geode.cache.Cache;
-import org.apache.geode.cache.CacheClosedException;
-import org.apache.geode.cache.CacheFactory;
 import org.apache.geode.json.JsonDocument;
 import org.apache.geode.json.JsonDocumentFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,43 +44,8 @@ public class GemFireJsonTest
 	public void setUp()
 	throws Exception
 	{
-		Cache cache = null;
-
-
-		try {
-			cache = CacheFactory.getAnyInstance();
-
-		}
-		catch(CacheClosedException e) {
-			if(cache == null)
-				cache = new CacheFactory().create();
-		}
-		catch(Exception e)
-		{
-			//should already have factory
-		}
 	}
 
-//	@Test
-//	public void test_convert_from_json_to_pdxInstance()
-//	throws Exception
-//	{
-//		UserProfile expected = new UserProfile();
-//		expected.setEmail("user");
-//
-//		var json = subject.toJsonFromNonPdxObject(expected);
-//
-//		System.out.println("json:"+json);
-//
-//		assertTrue(json != null && json.length() > 0);
-//
-//		assertTrue(json.contains("@type"));
-//
-//		var pdx = this.subject.fromJSON(json);
-//
-//		String actual = pdx.toJson();
-//		assertEquals(expected,actual);
-//	}
 
 	@Test
 	void assignJsonType_empty()
@@ -267,76 +229,4 @@ public class GemFireJsonTest
 		assertTrue(actual.contains(userProfile.getClass().getName()));
 	}
 
-//	@Test
-//	public void test_region_to_jsonMapEntry()
-//	throws Exception
-//	{
-//		var expectedKey = new BigDecimal("25");
-//		var pdxInstance = subject.toJsonFromNonPdxObject(new ComplexObject());
-//
-//		Set<Serializable> expectedKeys = Organizer.toSet(expectedKey);
-//		Region<Serializable, JsonDocument> region = Mockito.mock(Region.class);
-//		when(region.keySetOnServer()).thenReturn(expectedKeys);
-//		when(region.get(Mockito.any())).thenReturn(pdxInstance);
-//
-//		Collection<Serializable> keys = region.keySetOnServer();
-//
-//		SerializationJsonEntryWrapper wrapper;
-//
-//		for (Serializable key: keys)
-//		{
-//			wrapper = subject.toSerializePdxEntryWrapper(key,ComplexObject.class.getName(),region.get(key));
-//			assertNotNull(wrapper);
-//			assertEquals(expectedKey.getClass().getName(),wrapper.getKeyClassName());
-//			assertEquals(key,wrapper.deserializeKey());
-//			assertEquals(region.get(key),wrapper.toJsonDocument());
-//
-//		}
-//	}
-
-//	@Test
-//	public void wrapper_json()
-//	throws IOException
-//	{
-//		Long keyLong = 12L;
-//		JsonDocument pdx = this.subject.fromJSON(objectMapper.writeValueAsString(new UserProfile()));
-//		SerializationJsonEntryWrapper expected = new SerializationJsonEntryWrapper(keyLong,
-//				UserProfile.class.getName(),pdx);
-//
-//		String json = this.subject.toJsonFromNonPdxObject(expected);
-//		assertTrue(!json.contains(SerializationJsonEntryWrapper.class.getName()));
-//
-//		var actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
-//		assertEquals(expected,actual);
-//
-//		Double keyDouble = 12.0;
-//		expected = new SerializationJsonEntryWrapper(keyLong,UserProfile.class.getName(),pdx);
-//		json = this.subject.toJsonFromNonPdxObject(expected);
-//		actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
-//		assertEquals(expected,actual);
-//
-//		BigDecimal keyBigDecimal = BigDecimal.TEN;
-//		expected = new SerializationJsonEntryWrapper(keyBigDecimal,UserProfile.class.getName(),pdx);
-//		json = this.subject.toJsonFromNonPdxObject(expected);
-//		actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
-//		assertEquals(expected,actual);
-//
-//
-//		var keystring = "sdsdsd";
-//		expected = new SerializationJsonEntryWrapper(keystring,UserProfile.class.getName(),pdx);
-//		json = this.subject.toJsonFromNonPdxObject(expected);
-//		actual = this.subject.toSerializePdxEntryWrapperFromJson(json);
-//		assertEquals(expected,actual);
-//
-//		try
-//		{
-//
-//			var invalid = new UserProfile();
-//			expected = new SerializationJsonEntryWrapper(invalid,UserProfile.class.getName(),pdx);
-//			fail("Invalid key");
-//		}
-//		catch(InvalidSerializationKeyException e){
-//
-//		}
-//	}
 }

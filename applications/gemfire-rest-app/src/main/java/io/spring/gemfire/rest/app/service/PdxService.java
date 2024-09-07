@@ -1,9 +1,8 @@
-package io.spring.gemfire.rest.app;
+package io.spring.gemfire.rest.app.service;
 
 import com.vmware.data.services.gemfire.serialization.GemFireJson;
 import org.apache.geode.json.JsonDocument;
 import org.apache.geode.json.JsonDocumentFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Gregory Green

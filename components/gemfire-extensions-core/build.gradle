@@ -64,7 +64,6 @@ dependencies {
         implementation 'org.apache.logging.log4j:log4j-api'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-core'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-common'
-    implementation 'com.vmware.gemfire:gemfire-search:1.0.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 //    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
@@ -84,7 +83,6 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
 
     testImplementation group: 'com.vmware.gemfire', name: 'gemfire-core'
-    testImplementation 'com.vmware.gemfire:gemfire-search:1.0.0'
     testImplementation("org.assertj:assertj-core:3.26.0")
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.12.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.12.0'

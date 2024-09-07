@@ -1,9 +1,10 @@
-package io.spring.gemfire.rest.app;
+package io.spring.gemfire.rest.app.controller;
 
 import static org.mockito.Mockito.*;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
 import io.spring.gemfire.rest.app.exception.FaultAgent;
+import io.spring.gemfire.rest.app.service.PdxService;
 import org.apache.geode.cache.Region;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
-public class GemFireRegionRestServiceTest
+public class GemFireRegionControllerTest
 {
-	private GemFireRegionRestService subject;
+	private GemFireRegionController subject;
 
 	@Mock
 	private GemFireClient gemFireClient;
@@ -35,7 +36,7 @@ public class GemFireRegionRestServiceTest
 	{
 		when(gemFireClient.getRegion(anyString())).thenReturn(gemFireRegion);
 
-		subject = new GemFireRegionRestService(gemFireClient, pdxService,faultAgent);
+		subject = new GemFireRegionController(gemFireClient, pdxService,faultAgent);
 	}
 
 	@SuppressWarnings("unchecked")

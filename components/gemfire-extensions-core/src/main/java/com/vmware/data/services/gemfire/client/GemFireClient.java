@@ -1,23 +1,19 @@
 package com.vmware.data.services.gemfire.client;
 
 import com.vmware.data.services.gemfire.client.cq.CqQueueListener;
-import com.vmware.data.services.gemfire.io.GemFireIO;
+import com.vmware.data.services.gemfire.client.listeners.CacheListenerBridge;
 import com.vmware.data.services.gemfire.io.QuerierMgr;
 import com.vmware.data.services.gemfire.io.QuerierService;
-import com.vmware.data.services.gemfire.io.function.FuncExe;
-import com.vmware.data.services.gemfire.client.listeners.CacheListenerBridge;
-import com.vmware.data.services.gemfire.lucene.GemFireLuceneSearch;
-import com.vmware.data.services.gemfire.lucene.TextPageCriteria;
-import com.vmware.data.services.gemfire.lucene.function.LuceneSearchFunction;
 import com.vmware.data.services.gemfire.serialization.EnhancedReflectionSerializer;
 import nyla.solutions.core.exception.ConfigException;
-import nyla.solutions.core.exception.SystemException;
 import nyla.solutions.core.io.IO;
 import nyla.solutions.core.operations.ClassPath;
-import nyla.solutions.core.patterns.iteration.Paging;
 import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Debugger;
-import org.apache.geode.cache.*;
+import org.apache.geode.cache.CacheClosedException;
+import org.apache.geode.cache.CacheLoader;
+import org.apache.geode.cache.EntryEvent;
+import org.apache.geode.cache.Region;
 import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.client.ClientCacheFactory;
 import org.apache.geode.cache.client.ClientRegionFactory;
@@ -29,7 +25,10 @@ import org.apache.geode.pdx.PdxSerializer;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 import java.util.function.Consumer;
 
@@ -37,7 +36,6 @@ import java.util.function.Consumer;
 
 /**
  *  GemFire (power by Apache Geode) API wrapper.
- *  
  *  export SSL_KEYSTORE_PASSWORD=pivotal
 	export SSL_PROTOCOLS=TLSv1.2
 	export SSL_TRUSTSTORE_PASSWORD=pivotal
@@ -63,7 +61,7 @@ public class GemFireClient
 	private final ClientRegionFactory<?, ?> proxyRegionfactory;
 	private final ClientRegionFactory<?, ?> cachingRegionfactory;
 	private static GemFireClient gemFireClient = null;
-	private Map<String,CacheListenerBridge<?, ?>> listenerMap = new Hashtable<>();
+	private final Map<String,CacheListenerBridge<?, ?>> listenerMap = new Hashtable<>();
 	private final QuerierService querier;
 
 	/**
@@ -77,7 +75,7 @@ public class GemFireClient
 				clientCache.createClientRegionFactory(ClientRegionShortcut.CACHING_PROXY_HEAP_LRU),
 				new QuerierMgr()
 		);
-	}//------------------------------------------------
+	}
 	protected GemFireClient(ClientCache clientCache, ClientRegionFactory<?, ?> proxyRegionfactory,
 							ClientRegionFactory<?, ?> cachingProxyRegionfactory, QuerierService querier
 	)
@@ -87,7 +85,7 @@ public class GemFireClient
 		this.proxyRegionfactory = proxyRegionfactory;
 		this.cachingRegionfactory = cachingProxyRegionfactory;
 		this.querier = querier;
-	}//------------------------------------------------
+	}
 	protected GemFireClient(boolean cachingProxy, String... classPatterns)
 	{
 		this.cachingProxy = cachingProxy;
@@ -150,7 +148,7 @@ public class GemFireClient
 
 			this.querier = new QuerierMgr();
 		
-	}//------------------------------------------------
+	}
 
 	public static Builder builder()
 	{
@@ -188,7 +186,7 @@ public class GemFireClient
 		props.setProperty("ssl-require-authentication",Config.settings().getProperty("ssl-require-authentication","")  );
 		props.setProperty("ssl-enabled-components", Config.settings().getProperty("ssl-enabled-components",""));
 		
-	}//------------------------------------------------
+	}
 
 	/**
 	 *
@@ -203,7 +201,7 @@ public class GemFireClient
 
 		String fileName = Paths.get(sslKeystorePath).toFile().getName();
 
-		if(sslKeystorePath.length() == 0)
+		if(sslKeystorePath.isEmpty())
 			return null;
 
 		byte[] bytes = IO.readBinaryClassPath(sslKeystorePath);
@@ -226,12 +224,12 @@ public class GemFireClient
 		IO.writeFile(sslFile, bytes);
 
 		return sslFile;
-	}//------------------------------------------------
+	}
 
 	public <ReturnType> Collection<ReturnType>  select(String oql)
 	{
 		return select(oql,null);
-	}//------------------------------------------------
+	}
 	PdxSerializer createPdxSerializer(String pdxSerializerClassNm, String... classPatterns )
 	{
 		
@@ -239,98 +237,14 @@ public class GemFireClient
 		return ClassPath.newInstance(pdxSerializerClassNm, initArgs);
 	}
 
-	//------------------------------------------------
 
-	/**
-	 * @param <K> the key class
-	 * @param <V> the value class
-	 * @param criteria the search criteria
-	 * @param region the region
-	 * @param filter the filter set
-	 * @return collection of results
-	 */
-	public <K,V> Paging<V>  searchText(TextPageCriteria criteria, Region<K,V> region, Set<K> filter)
-	{
-		return searchText(criteria,region,filter,FuncExe.onRegion(region));
-	}
 
-	public <K,V> Paging<V>  searchText(TextPageCriteria criteria, Region<K,V> region, Set<K> filter, FuncExe funcExe)
-	{
-		try
-		{
-			LuceneSearchFunction<V> func = new LuceneSearchFunction();
-
-			Paging<V> paging = (Paging)GemFireIO.exeWithResults(
-					funcExe
-							.withFilter(filter)
-							.getExecution(), func);
-
-			return paging;
-		}
-		catch (RuntimeException e)
-		{
-			throw e;
-		}
-		catch (Exception e)
-		{
-			throw new SystemException(e);
-		}
-	}
 
 	public <ReturnType> Collection<ReturnType> select(String oql, RegionFunctionContext rfc)
 	{
 		return  querier.query(oql, rfc);
-	}//------------------------------------------------
-
-
-	/**
-	 *
-	 * @param criteria the search criteria
-	 * @return the collection keys in the page region
-	 * @throws Exception when an unknow exception occurs
-	 */
-	@SuppressWarnings("unchecked")
-	public Collection<String> searchWithPageKeys(TextPageCriteria criteria)
-			throws Exception
-	{
-		if(criteria == null)
-			return null;
-
-		return searchWithPageKeys(criteria,FuncExe.onRegion(getRegion(criteria.getRegionName())));
 	}
 
-	public Collection<String> searchWithPageKeys(TextPageCriteria criteria, FuncExe funcExe)
-	throws Exception
-	{
-		if(criteria == null)
-			return null;
-
-
-		if(criteria.getFilter() != null)
-		{
-			funcExe.withFilter(criteria.getFilter());
-		}
-
-	    return funcExe.exe(new LuceneSearchFunction<Object>());
-
-	}//------------------------------------------------
-
-	public <K,V> Map<K,V> readSearchResultsByPage(TextPageCriteria criteria, int pageNumber)
-	{
-		GemFireLuceneSearch search = new GemFireLuceneSearch(this.clientCache);
-		
-		Region<String,Collection<?>> pageRegion = this.getRegion(criteria.getPageRegionName());
-		Region<K,V> region = this.getRegion(criteria.getRegionName());
-		
-		return search.readResultsByPage(criteria,pageNumber,region,pageRegion);
-	}//------------------------------------------------
-	public Collection<String> clearSearchResultsByPage(TextPageCriteria criteria)
-	{
-		GemFireLuceneSearch search = new GemFireLuceneSearch(this.clientCache);
-	
-		return search.clearSearchResultsByPage(criteria,this.getRegion(criteria.getPageRegionName()));
-		
-	}//------------------------------------------------
 	/**
 	 * 
 	 * @return the querier service instance
@@ -338,7 +252,7 @@ public class GemFireClient
 	public QuerierService getQuerierService()
 	{
 		return querier;
-	}//------------------------------------------------
+	}
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private <K,V> Region<K,V> createRegion(String regionName)
 	{
@@ -373,7 +287,7 @@ public class GemFireClient
 			return (Region<K,V>)this.proxyRegionfactory.create(regionName);
 		
 		
-	}//------------------------------------------------
+	}
 	/**
 	 * This is an example to get or create a region
 	 * @param regionName the  name
@@ -403,7 +317,7 @@ public class GemFireClient
 		}
 		
 		return region;
-	}//------------------------------------------------
+	}
 	/**
 	 * Create a proxy region
 	 * @param <K> the region key
@@ -427,7 +341,7 @@ public class GemFireClient
 		.createClientRegionFactory(ClientRegionShortcut.PROXY).create(regionName);
 		
 		return region;
-	}//------------------------------------------------
+	}
 	
 	/**
 	 * Create a proxy region
@@ -453,7 +367,7 @@ public class GemFireClient
 		.createClientRegionFactory(ClientRegionShortcut.PROXY).setPoolName(poolName).create(regionName);
 		
 		return region;
-	}//------------------------------------------------
+	}
 	public <T> BlockingQueue<T> registerCq(String cqName,String oql) 
 	{
 		try
@@ -487,7 +401,7 @@ public class GemFireClient
 		  ("ERROR:"+e.getMessage()+" cqName:"+cqName+" oql:"+oql,e);
 		}
 	}
-	//------------------------------------------------
+
 	
 	
 	
@@ -506,7 +420,7 @@ public class GemFireClient
 		Config.settings().getProperty(GemFireConfigConstants.PDX_CLASS_PATTERN_PROP,".*"));
 		
 		return gemFireClient;
-	}//------------------------------------------------
+	}
 	
 	/**
 	 * @return the clientCache
@@ -528,7 +442,7 @@ public class GemFireClient
 	public void setCachingProxy(boolean cachingProxy)
 	{
 		this.cachingProxy = cachingProxy;
-	}//------------------------------------------------
+	}
 	/**
 	 * Add the observer as a listener for put/create events
 	 * @param <K> the region key
@@ -556,7 +470,7 @@ public class GemFireClient
 		
 		this.listenerMap.put(regionName, listener);
 		
-	}//------------------------------------------------
+	}
 	/**
 	 * Add the observer as a listener for remove/invalidate events
 	 * @param <K> the region key

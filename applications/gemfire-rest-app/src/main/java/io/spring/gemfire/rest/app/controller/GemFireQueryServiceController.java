@@ -1,4 +1,4 @@
-package io.spring.gemfire.rest.app;
+package io.spring.gemfire.rest.app.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +7,7 @@ import io.spring.gemfire.rest.app.exception.DataError;
 import io.spring.gemfire.rest.app.exception.FaultAgent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.geode.cache.query.Struct;
 import org.apache.geode.cache.query.types.StructType;
 import org.apache.geode.pdx.JSONFormatter;
@@ -23,20 +24,22 @@ import java.util.*;
  *
  * @author Gregory Green
  */
-@RestController
+//@RestController
 @RequestMapping("/query")
-public class GemFireQueryServiceRestService
+public class GemFireQueryServiceController
 {
     private Logger logger = LogManager.getLogger(getClass());
 
     private static final String EMPTY_JSON = "{}";
-    ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    QuerierService querierService;
+    private final QuerierService querierService;
+    private final FaultAgent faultAgent;
 
-    @Autowired
-    FaultAgent faultAgent;
+    public GemFireQueryServiceController(QuerierService querierService, FaultAgent faultAgent) {
+        this.querierService = querierService;
+        this.faultAgent = faultAgent;
+    }
 
     /**
      * Execute a GemFire query with no limit
@@ -50,7 +53,7 @@ public class GemFireQueryServiceRestService
     throws Exception
     {
         return queryLimit(query, -1);
-    }//------------------------------------------------
+    }
 
 
     /**
@@ -89,7 +92,7 @@ public class GemFireQueryServiceRestService
             e.printStackTrace();
             throw e;
         }
-    }//------------------------------------------------
+    }
 
     /**
      * Handling exceptions in general for REST responses
@@ -103,7 +106,7 @@ public class GemFireQueryServiceRestService
     DataError handleException(HttpServletRequest request, HttpServletResponse response, Exception e)
     {
         return faultAgent.handleException(request, response, e);
-    }//------------------------------------------------
+    }
 
     /**
      * @param query the OQL to append
@@ -160,13 +163,11 @@ public class GemFireQueryServiceRestService
             return allResults.toString();
         }
 
-
         //list of object (not Pdx or Struct)
-
         return objectMapper.writeValueAsString(list);
 
 
-    }//-------------------------------------------
+    }
 
     /**
      * @param results    the collection of results

@@ -1,8 +1,9 @@
-package io.spring.gemfire.rest.app;
+package io.spring.gemfire.rest.app.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vmware.data.services.gemfire.client.GemFireClient;
+import io.spring.gemfire.rest.app.service.PdxService;
 import io.spring.gemfire.rest.app.exception.DataError;
 import io.spring.gemfire.rest.app.exception.DataServiceSystemException;
 import io.spring.gemfire.rest.app.exception.FaultAgent;
@@ -14,7 +15,6 @@ import org.apache.geode.cache.RegionDestroyedException;
 import org.apache.geode.cache.client.ServerOperationException;
 import org.apache.geode.json.JsonDocument;
 import org.apache.geode.pdx.PdxInstance;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -23,8 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/region")
-@RequiredArgsConstructor
-public class GemFireRegionRestService
+public class GemFireRegionController
 {
     private final GemFireClient gemfire;
     private final PdxService pdxService;
@@ -32,8 +31,14 @@ public class GemFireRegionRestService
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    public GemFireRegionController(GemFireClient gemfire, PdxService pdxService, FaultAgent faultAgent) {
+        this.gemfire = gemfire;
+        this.pdxService = pdxService;
+        this.faultAgent = faultAgent;
+    }
 
-	/**
+
+    /**
      * Put a new records
      *
      * @param region the region name

@@ -58,7 +58,7 @@ java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSH
 
 ```json
 {
-  "@type": "java.util.HashMap",
+  "@type": "java.lang.Object",
   "firstName" :  "John",
   "lastName" :  "Doe",
   "email" : "jdoe@jdoe.jdoe", 
@@ -81,7 +81,7 @@ curl -X 'POST' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "@type": "java.util.HashMap",
+  "@type": "java.lang.Object",
   "firstName" :  "John",
   "lastName" :  "Doe",
   "email" : "jdoe@jdoe.jdoe", 
@@ -103,7 +103,7 @@ curl -X 'POST' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "@type": "java.util.HashMap",
+  "@type": "java.lang.Object",
   "firstName" :  "Jill",
   "lastName" :  "Doe",
   "email" : "jdoe@jdoe.jdoe", 
@@ -120,20 +120,28 @@ curl -X 'POST' \
 
 The following is an example of how to execute the function on the given a region in Gfsh.
 
-            id = argsStrings[0];
-            query = argsStrings[1];
-            regionName = argsStrings[2];
-            indexName = argsStrings[3];
-            defaultField = argsStrings[4];
-            String limitText = argsStrings[5];
+id=0, indexName=1, defaultField=2, query=3, limit=4
 
 ```shell
-execute function --id=LuceneSearchFunction --region=/example-search-region --arguments="user1,firstName:nope~ OR lastName:D~,example-search-region,simpleIndex,firstName,100"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100'"
 ```
+
+Limit 1, pageSize 1 then get first page
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,1'"
+```
+
+
+Get Second page
+
 
 Get data values should be null
 
 ```shell
-get --key=1 --region=/TestClear
-get --key=2 --region=/TestClear
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "get --key=user1-1 --region=/Paging"
+```
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "get --key=user1-2 --region=/Paging"
 ```
