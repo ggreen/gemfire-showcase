@@ -1,7 +1,7 @@
 package com.vmware.data.services.gemfire.lucene.functions;
 
-import com.vmware.data.services.gemfire.lucene.functions.domain.TextPageCriteria;
-import com.vmware.data.services.gemfire.lucene.functions.domain.TextPageCriteriaBuilder;
+import com.vmware.data.services.gemfire.lucene.functions.domain.SearchCriteria;
+import com.vmware.data.services.gemfire.lucene.functions.domain.SearchCriteriaBuilder;
 import org.apache.geode.cache.Cache;
 import org.apache.geode.cache.CacheFactory;
 import org.apache.geode.cache.Region;
@@ -18,20 +18,20 @@ import java.util.List;
 import java.util.function.Supplier;
 
 
-public class LuceneSearchFunction<T> implements Function<Object>
+public class GemFireSearchFunction implements Function<Object>
 {
 	private static final long serialVersionUID = 1L;
 	private final Supplier<Cache> cacheSupplier;
 	private final Supplier<LuceneService> luceneServiceSupplier;
-	private Logger logger = LogManager.getLogger(LuceneSearchFunction.class);
+	private final Logger logger = LogManager.getLogger(GemFireSearchFunction.class);
 
-	public LuceneSearchFunction()
+	public GemFireSearchFunction()
 	{
 		this( () -> CacheFactory.getAnyInstance(),
 				() -> LuceneServiceProvider.get(CacheFactory.getAnyInstance()));
 	}
 
-	public LuceneSearchFunction(Supplier<Cache> cacheSupplier, Supplier<LuceneService> luceneServiceSupplier) {
+	public GemFireSearchFunction(Supplier<Cache> cacheSupplier, Supplier<LuceneService> luceneServiceSupplier) {
 		this.cacheSupplier = cacheSupplier;
 		this.luceneServiceSupplier = luceneServiceSupplier;
 	}
@@ -39,7 +39,7 @@ public class LuceneSearchFunction<T> implements Function<Object>
 
 	@Override
 	public String getId() {
-		return "LuceneSearchFunction";
+		return "GemFireSearchFunction";
 	}
 	/**
 	 * Execute the search on Region
@@ -57,27 +57,30 @@ public class LuceneSearchFunction<T> implements Function<Object>
 			{	
 				throw new FunctionException("Execute on a region");
 			}
-			
+			RegionFunctionContext rfc = (RegionFunctionContext) functionContext;
+
 			Object args = functionContext.getArguments();
 			
 			if (args == null)
 				throw new FunctionException("arguments is required");
 			
-			TextPageCriteria criteria = new TextPageCriteriaBuilder().args(args).build();
+			SearchCriteria criteria = new SearchCriteriaBuilder().args(args).build();
 
 			logger.info("criteria: {}",criteria);
 
 			Region<String, Collection<Object>> pagingRegion = cache.getRegion(criteria.getPageRegionName());
 			
-			Region<?,?> region = cache.getRegion(criteria.getRegionName());
+			Region<?,?> region = rfc.getDataSet();
+
+
 
 			LuceneService luceneService = luceneServiceSupplier.get();
 
 			LuceneQuery<Object, Object> query = luceneService.createLuceneQueryFactory()
 					.setLimit(criteria.getLimit())
-					.setPageSize(criteria.getSize())
+					.setPageSize(criteria.getPageSize())
 					.create(criteria.getIndexName(),
-							criteria.getRegionName(),
+							region.getName(),
 							criteria.getQuery(),
 							criteria.getDefaultField());
 
@@ -104,23 +107,19 @@ public class LuceneSearchFunction<T> implements Function<Object>
 					}
 
 					logger.info("Returning paging");
-					pagingRegion.put(toPageKey(criteria.getId(), pageNumber),page);
+					pagingRegion.put(criteria.toPageKey(pageNumber++),page);
 				}
 
 			}
 		}
 		catch (LuceneQueryException luceneQueryException) {
+			logger.error(luceneQueryException);
 			throw new FunctionException(luceneQueryException);
 		}
 		catch (RuntimeException e)
 		{
-			e.printStackTrace();
+			logger.error(e);
 			throw e;
 		}
-	}
-
-	public static String toPageKey(String id,int pageNumber)
-	{
-		return new StringBuilder().append(id).append("-").append(pageNumber).toString();
 	}
 }
