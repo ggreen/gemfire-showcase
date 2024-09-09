@@ -1,4 +1,4 @@
-# Clear Remove Function
+# GemFire Search Function
 
 
 This is an example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
