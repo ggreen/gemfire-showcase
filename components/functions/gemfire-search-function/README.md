@@ -1,7 +1,7 @@
 # Clear Remove Function
 
 
-This a example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
+This an example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
 
 
 The format of the result uses the LuceneResultStruct object with the follow definition.
@@ -16,6 +16,9 @@ public interface LuceneResultStruct<K, V> {
 }
 ```
 
+The results of search are stored in a region name **Paging**.
+
+
 The following are example inputs arguments in a list of strings
 
 - id = arguments[0];
@@ -25,6 +28,8 @@ The following are example inputs arguments in a list of strings
 - limit = arguments[4]
 - pageSize = arguments[5] // default 100
 - keysOnly= arguments[6] //default false
+
+
 
 Note: Arguments in gfsh are separated by ","
 
@@ -91,7 +96,7 @@ java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSH
 ```
 
 
-Load JSON John Doe JSON
+Load JSON: user=John Doe 
 ```shell
 curl -X 'POST' \
   'http://localhost:8080/region/example-search-region/1' \
@@ -112,7 +117,7 @@ curl -X 'POST' \
   }
 }'
 ```
-Load JSON Jill Doe JSON
+Load JSON: user=Jill Doe 
 
 ```shell
 curl -X 'POST' \
