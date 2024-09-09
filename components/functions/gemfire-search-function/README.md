@@ -1,10 +1,10 @@
 # Clear Remove Function
 
 
-This an example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
+This is an example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
 
 
-The format of the result uses the LuceneResultStruct object with the follow definition.
+The format of the result uses the LuceneResultStruct object with the following definition.
 
 ```java
 public interface LuceneResultStruct<K, V> {
@@ -16,10 +16,10 @@ public interface LuceneResultStruct<K, V> {
 }
 ```
 
-The results of search are stored in a region name **Paging**.
+The results of the search are stored in a region named **Paging**.
 
 
-The following are example inputs arguments in a list of strings
+The following are example input arguments in a list of strings
 
 - id = arguments[0];
 - indexName = arguments[1];
@@ -41,7 +41,7 @@ Example Search in gfsh
 execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,1'
 ```
 
-Note the function always returns first number of records based on page size
+Note the function always returns the first number of records based on page size.
 
 
 This function has been tested with the following
@@ -140,7 +140,7 @@ curl -X 'POST' \
 }'
 ```
 
-The following is an example of how to execute the function on the given a region in Gfsh.
+The following is an example of how to execute the function on the given region in Gfsh.
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100'"
