@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.String.valueOf;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SearchCriteriaBuilderTest {
 
@@ -18,10 +18,11 @@ class SearchCriteriaBuilderTest {
 
     private SearchCriteriaBuilder subject;
     private SearchCriteria expected;
+    private String regionName = "region";
 
     @BeforeEach
     void setUp() {
-        this.expected =  new SearchCriteria(id,  indexName, defaultField,query,limit);
+        this.expected =  new SearchCriteria(id,  regionName, indexName, defaultField,query,limit);
 
         subject = new SearchCriteriaBuilder();
     }
@@ -31,6 +32,7 @@ class SearchCriteriaBuilderTest {
 
         String[] stringArgs = {
                 expected.getId(),
+                expected.getRegionName(),
                 expected.getIndexName(),
                 expected.getDefaultField(),
                 expected.getQuery(),
@@ -48,6 +50,7 @@ class SearchCriteriaBuilderTest {
 
         String[] stringArgs = {
                 expected.getId(),
+                expected.getRegionName(),
                 expected.getIndexName(),
                 expected.getDefaultField(),
                 expected.getQuery(),
@@ -67,6 +70,7 @@ class SearchCriteriaBuilderTest {
 
         String[] stringArgs = {
                 expected.getId(),
+                expected.getRegionName(),
                 expected.getIndexName(),
                 expected.getDefaultField(),
                 expected.getQuery(),

@@ -65,7 +65,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.1'
 
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: '1.0.0'
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: '1.0.0'
     implementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'

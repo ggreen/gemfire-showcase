@@ -54,6 +54,11 @@ public class SearchCriteriaBuilder {
             if(argsStrings.length > argIndex)
                 id = argsStrings[argIndex++];
 
+
+            if(argsStrings.length > argIndex)
+                regionName = argsStrings[argIndex++];
+
+
             if(argsStrings.length > argIndex)
                 indexName = argsStrings[argIndex++];
 
@@ -66,7 +71,7 @@ public class SearchCriteriaBuilder {
             if(argsStrings.length > argIndex)
                 limit = toInteger(argsStrings[argIndex++],DEFAULT_LIMIT,"limit");
 
-            SearchCriteria searchCriteria = new SearchCriteria(id, indexName, defaultField, query, limit);
+            SearchCriteria searchCriteria = new SearchCriteria(id, regionName,indexName, defaultField, query, limit);
 
             if(argsStrings.length > argIndex)
                 searchCriteria.setPageSize(toInteger(argsStrings[argIndex++],DEFAULT_PAGE_SIZE,"pageSize"));

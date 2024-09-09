@@ -56,11 +56,11 @@ public class GemFireSearchFunction implements Function<Object>
 		try
 		{
 			//Function must be executed on Region
-			if(!(functionContext instanceof RegionFunctionContext))
+			if(functionContext instanceof RegionFunctionContext)
 			{	
-				throw new FunctionException("Execute on a region");
+				throw new FunctionException("Execute on a onServer");
 			}
-			RegionFunctionContext rfc = (RegionFunctionContext) functionContext;
+
 
 			Object args = functionContext.getArguments();
 			
@@ -71,10 +71,14 @@ public class GemFireSearchFunction implements Function<Object>
 
 			logger.info("criteria: {}",criteria);
 
-			Region<String, Collection<Object>> pagingRegion = cache.getRegion(criteria.getPageRegionName());
-			
-			Region<?,?> region = rfc.getDataSet();
 
+			Region<?,?> region = cache.getRegion(criteria.getRegionName());
+			if(region == null)
+				throw new FunctionException("Region \""+criteria.getRegionName()+"\" does not exist");
+
+			Region<String, Collection<Object>> pagingRegion = cache.getRegion(criteria.getPageRegionName());
+			if(pagingRegion == null)
+				throw new FunctionException("Paging region \""+criteria.getPageRegionName()+"\" does not exist. Please create it.");
 
 
 			LuceneService luceneService = luceneServiceSupplier.get();

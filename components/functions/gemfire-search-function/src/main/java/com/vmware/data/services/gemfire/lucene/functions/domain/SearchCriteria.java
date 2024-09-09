@@ -17,10 +17,15 @@ public class SearchCriteria implements Serializable
 
 	private int pageSize;
 	private final String id;
+	private final String regionName;
 	private final String query;
 	private String pageRegionName = DEFAULT_PAGE_REGION_NM;
 	private final String indexName;
 	private final String defaultField;
+
+	public String getRegionName() {
+		return regionName;
+	}
 
 	private final int limit;
 
@@ -34,8 +39,9 @@ public class SearchCriteria implements Serializable
 
 	private boolean keysOnly;
 
-	public SearchCriteria(String id, String indexName, String defaultField, String query, int limit) {
+	public SearchCriteria(String id, String regionName,String indexName, String defaultField, String query, int limit) {
         this.id = id;
+		this.regionName = regionName;
         this.query = query;
         this.defaultField = defaultField;
 		this.indexName = indexName;
@@ -119,9 +125,10 @@ public class SearchCriteria implements Serializable
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("TextPageCriteria{");
-		sb.append("size=").append(pageSize);
+		final StringBuilder sb = new StringBuilder("SearchCriteria{");
+		sb.append("pageSize=").append(pageSize);
 		sb.append(", id='").append(id).append('\'');
+		sb.append(", regionName='").append(regionName).append('\'');
 		sb.append(", query='").append(query).append('\'');
 		sb.append(", pageRegionName='").append(pageRegionName).append('\'');
 		sb.append(", indexName='").append(indexName).append('\'');
@@ -137,12 +144,12 @@ public class SearchCriteria implements Serializable
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		SearchCriteria that = (SearchCriteria) o;
-		return pageSize == that.pageSize && limit == that.limit && keysOnly == that.keysOnly && Objects.equals(id, that.id) && Objects.equals(query, that.query) && Objects.equals(pageRegionName, that.pageRegionName) && Objects.equals(indexName, that.indexName) && Objects.equals(defaultField, that.defaultField);
+		return pageSize == that.pageSize && limit == that.limit && keysOnly == that.keysOnly && Objects.equals(id, that.id) && Objects.equals(regionName, that.regionName) && Objects.equals(query, that.query) && Objects.equals(pageRegionName, that.pageRegionName) && Objects.equals(indexName, that.indexName) && Objects.equals(defaultField, that.defaultField);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(pageSize, id, query, pageRegionName, indexName, defaultField, limit, keysOnly);
+		return Objects.hash(pageSize, id, regionName, query, pageRegionName, indexName, defaultField, limit, keysOnly);
 	}
 
 	public boolean getKeysOnly() {

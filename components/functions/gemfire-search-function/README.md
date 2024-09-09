@@ -78,7 +78,7 @@ gradle build
 ## Start GemFire
 
 ```shell
-./deployment/local/gemfire/start.sh
+./deployment/local/gemfire/start-multi-servers.sh
 ```
 
 You must deploy the function using the gfsh deploy command.
@@ -96,7 +96,7 @@ java -jar applications/gemfire-rest-app/build/libs/gemfire-rest-app-0.0.1-SNAPSH
 ```
 
 
-Load JSON: user=John Doe 
+Load JSON
 ```shell
 curl -X 'POST' \
   'http://localhost:8080/region/example-search-region/1' \
@@ -115,13 +115,29 @@ curl -X 'POST' \
     "zip" : "55555",
     "country" : "US"
   }
-}'
-```
-Load JSON: user=Jill Doe 
+}';
 
-```shell
 curl -X 'POST' \
   'http://localhost:8080/region/example-search-region/2' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "@type": "java.lang.Object",
+  "firstName" :  "John2",
+  "lastName" :  "Doe2",
+  "email" : "jdoe2@jdoe.jdoe", 
+  "contacts" : {
+    "phoneNumbers" : ["555-555-5555", "111-111-1111"],
+    "address" : "1 Straight street",
+    "cityTown" : "JC",
+    "stateProvince" : "NJ",
+    "zip" : "55555",
+    "country" : "US"
+  }
+}';
+
+curl -X 'POST' \
+  'http://localhost:8080/region/example-search-region/3' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -137,20 +153,45 @@ curl -X 'POST' \
     "zip" : "55551",
     "country" : "US"
   }
-}'
+}';
+
+
+curl -X 'POST' \
+  'http://localhost:8080/region/example-search-region/4' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "@type": "java.lang.Object",
+  "firstName" :  "Jill1",
+  "lastName" :  "Doe2",
+  "email" : "jdoe2@jdoe.jdoe", 
+  "contacts" : {
+    "phoneNumbers" : ["222-222-2222", "333-333-3333"],
+    "address" : "2 Straight street",
+    "cityTown" : "JC",
+    "stateProvince" : "NJ",
+    "zip" : "55551",
+    "country" : "US"
+  }
+}';
 ```
 
 The following is an example of how to execute the function on the given region in Gfsh.
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100'"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --member=server1 --arguments='user1,example-search-region,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100'"
+```
+
+Get Keys Only
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --member=server2 --arguments='user1,example-search-region,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,10,true'"
 ```
 
 Testing paging
 
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --region=/example-search-region --arguments='user1,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,1'"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=GemFireSearchFunction --member=server1 --arguments='user1,example-search-region,simpleIndex,firstName,firstName:nope~ OR lastName:D~,100,1'"
 ```
 
 

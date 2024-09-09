@@ -47,15 +47,10 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven {
-        url "https://packages.broadcom.com/artifactory/gemfire/"
-        metadataSources {
-            mavenPom()
-            artifact()
-            ignoreGradleMetadataRedirection()
-        }
         credentials {
-            username System.getenv('BROADCOM_MAVEN_USERNAME')
-            password System.getenv('BROADCOM_MAVEN_PASSWORD')
+            username "$gemfireRepoUsername"
+            password "$gemfireRepoPassword"
         }
+        url = uri("https://packages.broadcom.com/artifactory/gemfire/")
     }
 }
