@@ -51,8 +51,10 @@ repositories {
             ignoreGradleMetadataRedirection()
         }
         credentials {
-            username System.getenv("HARBOR_USER")
-            password System.getenv("HARBOR_PASSWORD")
+            credentials {
+                username System.getenv('BROADCOM_MAVEN_USERNAME')
+                password System.getenv('BROADCOM_MAVEN_PASSWORD')
+            }
         }
     }
 }

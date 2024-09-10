@@ -30,8 +30,8 @@ repositories {
     maven {
         url "https://packages.broadcom.com/artifactory/gemfire/"
         credentials {
-            username "$gemfireRepoUsername"
-            password "$gemfireRepoPassword"
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_MAVEN_PASSWORD')
         }
     }
 }

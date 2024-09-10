@@ -48,8 +48,8 @@ repositories {
     mavenLocal()
     maven {
         credentials {
-            username "$gemfireRepoUsername"
-            password "$gemfireRepoPassword"
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_MAVEN_PASSWORD')
         }
         url = uri("https://packages.broadcom.com/artifactory/gemfire/")
     }
