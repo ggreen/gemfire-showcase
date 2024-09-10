@@ -185,4 +185,26 @@ class GemFireSearchFunctionTest {
         }
 
     }
+
+
+    @Test
+    void pagingSendsMultiple() throws LuceneQueryException {
+
+        when(fc.getArguments()).thenReturn(stringArgs);
+        when(region.getName()).thenReturn(regionName);
+        when(luceneService.createLuceneQueryFactory()).thenReturn(queryFactory);
+        when(queryFactory.create(anyString(), anyString(), anyString(), anyString())).thenReturn(queryObject);
+        when(queryFactory.setPageSize(anyInt())).thenReturn(queryFactory);
+        when(queryFactory.setLimit(anyInt())).thenReturn(queryFactory);
+        when(queryObject.findPages()).thenReturn(pages);
+        when(pages.hasNext()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(fc.getResultSender()).thenReturn(rs);
+        when(cache.getRegion(anyString()))
+                .thenReturn(region).thenReturn(pagingRegion);
+
+        subject.execute(fc);
+
+        verify(rs).sendResult(any());
+        verify(rs).lastResult(any());
+    }
 }

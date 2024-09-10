@@ -3,6 +3,12 @@
 
 This is an example function that uses [GemFire Search](https://docs.vmware.com/en/VMware-GemFire-Search/1.1/gemfire-search/search_landing.html) capabilities.
 
+The function uses [PageableLuceneQueryResults](https://gemfire.dev/api/extensions/search/1.1/org/apache/geode/cache/lucene/PageableLuceneQueryResults).
+It saves the results to a paging region.
+
+The function should be executed using the [FunctionService.onServer(...)](https://gemfire.dev/api/gemfire/10.1/org/apache/geode/cache/execute/FunctionService) method.
+Note that executing this function on multiple servers produces duplicate results, because the GemFire Search results are 
+not unique to the local member. Uses the FunctionService onServer executes this function on a single member based a pool or region.
 
 The format of the result uses the LuceneResultStruct object with the following definition.
 

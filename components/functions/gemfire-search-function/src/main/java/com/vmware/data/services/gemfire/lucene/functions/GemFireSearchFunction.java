@@ -5,10 +5,7 @@ import com.vmware.data.services.gemfire.lucene.functions.domain.SearchCriteriaBu
 import org.apache.geode.cache.Cache;
 import org.apache.geode.cache.CacheFactory;
 import org.apache.geode.cache.Region;
-import org.apache.geode.cache.execute.Function;
-import org.apache.geode.cache.execute.FunctionContext;
-import org.apache.geode.cache.execute.FunctionException;
-import org.apache.geode.cache.execute.RegionFunctionContext;
+import org.apache.geode.cache.execute.*;
 import org.apache.geode.cache.lucene.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +16,7 @@ import java.util.function.Supplier;
 
 /**
  * GemFire function that using GemFire Search based on Apache Lucene.
+ * This result can save to a Paging region.
  * @author gregory green
  */
 public class GemFireSearchFunction implements Function<Object>
@@ -91,30 +89,40 @@ public class GemFireSearchFunction implements Function<Object>
 							criteria.getQuery(),
 							criteria.getDefaultField());
 
+			ResultSender resultSender = functionContext.getResultSender();
+
 			if (criteria.getKeysOnly()) {
-					logger.info("Returning keys only");
-                    functionContext.getResultSender().lastResult(query.findKeys());
+				logger.info("Returning keys only");
+				resultSender.lastResult(query.findKeys());
             }
 			else {
 
-				logger.info("Returning pages");
+				logger.info("Saving pages");
 				PageableLuceneQueryResults<Object, Object> pageableLuceneQueryResults = query.findPages();
 
 				int pageNumber = 1;
 
-				List firstPage = null;
 				List page = null;
+
+				String key;
+
 
 				while (pageableLuceneQueryResults.hasNext()) {
 					page = pageableLuceneQueryResults.next();
 
-					if(firstPage ==null){
-						firstPage = page;
-						functionContext.getResultSender().lastResult(firstPage);
-					}
 
-					logger.info("Returning paging");
-					pagingRegion.put(criteria.toPageKey(pageNumber++),page);
+					key = criteria.toPageKey(pageNumber++);
+					pagingRegion.put(key,page);
+
+					logger.info("Returning key {}",key);
+
+					//Send key back to user
+					if(!pageableLuceneQueryResults.hasNext()){
+						resultSender.lastResult(key);
+					}
+					else
+						resultSender.sendResult(key);
+
 				}
 
 			}
