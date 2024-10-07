@@ -13,7 +13,6 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
-import org.springframework.batch.item.support.SynchronizedItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -65,8 +64,6 @@ public class BatchAppConf {
     @Value("${batch.jdbc.password:''}")
     private String batchPassword;
 
-    private long groupId = 3;
-
 
     @Bean
     public JobLauncher jobLauncher(JobRepository jobRepository,
@@ -79,6 +76,7 @@ public class BatchAppConf {
     }
 
 
+    @StepScope
     @Bean
     public RowMapper<Account> rowMapper()
     {
@@ -90,7 +88,9 @@ public class BatchAppConf {
     }
 
     @Bean
-    ItemReader<Account> reader(RowMapper<Account> rowMapper)
+    @StepScope
+    ItemStreamReader<Account> reader(RowMapper<Account> rowMapper,
+                                     @Value("#{jobParameters['groupId']}") long groupId)
     {
         var dataSource = DataSourceBuilder.create().
         url(batchJdbcUrl).username(batchUsername)
@@ -111,6 +111,7 @@ public class BatchAppConf {
     }
 
     @Bean
+    @StepScope
     ItemWriter<Account> writer(GemfireTemplate gemFireTemplate){
 
         ItemWriter<Account> itemWriter = c ->
@@ -120,6 +121,7 @@ public class BatchAppConf {
     }
 
     @Bean
+    @StepScope
     ItemProcessor<Account,Account> itemProcessor()
     {
         //Set current time
