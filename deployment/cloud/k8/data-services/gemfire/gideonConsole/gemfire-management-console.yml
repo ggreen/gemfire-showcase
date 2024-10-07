@@ -31,14 +31,15 @@ spec:
         - env:
             - name: server.port
               value: "8080"
-          image: gemfire/gemfire-management-console:1.2
+          image: gemfire/gemfire-management-console:1.2.1
           name: gemfire-management-console
-      volumes:
-        - name: gemfire-management-console-persistence
-          persistentVolumeClaim:
-            claimName: gemfire-management-console-pvc
+          imagePullPolicy: IfNotPresent
+#      volumes:
+#        - name: gemfire-management-console-persistence
+#          persistentVolumeClaim:
+#            claimName: gemfire-management-console-pvc
 #          imagePullPolicy: Always
-#          imagePullPolicy: IfNotPresent
+
 ---
 apiVersion: v1
 kind: Service

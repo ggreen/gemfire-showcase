@@ -1,0 +1,6 @@
+gemfire:
+  health:
+    region:
+      name: health2
+server:
+  port: 8282

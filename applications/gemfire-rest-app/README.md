@@ -235,16 +235,18 @@ http://localhost:8080/query/10
 
 # Docker 
 
-Use the maven plugin to containerize the Spring Boot application. 
+# Building Docker
 
-```shell script
-mvn spring-boot:build-image
+```shell
+
+gradle build
+cd applications/gemfire-rest-app
+docker build   --platform linux/amd64,linux/arm64 -t gemfire-rest-app:0.0.1-SNAPSHOT .
 ```
 
-List docker images
-
-```shell script
-docker images
+```shell
+docker tag gemfire-rest-app:0.0.1-SNAPSHOT cloudnativedata/gemfire-rest-app:0.0.1-SNAPSHOT
+docker push cloudnativedata/gemfire-rest-app:0.0.1-SNAPSHOT
 ```
 
 You should see the image **gemfire-rest-app** with the  current version number.

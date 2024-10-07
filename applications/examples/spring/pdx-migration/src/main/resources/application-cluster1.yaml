@@ -1,0 +1,6 @@
+gemfire:
+  health:
+    region:
+      name: health1
+server:
+  port: 8181

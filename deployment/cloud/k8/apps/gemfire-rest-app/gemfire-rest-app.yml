@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run:  gemfire-rest-app
+  name:  gemfire-rest-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name:  gemfire-rest-app
+  template:
+    metadata:
+      labels:
+        name:  gemfire-rest-app
+    spec:
+      containers:
+        - env:
+            - name: management.endpoint.health.enabled
+              value: "true"
+            - name: management.endpoint.health.probes.enabled
+              value: "true"
+            - name: server.port
+              value: "8080"
+            - name: LOCATORS
+              valueFrom:
+                configMapKeyRef:
+                  name: gemfire1-config
+                  key: locators
+          image: cloudnativedata/gemfire-rest-app:0.0.1-SNAPSHOT
+          name: gemfire-rest-app
+          imagePullPolicy: "Always"
+#          imagePullPolicy: "IfNotPresent"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 40
+            timeoutSeconds: 2
+            periodSeconds: 3
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 40
+            timeoutSeconds: 2
+            periodSeconds: 3
+            failureThreshold: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gemfire-rest-app
+spec:
+  selector:
+    name: gemfire-rest-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
