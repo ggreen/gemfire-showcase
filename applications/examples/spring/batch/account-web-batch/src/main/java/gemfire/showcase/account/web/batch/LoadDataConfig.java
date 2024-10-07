@@ -2,6 +2,7 @@ package gemfire.showcase.account.web.batch;
 
 import lombok.extern.slf4j.Slf4j;
 import nyla.solutions.core.patterns.creational.generator.FullNameCreator;
+import nyla.solutions.core.util.Digits;
 import nyla.solutions.core.util.Text;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -20,11 +21,13 @@ import static java.lang.String.valueOf;
 @Slf4j
 public class LoadDataConfig {
 
+
+
     @Value("${db.schema}")
     private String schemaName;
 
     private String insertSql  = """
-                INSERT INTO ${schemaName}.accounts (id, "name") VALUES(?, ?)
+                INSERT INTO ${schemaName}.accounts (id, "name","acct_group") VALUES(?, ?,?)
                 """;
 
     private String deleteSql  = """
@@ -46,6 +49,7 @@ public class LoadDataConfig {
             CREATE TABLE IF NOT EXISTS taccounts.accounts (
                 id varchar(100) NOT NULL,
                 name varchar(255) NOT NULL,
+                acct_group bigint NOT NULL,
                 PRIMARY KEY (ID)
             );
             """;
@@ -55,6 +59,8 @@ public class LoadDataConfig {
     @Bean
     CommandLineRunner loadData(DataSource dataSource)
     {
+        var digits = new Digits();
+
         var map = Map.of("schemaName",schemaName);
         insertSql = Text.format(insertSql,map);
         deleteSql  = Text.format(deleteSql,map);
@@ -78,6 +84,7 @@ public class LoadDataConfig {
                 for (int i = 0; i < accountCount; i++) {
                     insertPreparedStatement.setString(1, valueOf(i));
                     insertPreparedStatement.setString(2, accountNamePrefix +" "+i+" "+fullNameCreator.create());
+                    insertPreparedStatement.setInt(3, digits.generateInteger(1,3));
                     insertPreparedStatement.addBatch();
 
                     if((i+1) % batchSize == 0)

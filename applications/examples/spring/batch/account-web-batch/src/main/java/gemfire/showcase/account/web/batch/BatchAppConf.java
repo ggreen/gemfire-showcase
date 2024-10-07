@@ -5,22 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.*;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.support.SynchronizedItemReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.gemfire.GemfireTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -42,8 +42,12 @@ public class BatchAppConf {
 
     private String jobName = "example";
 
-    @Value("${batch.read.sql}")
-    private String readSql;
+
+    private String readSql = """
+            select * 
+            from taccounts.accounts 
+            where acct_group = ?
+            """;
 
     @Value("${batch.read.fetch.size}")
     private int fetchSize;
@@ -61,11 +65,15 @@ public class BatchAppConf {
     @Value("${batch.jdbc.password:''}")
     private String batchPassword;
 
+    private long groupId = 3;
+
 
     @Bean
-    public JobLauncher jobLauncher(JobRepository jobRepository) throws Exception {
+    public JobLauncher jobLauncher(JobRepository jobRepository,
+                                   TaskExecutor taskExecutor) throws Exception {
         var jobLauncher = new TaskExecutorJobLauncher();
         jobLauncher.setJobRepository(jobRepository);
+        jobLauncher.setTaskExecutor(taskExecutor);
         jobLauncher.afterPropertiesSet();
         return jobLauncher;
     }
@@ -77,6 +85,7 @@ public class BatchAppConf {
         return (rs,i) ->   Account.builder()
                 .id(rs.getString(1))
                 .name(rs.getString(2))
+                .group(rs.getLong(3))
                 .build();
     }
 
@@ -87,13 +96,18 @@ public class BatchAppConf {
         url(batchJdbcUrl).username(batchUsername)
                 .password(batchPassword).build();
 
-        return new JdbcCursorItemReaderBuilder<Account>()
+        var reader = new JdbcCursorItemReaderBuilder<Account>()
                 .dataSource(dataSource)
                 .name("accounts")
                 .rowMapper(rowMapper)
                 .sql(readSql)
+                .preparedStatementSetter(ps -> {
+                    ps.setLong(1,groupId);
+                } )
                 .fetchSize(fetchSize)
                 .build();
+
+        return reader;
     }
 
     @Bean
@@ -103,6 +117,17 @@ public class BatchAppConf {
             gemFireTemplate.putAll(convertToMap(c));
 
         return itemWriter;
+    }
+
+    @Bean
+    ItemProcessor<Account,Account> itemProcessor()
+    {
+        //Set current time
+        return account -> {
+            account.setTimestamp(System.currentTimeMillis());
+            log.info("Transformed account: {}",account);
+            return account;
+        };
     }
 
     protected BinaryOperator<Account> mergeFunction() {
@@ -146,10 +171,12 @@ public class BatchAppConf {
                            @Qualifier("transactionManager")
                            PlatformTransactionManager transactionManager,
                            ItemReader<Account> itemReader,
+                           ItemProcessor<Account,Account> processor,
                            ItemWriter<Account> itemWriter) {
         return new StepBuilder("load-step", jobRepository)
                 .<Account, Account>chunk(chunkSize, transactionManager)
                 .reader(itemReader)
+                .processor(processor)
                 .writer(itemWriter)
                 .build();
     }

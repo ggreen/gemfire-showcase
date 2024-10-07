@@ -21,14 +21,14 @@ public class JobRunnerController {
 
     @SneakyThrows
     @PostMapping
-    public JobInstance launchForAccountByGroupId(@RequestParam("groupId") int groupId) {
+    public JobInstance launchForAccountByGroupId(@RequestParam("groupId") long groupId) {
 
 
         var jobId = UUID.randomUUID().toString();
 
         var jobParameterBuilder = new JobParametersBuilder()
                 .addJobParameter("jobId",jobId,String.class)
-                .addJobParameter("groupId",groupId, Integer.class)
+                .addLong("groupId",groupId)
                 .addLong("time", System.currentTimeMillis());
 
         return jobLauncher.run(job,jobParameterBuilder.toJobParameters() ).getJobInstance();

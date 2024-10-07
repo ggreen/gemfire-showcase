@@ -12,4 +12,6 @@ import lombok.NoArgsConstructor;
 public class Account {
     private String id;
     private String name;
+    private long group;
+    private Long timestamp;
 }

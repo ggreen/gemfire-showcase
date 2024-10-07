@@ -4,7 +4,6 @@ batch:
   load:
     accounts: true
   read:
-    sql: "select * from taccounts.accounts"
     fetch:
       size: 100
     chunk:
