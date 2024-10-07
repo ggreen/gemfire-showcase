@@ -1,5 +1,9 @@
 package gemfire.showcase.account.web.batch;
 
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import com.vmware.gemfire.testcontainers.GemFireCluster;
 import nyla.solutions.core.patterns.creational.generator.JavaBeanGeneratorCreator;
 import org.junit.jupiter.api.AfterAll;
@@ -12,8 +16,10 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import gemfire.showcase.account.web.batch.domain.Account;
+import org.testcontainers.utility.DockerImageName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,6 +31,7 @@ class AccountBatchTests {
 	private static int locatorCount = 1;
 	private static int serverCount = 1;
 	private static String hostName = "localhost";
+	private static PostgreSQLContainer<?> postgres;
 	@Autowired
 	private TestRestTemplate restTemplate;
 
@@ -54,6 +61,19 @@ class AccountBatchTests {
 
 		gemFireCluster.acceptLicense().start();
 		System.setProperty("spring.data.gemfire.pool.locators", String.format("localhost[%d]", gemFireCluster.getLocatorPort()));
+
+		postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
+				.withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
+						new HostConfig().withPortBindings(new PortBinding(Ports.Binding.bindPort(5432), new ExposedPort(5432)))
+				))
+				.withUsername("postgres")
+				.withPassword(System.getenv("POSTGRES_DB_PASSWORD"));
+
+		postgres.start();
+		System.setProperty("spring.datasource.jdbc.url", postgres.getJdbcUrl());
+
+		System.setProperty("batch.jdbc.url", postgres.getJdbcUrl());
+
 	}
 
 
@@ -81,7 +101,9 @@ class AccountBatchTests {
 	@AfterAll
 	static void shutdown()
 	{
-		gemFireCluster.close();
+		try { gemFireCluster.close(); } catch(Exception e){}
+		try { postgres.close(); } catch (Exception e){}
+
 	}
 
 }

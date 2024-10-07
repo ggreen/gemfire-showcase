@@ -143,6 +143,7 @@ public class BatchAppConf {
 
     @Bean("loadGemFire")
     public Step loadGemFire(JobRepository jobRepository,
+                           @Qualifier("transactionManager")
                            PlatformTransactionManager transactionManager,
                            ItemReader<Account> itemReader,
                            ItemWriter<Account> itemWriter) {

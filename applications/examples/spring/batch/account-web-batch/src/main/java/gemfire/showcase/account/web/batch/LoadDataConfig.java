@@ -24,11 +24,11 @@ public class LoadDataConfig {
     private String schemaName;
 
     private String insertSql  = """
-                INSERT INTO ${schemaName}.account (id, "name") VALUES(?, ?)
+                INSERT INTO ${schemaName}.accounts (id, "name") VALUES(?, ?)
                 """;
 
     private String deleteSql  = """
-                truncate ${schemaName}.account
+                truncate ${schemaName}.accounts
                 """;
 
     @Value("${account.data.count:100}")

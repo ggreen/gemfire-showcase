@@ -2,15 +2,11 @@ package gemfire.showcase.account.web.batch.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.batch.core.*;
-import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.job.flow.Flow;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobInstance;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -24,8 +20,9 @@ public class JobRunnerController {
 
 
     @SneakyThrows
-    @PostMapping("{groupId}")
-    public JobInstance launchForAccountByGroupId(@PathVariable int groupId) {
+    @PostMapping
+    public JobInstance launchForAccountByGroupId(@RequestParam("groupId") int groupId) {
+
 
         var jobId = UUID.randomUUID().toString();
 

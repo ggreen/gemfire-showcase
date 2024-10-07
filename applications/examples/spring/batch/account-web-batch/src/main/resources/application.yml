@@ -1,0 +1,28 @@
+db:
+  schema: "taccounts"
+batch:
+  load:
+    accounts: true
+  read:
+    sql: "select * from taccounts.accounts"
+    fetch:
+      size: 100
+    chunk:
+      size: 10
+  job:
+    repository:
+      create: true
+  jdbc:
+    url:  jdbc:postgresql://localhost:5432/
+    username: postgres
+    password: ${POSTGRES_DB_PASSWORD}
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/
+    username: postgres
+    password: ${POSTGRES_DB_PASSWORD}
+  data:
+    gemfire:
+      pool:
+        default:
+          locators: localhost[10334]
