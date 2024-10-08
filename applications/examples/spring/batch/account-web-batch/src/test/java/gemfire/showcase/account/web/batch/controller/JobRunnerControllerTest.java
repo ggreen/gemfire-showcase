@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -30,6 +31,8 @@ class JobRunnerControllerTest {
 
     @Mock
     private JobExecution jobExecution;
+    @Mock
+    private JobInstance expected;
     private int groupId = 1;
 
     @BeforeEach
@@ -39,9 +42,8 @@ class JobRunnerControllerTest {
 
     @Test
     void launchJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        long expected = 22L;
         when(jobLauncher.run(any(),any())).thenReturn(jobExecution);
-        when(jobExecution.getJobId()).thenReturn(expected);
+        when(jobExecution.getJobInstance()).thenReturn(expected);
 
         var actual = subject.launchForAccountByGroupId(groupId);
 

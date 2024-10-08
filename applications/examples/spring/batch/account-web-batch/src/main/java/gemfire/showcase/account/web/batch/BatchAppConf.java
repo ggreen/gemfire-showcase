@@ -13,6 +13,7 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.support.SynchronizedItemStreamReader;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -107,7 +108,9 @@ public class BatchAppConf {
                 .fetchSize(fetchSize)
                 .build();
 
-        return reader;
+        var synchronizeReader = new SynchronizedItemStreamReader<Account>();
+        synchronizeReader.setDelegate(reader);
+        return synchronizeReader;
     }
 
     @Bean
