@@ -34,9 +34,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableTask
 @EnableTransactionManagement
-//${batch.job.repository.schema.prefix:}BOOT3_BATCH_
 @EnableBatchProcessing(tablePrefix = "${batch.job.repository.schema.prefix:}BOOT3_BATCH_")
-//@EnableAutoConfiguration
 @Slf4j
 public class BatchAppConf {
 
@@ -84,7 +82,7 @@ public class BatchAppConf {
         return (rs,i) ->   Account.builder()
                 .id(rs.getString(1))
                 .name(rs.getString(2))
-                .group(rs.getLong(3))
+                .groupId(rs.getLong(3))
                 .build();
     }
 
@@ -185,15 +183,4 @@ public class BatchAppConf {
                 .writer(itemWriter)
                 .build();
     }
-
-//    @Bean
-//    @Order(10)
-//    CommandLineRunner runner(Job job,JobLauncher jobLauncher) throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-//        return args -> {
-//            String jobId = UUID.randomUUID().toString();
-//            JobParameter<?> jobIdParam = new JobParameter<String>(jobId, String.class);
-//            JobParameters jobParameters = new JobParameters(Map.of("jobId", jobIdParam));
-//            jobLauncher.run(job, jobParameters);
-//        };
-//    }
 }

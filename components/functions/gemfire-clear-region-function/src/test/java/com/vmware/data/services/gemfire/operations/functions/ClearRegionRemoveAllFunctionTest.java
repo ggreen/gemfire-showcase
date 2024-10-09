@@ -10,9 +10,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Set;
+import java.util.function.Function;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,16 +30,21 @@ class ClearRegionRemoveAllFunctionTest {
 
     @Mock
     private Region<Object, Object> region;
+    @Mock
+    private Function<FunctionContext<?>, Region<Object, Object>> getFunction;
+    private Set<Object> keySet = Set.of("1","2");
 
 
     @BeforeEach
     void setUp() {
-        subject = new ClearRegionRemoveAllFunction();
+        subject = new ClearRegionRemoveAllFunction(getFunction);
     }
 
     @Test
     void apply() {
-        when(context.getDataSet()).thenReturn(region);
+        when(getFunction.apply(any())).thenReturn(region);
+        when(region.keySet()).thenReturn(keySet);
+
         when(context.getResultSender()).thenReturn(resultSender);
 
         subject.execute((FunctionContext) context);

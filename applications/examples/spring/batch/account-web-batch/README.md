@@ -29,6 +29,78 @@ Example solution
 
 
 -----------------
+# Run applications
+
+
+```shell
+java -jar applications/examples/spring/batch/account-web-batch/build/libs/account-web-batch-0.0.1-SNAPSHOT.jar
+```
+
+# Testing
+
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "query --query='select * from /Account'"
+```
+
+Load Group 1
+
+```shell
+curl -X 'POST' \
+  'http://localhost:8080/jobs?groupId=1' \
+  -H 'accept: */*' \
+  -d ''
+```
+
+query
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "query --query='select * from /Account'"
+```
+
+Load Group 2
+
+```shell
+curl -X 'POST' \
+  'http://localhost:8080/jobs?groupId=2' \
+  -H 'accept: */*' \
+  -d ''
+```
+
+query
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "query --query='select * from /Account'"
+```
+
+Load Group 3
+
+```shell
+curl -X 'POST' \
+  'http://localhost:8080/jobs?groupId=3' \
+  -H 'accept: */*' \
+  -d ''
+```
+
+query
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "query --query='select * from /Account'"
+```
+
+## Deploy GemF[generated](build%2Fgenerated)ire server components
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=components/functions/gemfire-clear-region-function/build/libs/gemfire-clear-region-function-1.0.1-SNAPSHOT.jar"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "list deployed"
+```
+
+Clear All Region Data
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=ClearRegionRemoveAllFunction --region=/Account"
+```
+
 
 # Job Repository Reporting
 
@@ -47,4 +119,11 @@ order by ji.job_instance_id desc
 ```sql
 select * from taccounts.accounts;
  drop table taccounts.accounts;
+```
+
+
+GemFire query
+
+```sql
+query --query="select * from /Account  limit 40"
 ```
