@@ -29,6 +29,16 @@ Example solution
 
 
 -----------------
+# Setup 
+
+## Deploy Gemmire server components
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=components/functions/gemfire-clear-region-function/build/libs/gemfire-clear-region-function-1.0.1-SNAPSHOT.jar"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=components/functions/gemfire-delete-region-function/build/libs/gemfire-delete-region-function-1.0.0-SNAPSHOT.jar"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "list deployed"
+```
+
 # Run applications
 
 
@@ -88,12 +98,6 @@ query
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "query --query='select * from /Account'"
 ```
 
-## Deploy GemF[generated](build%2Fgenerated)ire server components
-
-```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=components/functions/gemfire-clear-region-function/build/libs/gemfire-clear-region-function-1.0.1-SNAPSHOT.jar"
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "list deployed"
-```
 
 Clear All Region Data
 

@@ -2,6 +2,8 @@ package gemfire.showcase.account.web.batch;
 
 import gemfire.showcase.account.web.batch.domain.Account;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.execute.FunctionService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -11,6 +13,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.*;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.support.SynchronizedItemStreamReader;
@@ -150,24 +153,16 @@ public class BatchAppConf {
 
     @Bean
     public Job job(JobRepository jobRepository,
-//                   @Qualifier("deleteFromGemFire")
-//                   Step deleteFromGemFireStep,
+                   @Qualifier("deleteFromGemFire")
+                   Step deleteFromGemFireStep,
                    @Qualifier("loadGemFire")
                    Step loadGemFire){
 
         return new JobBuilder(jobName,jobRepository)
-                .start(loadGemFire)
+                .start(deleteFromGemFireStep)
+                .next(loadGemFire)
                 .build();
     }
-
-//    @Bean("deleteFromGemFire")
-//    public Step loadGemFire(JobRepository jobRepository,
-//                            PlatformTransactionManager transactionManager,
-//                            GemfireTemplate gemfireTemplate) {
-//        Tasklet tasklet;
-//        return new StepBuilder("deleteFromGemFire", jobRepository)
-//                .tasklet(tasklet,transactionManager).build();
-//    }
 
     @Bean("loadGemFire")
     public Step loadGemFire(JobRepository jobRepository,
@@ -183,4 +178,39 @@ public class BatchAppConf {
                 .writer(itemWriter)
                 .build();
     }
+
+
+    @Bean("deleteFromGemFire")
+    public Step deleteAccountsByGroupIdStep(JobRepository jobRepository,
+                            @Qualifier("transactionManager")
+                            PlatformTransactionManager transactionManager,
+                                            GemfireTemplate gemfireTemplate,
+                                            Runnable runnable) {
+
+        return new StepBuilder("delete-step", jobRepository)
+                .tasklet(toTask(runnable),transactionManager)
+                .build();
+    }
+
+    @Bean
+    @StepScope
+    Runnable runnable(@Value("#{jobParameters['groupId']}") int groupId, GemfireTemplate gemfireTemplate)
+    {
+        return  () -> {
+            String[] args = {"select key from /Account.entries where value.groupId = "+groupId};
+            log.info("Execute deletes for groupId results {}",groupId);
+            var results = FunctionService.onRegion(gemfireTemplate.getRegion()).setArguments(args).execute("DeleteFunction");
+            log.info("Delete results {}",results.getResult());
+        };
+    }
+
+    public MethodInvokingTaskletAdapter toTask(Runnable runnable) {
+        MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
+
+        adapter.setTargetObject(runnable);
+        adapter.setTargetMethod("run");
+        return adapter;
+    }
+
+
 }
