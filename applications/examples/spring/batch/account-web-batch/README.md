@@ -48,6 +48,7 @@ java -jar applications/examples/spring/batch/account-web-batch/build/libs/accoun
 
 # Testing
 
+No data
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "query --query='select * from /Account'"
@@ -116,6 +117,15 @@ select ji.job_instance_id , je.*
 from boot3_batch_job_execution je, boot3_batch_job_instance ji
 where je.job_instance_id = ji.job_instance_id 
 order by ji.job_instance_id desc
+```
+
+
+View Steps
+
+```sql
+select * from boot3_batch_step_execution
+order by job_execution_id desc
+
 ```
 
 # Testing SQL(s)
