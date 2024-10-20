@@ -1,7 +1,7 @@
 Start script
 
 ```shell
-.\deployments/scripts/monitoring/start.sh
+./deployments/scripts/monitoring/start.sh
 ```
 
 Or execute from online script

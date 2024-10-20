@@ -46,7 +46,7 @@ Put String 10 character string, 10000 times with the key is generated in the ran
 
 ```shell
 
-java -Xmx1g -Xms1g  -Daction=putString -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10000]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin
+java -Xmx1g -Xms1g  -Daction=putAndGetAndQuery -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
 
 ```
 

@@ -26,6 +26,45 @@ export MAVEN_OPTS="-Dmaven.resolver.transport=wagon -Dmaven.wagon.http.ssl.insec
 mvn package
 ```
 
+# Running Application
+
+
+```shell
+java -jar applications/examples/spring/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar --spring.data.gemfire.pool.locators="localhost[10334]" --server.port=8050
+```
+
+```shell
+open http://localhost:8050
+```
+
+
+## Load Data
+
+```shell
+for i in {1..300}
+do
+  accountJson='{ "id": "';
+  accountJson+=$i;
+  accountJson+='", "name": "Account ';
+  accountJson+=$i;
+  accountJson+='"}';
+
+  curl -X 'POST' \
+  'http://localhost:8050/accounts' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d $accountJson
+  echo;  
+done
+```
+
+Get Record
+
+```shell
+curl -X 'GET' \
+  'http://localhost:8050/accounts/1' \
+  -H 'accept: */*'
+```
 
 # Docker building image
 
