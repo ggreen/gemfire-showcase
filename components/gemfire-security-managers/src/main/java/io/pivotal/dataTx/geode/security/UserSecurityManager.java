@@ -28,7 +28,8 @@ public class UserSecurityManager implements SecurityManager
 	public UserSecurityManager()
 	{
 		this(new SettingsUserService());
-	}//------------------------------------------------
+	}
+
 	
 	public UserSecurityManager(UserService userService)
 	{		
@@ -119,7 +120,8 @@ public class UserSecurityManager implements SecurityManager
 			}
 			
 			
-	}//------------------------------------------------
+	}
+
     public boolean authorize(Object principal, ResourcePermission permission)
     {
     	if(principal == null)
@@ -152,18 +154,21 @@ public class UserSecurityManager implements SecurityManager
 		}
     	
     	return hasPermission;
-    }//------------------------------------------------
+    }
+
     private Logger getLogger()
     {
     	if(logger == null)
     		logger = LogManager.getLogger(UserSecurityManager.class);
     	
     	return logger;
-    }//------------------------------------------------
+    }
+
     protected void setLogger(Logger logger)
     {
     	this.logger = logger;
-    }//------------------------------------------------
+    }
+
 
 
 }

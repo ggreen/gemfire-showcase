@@ -10,6 +10,7 @@ curl http://localhost:7778/metrics
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --skip-if-exists=true --name=Account --type=PARTITION --enable-statistics=true"
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --skip-if-exists=true --name=UserAccount --type=PARTITION --enable-statistics=true"
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --skip-if-exists=true --name=Location --type=PARTITION --enable-statistics=true"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --skip-if-exists=true --name=test --type=PARTITION --enable-statistics=true"
 
 ## simpleIndex uses default Lucene StandardAnalyzer
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "create lucene index --name=simpleIndex --region=example-search-region --field=firstName,lastName"

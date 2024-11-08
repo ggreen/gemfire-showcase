@@ -53,7 +53,7 @@ public class AclSecurityPropertiesDirector implements BuilderDirector<SecurityAc
 		
 		this.group_prefix = group_prefix;
 		this.user_prefix = user_prefix;
-	}//------------------------------------------------
+	}
 
 
 	public void construct(SecurityAclBuilder builder)
@@ -80,7 +80,7 @@ public class AclSecurityPropertiesDirector implements BuilderDirector<SecurityAc
 		
 	
 		
-		Map<Object,Object> properties = Config.getProperties();
+		Map<Object,Object> properties = Config.settings().getProperties();
 		
 		if(properties == null ||  properties.isEmpty())
 			return;

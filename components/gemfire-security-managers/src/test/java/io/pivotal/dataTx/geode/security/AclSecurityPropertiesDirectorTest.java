@@ -34,7 +34,7 @@ public class AclSecurityPropertiesDirectorTest
 		System.setProperty(systemGroupPropertName, "ALL");
 		Config.reLoad();
 		
-		assertNotNull(Config.getProperties().get(systemUserPropertName));
+		assertNotNull(Config.settings().getProperties().get(systemUserPropertName));
 		
 		SecurityAclBuilder builder = new SecurityAclBuilder()
 		{

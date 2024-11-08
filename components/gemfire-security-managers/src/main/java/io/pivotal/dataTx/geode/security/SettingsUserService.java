@@ -27,7 +27,9 @@ import nyla.solutions.core.util.settings.Settings;
 
 public class SettingsUserService implements CacheLoader<String, User>,  UserService, 
 SubjectObserver<Settings>
-{	
+{
+	private Map<String, User> declaredUsersMap = null;
+
 	/**
 	 * Property to support users being loaded from the security.properties file
 	 */
@@ -39,8 +41,8 @@ SubjectObserver<Settings>
 	 */
 	public SettingsUserService()
 	{
-		this(Config.getSettings());
-	}// --------------------------------------------------------
+		this(Config.settings());
+	}
 	
 	/**
 	 *
@@ -49,7 +51,7 @@ SubjectObserver<Settings>
 	public SettingsUserService(Settings properties)
 	{
 		loadUsersMap(properties);
-	}// --------------------------------------------------------
+	}
 
 	private void loadUsersMap(Settings settings)
 	{
@@ -62,16 +64,16 @@ SubjectObserver<Settings>
 		.map((e) -> createUserFromEntry(e)).forEach( u -> declaredUsersMap.put(u.getUserName(),u));
 		
 		settings.registerObserver(this);
-	}//------------------------------------------------
+	}
+
 	@Override
 	public void close()
 	{
-	}// --------------------------------------------------------
-	@Override
+	}
 	public User load(LoaderHelper<String, User> helper) throws CacheLoaderException
 	{
 		return this.findUser(helper.getKey());
-	}// --------------------------------------------------------
+	}
 
 	/**
 	 * 
@@ -128,7 +130,8 @@ SubjectObserver<Settings>
 			user.setPriviledges(priviledges);
 		}
 		return user;
-	}//------------------------------------------------
+	}
+
 	/**
 	 * @param  userName the user name
 	 * @return the user with a declared user name
@@ -139,14 +142,14 @@ SubjectObserver<Settings>
 			return null;
 		
 		return declaredUsersMap.get(userName.trim());
-	}// --------------------------------------------------------
+	}
 	
 	@Override
 	public void update(String subjectName, Settings settings)
 	{
 		this.loadUsersMap(settings);
-	}//------------------------------------------------
+	}
 
-	private Map<String, User> declaredUsersMap = null;
-	//private final UserRegionService userRegionService;
+
+
 }

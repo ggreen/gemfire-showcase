@@ -51,7 +51,7 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 	private String groupAttrNm  = null; //Ex: "CN";
 	protected Logger securityLogger;
 	private String serviceAccountDn = null;
-	private int timeout = Config.getPropertyInteger("LDAP_TIMEOUT", 10).intValue();
+	private int timeout = Config.settings().getPropertyInteger("LDAP_TIMEOUT", 10).intValue();
 	private LDAPConnectionFactory ldapConnectionFactory = new LDAPConnectionFactory();
 	private String ldapUrl;
 	private ExpiringKeyValueLookup<String, Principal> cachedCredentials =null;
@@ -59,13 +59,15 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 	public static org.apache.geode.security.SecurityManager create()
 	{
 		return new LdapSecurityMgr();
-	}//------------------------------------------------
+	}
+
 
 	public LdapSecurityMgr()
 	{
 		this.securityLogger = null;
 
-	}//------------------------------------------------
+	}
+
 
 	/**
 	 * @param principal the principal to authorize
@@ -111,20 +113,21 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 
 		}
 
-	}// --------------------------------------------------------------
+	}
 
 	@Override
 	public void init(final Properties securityProps)
 	throws NotAuthorizedException
 	{
 		setup(securityProps);
-	}// --------------------------------------------------------------
+	}
 
 	String toString(ResourcePermission resourcePermission)
 	{
 		return String.valueOf(resourcePermission);
 
-	}//------------------------------------------------
+	}
+
 	/**
 	 * Set up the security manager
 	 * @param securityProps the security properties
@@ -137,7 +140,7 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 		
 		setupLocalCredentialCaching(securityProps);
 		
-		this.serviceAccountDn = Config.getPropertyEnv(LdapSecurityConstants.LDAP_PROXY_DN,securityProps);
+		this.serviceAccountDn = Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_PROXY_DN,securityProps);
 
 		securityLogger.debug(LdapSecurityConstants.LDAP_PROXY_DN + " *************" + serviceAccountDn);
 
@@ -148,25 +151,25 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 
 		setupProxyPassword(securityProps);
 
-		this.ldapUrl = Config.getPropertyEnv(LdapSecurityConstants.LDAP_SERVER_URL_PROP,securityProps);
+		this.ldapUrl = Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_SERVER_URL_PROP,securityProps);
 		if (this.ldapUrl == null || this.ldapUrl.length() == 0)
 			throw new MissingSecurityProperty(LdapSecurityConstants.LDAP_SERVER_URL_PROP);
 			
 			
-		this.basedn = Config.getPropertyEnv(LdapSecurityConstants.LDAP_BASEDN_NAME_PROP,securityProps);
+		this.basedn = Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_BASEDN_NAME_PROP,securityProps);
 		if (this.basedn == null || this.basedn.length() == 0)
 			throw new MissingSecurityProperty(LdapSecurityConstants.LDAP_BASEDN_NAME_PROP);
 		
-		this.memberOfAttrNm = Config.getPropertyEnv(LdapSecurityConstants.LDAP_MEMBEROF_ATTRIB_NM_PROP,securityProps);
+		this.memberOfAttrNm = Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_MEMBEROF_ATTRIB_NM_PROP,securityProps);
 		if (this.memberOfAttrNm == null || this.memberOfAttrNm.length() == 0)
 			throw new MissingSecurityProperty(LdapSecurityConstants.LDAP_MEMBEROF_ATTRIB_NM_PROP);
 		
 		
-		this.groupAttrNm = Config.getPropertyEnv(LdapSecurityConstants.LDAP_GROUP_ATTRIB_NM_PROP,securityProps);
+		this.groupAttrNm = Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_GROUP_ATTRIB_NM_PROP,securityProps);
 		if (this.groupAttrNm == null || this.groupAttrNm.length() == 0)
 			throw new MissingSecurityProperty(LdapSecurityConstants.LDAP_GROUP_ATTRIB_NM_PROP);
 		
-		this.uidAttribute =Config.getPropertyEnv(LdapSecurityConstants.LDAP_UID_ATTRIBUTE,securityProps);
+		this.uidAttribute =Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_UID_ATTRIBUTE,securityProps);
 		if (this.uidAttribute == null || this.uidAttribute.length() == 0)
 		{
 			this.uidAttribute = "uid";
@@ -191,7 +194,8 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 
 		this.acl = builder.getAcl();
 
-	}//------------------------------------------------
+	}
+
 	/**
 	 * 
 	 * @param securityProps the properties containing the password
@@ -199,7 +203,7 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 	String setupProxyPassword(Properties securityProps)
 	{
 		
-		this.proxyPassword = Config.getPropertyEnv(LdapSecurityConstants.LDAP_PROXY_PASSWORD,securityProps);
+		this.proxyPassword = Config.config().getPropertyEnv(LdapSecurityConstants.LDAP_PROXY_PASSWORD,securityProps);
 		if (proxyPassword == null || proxyPassword.length() == 0)
 			throw new MissingSecurityProperty(LdapSecurityConstants.LDAP_PROXY_PASSWORD);
 		
@@ -207,7 +211,8 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 		
 		return this.proxyPassword;
 		
-	}//------------------------------------------------
+	}
+
 	@Override
 	public Object authenticate(final Properties props)
 	throws AuthenticationFailedException
@@ -283,7 +288,7 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 			throw new AuthenticationFailedException(e.getMessage());
 		}
 
-	}// --------------------------------------------------------------
+	}
 
 	/**
 	 * 
@@ -294,7 +299,8 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 	void setLdapConnectionFactory(LDAPConnectionFactory ldapConnectionFactory)
 	{
 		this.ldapConnectionFactory = ldapConnectionFactory;
-	}//------------------------------------------------
+	}
+
 	/**
 	 * Validate if the cache exists
 	 * @param props the security credential properties
@@ -306,7 +312,8 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 		return this.cachedCredentials != null? 
 			this.cachedCredentials.getValue(toCredentialKey(props)) :
 			null;
-	}//------------------------------------------------
+	}
+
 	/**
 	 * 
 	 * @param props
@@ -318,7 +325,8 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 		this.cachedCredentials.putEntry(
 			toCredentialKey(props),
 			principal);
-	}//------------------------------------------------
+	}
+
 	/**
 	 * Format a unique key based on prop username/password
 	 * @param props the properties
@@ -348,7 +356,7 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 			return;
 		
 
-		String msTx =  Config.getPropertyEnv(SecurityConstants.LDAP_CACHING_EXPIRATION_MS_PROP, initProps,"0");
+		String msTx =  Config.config().getPropertyEnv(SecurityConstants.LDAP_CACHING_EXPIRATION_MS_PROP, initProps,"0");
 		
 		try
 		{

@@ -30,6 +30,7 @@ public class GetRegionFromFunctionContext implements Function<FunctionContext, R
         if(!(functionContext instanceof RegionFunctionContext))
             throw  new FunctionException("Function must be executed on a region");
 
+        //local data
         return ((RegionFunctionContext)functionContext).getDataSet();
 
     }

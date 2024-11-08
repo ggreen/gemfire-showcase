@@ -15,10 +15,10 @@ import org.springframework.data.gemfire.config.annotation.EnablePdx;
 import org.springframework.data.gemfire.repository.config.EnableGemfireRepositories;
 
 @ClientCacheApplication
+@EnableGemfireRepositories
+@EnablePdx
 @EnableSecurity
 @Configuration
-@EnablePdx
-@EnableGemfireRepositories
 public class GemFireConf
 {
 

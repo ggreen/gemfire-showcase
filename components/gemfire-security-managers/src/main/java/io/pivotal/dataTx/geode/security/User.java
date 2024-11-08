@@ -15,14 +15,18 @@ public class User implements PdxSerializable, Serializable
 	 * 
 	 */
 	private static final long serialVersionUID = 7849491509886229835L;
-	
-	
+
+	private String userName;
+	private byte[] encryptedPassword;
+	private Collection<String> priviledges;
+
+
 	public User()
 	{
-	}//------------------------------------------------
+	}
+
 	public User(String userName, byte[] password, Collection<String> priviledges)
 	{
-		super();
 		this.userName = userName;
 		this.encryptedPassword = password;
 		this.priviledges = priviledges;
@@ -113,10 +117,4 @@ public class User implements PdxSerializable, Serializable
 			writer.writeStringArray("priviledges", array);
 		}
 	}
-
-
-	private String userName;
-	private byte[] encryptedPassword;
-	private Collection<String> priviledges;
-	
 }

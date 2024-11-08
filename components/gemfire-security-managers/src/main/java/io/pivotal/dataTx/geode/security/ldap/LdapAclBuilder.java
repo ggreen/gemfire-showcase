@@ -23,7 +23,7 @@ public class LdapAclBuilder extends SecurityAclBuilder
 
 			this.acl.addEntry(null, principal, new SecurityPermissionContains(permission));
 		
-	}//------------------------------------------------
+	}
 	
 	public void buildUserPermission(String user, String permission)
 	{

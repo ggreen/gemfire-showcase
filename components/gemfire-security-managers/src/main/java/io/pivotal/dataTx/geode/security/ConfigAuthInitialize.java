@@ -2,6 +2,7 @@ package io.pivotal.dataTx.geode.security;
 
 import java.util.Properties;
 
+import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.LogWriter;
 import org.apache.geode.distributed.DistributedMember;
 import org.apache.geode.security.AuthInitialize;
@@ -30,13 +31,15 @@ implements AuthInitialize
 	public final static String USER_NAME = "security-username";
 	public final static String PASSWORD = "security-password";
 	public final static String TOKEN = "security-token";
+	private final Settings config = Config.settings();
 	
 	  /**
 	   * Constructor
 	   */
 	  protected ConfigAuthInitialize()
 	  {
-	  }//------------------------------------------------
+	  }
+
 	  public static AuthInitialize create() {
 	    return new ConfigAuthInitialize();
 	  }
@@ -61,25 +64,26 @@ implements AuthInitialize
 	    if(password == null || password.length() == 0 )
 	    	password = getSecurityPassword();
 	    
-	    String token = Config.getProperty(TOKEN,"");
+	    String token = config.getProperty(TOKEN,"");
 	    
 	        props.setProperty(USER_NAME, username);
 	      props.setProperty(PASSWORD, password);
 	      props.setProperty(TOKEN, token);
 	      
 	    return props;
-	  }//------------------------------------------------
+	  }
+
 	protected String getSecurityPassword()
 	{
-		String password = Config.getProperty(PASSWORD,Config.getProperty("SECURITY_PASSWORD",""));
+		String password = config.getProperty(PASSWORD,config.getProperty("SECURITY_PASSWORD",""));
 		return password;
-	}//------------------------------------------------
+	}
+
 	protected String getSecurityUserName()
 	{
-		String username = Config.getProperty(USER_NAME,Config.getProperty("SECURITY_USERNAME",""));
+		String username = config.getProperty(USER_NAME,config.getProperty("SECURITY_USERNAME",""));
 		return username;
-	}//------------------------------------------------
-
+	}
 
 	@Override
 	  public void init(LogWriter logWriter, LogWriter securityLogWriter)

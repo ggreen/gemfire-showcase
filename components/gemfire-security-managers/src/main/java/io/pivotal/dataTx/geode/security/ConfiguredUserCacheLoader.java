@@ -25,7 +25,10 @@ import nyla.solutions.core.util.settings.Settings;
  */
 
 public class ConfiguredUserCacheLoader implements CacheLoader<String, User>,  UserService
-{	
+{
+
+	private Map<String, User> declaredUsersMap = null;
+
 	/**
 	 * Property to support users being loaded from the security.properties file
 	 */
@@ -35,20 +38,23 @@ public class ConfiguredUserCacheLoader implements CacheLoader<String, User>,  Us
 	@Override
 	public void close()
 	{
-	}// --------------------------------------------------------
+	}
+
 	@Override
 	public User load(LoaderHelper<String, User> helper) throws CacheLoaderException
 	{
 		return this.findUser(helper.getKey());
-	}// --------------------------------------------------------
+	}
+
 
 	/**
 	 * Factory method to create declare user loader from properties
 	 */
 	public ConfiguredUserCacheLoader()
 	{
-		this(Config.getSettings());
-	}// --------------------------------------------------------
+		this(Config.settings());
+	}
+
 	
 	/**
 	 *
@@ -57,14 +63,12 @@ public class ConfiguredUserCacheLoader implements CacheLoader<String, User>,  Us
 	public ConfiguredUserCacheLoader(Settings properties)
 	{
 		
-		
 		this.declaredUsersMap = new HashMap<String,User>();
 		
 		properties.getProperties().entrySet().stream().filter((e)->e.getKey().toString().contains(SECURITY_USERS_PROP))
 		.map((e) -> createUserFromEntry(e)).forEach( u -> declaredUsersMap.put(u.getUserName(),u));
-		
-		
-	}// --------------------------------------------------------
+	}
+
 	/**
 	 * 
 	 * @param entry the property map entry
@@ -116,7 +120,8 @@ public class ConfiguredUserCacheLoader implements CacheLoader<String, User>,  Us
 			user.setPriviledges(priviledges);
 		}
 		return user;
-	}//------------------------------------------------
+	}
+
 	/**
 	 * @param  userName the user name
 	 * @return the user with a declared user name
@@ -127,8 +132,6 @@ public class ConfiguredUserCacheLoader implements CacheLoader<String, User>,  Us
 			return null;
 		
 		return declaredUsersMap.get(userName);
-	}// --------------------------------------------------------
+	}
 
-	private Map<String, User> declaredUsersMap = null;
-	//private final UserRegionService userRegionService;
 }
