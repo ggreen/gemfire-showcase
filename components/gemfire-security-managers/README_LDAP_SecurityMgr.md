@@ -1,59 +1,65 @@
 # Overview
 
-This module contains a LDAP based implementation of the GemFire/Geode 9.x [integrated security manager](https://gemfire.docs.pivotal.io/geode/managing/security/implementing_authentication.html).
+This module contains an LDAP based implementation of the GemFire [security manager](https://docs.vmware.com/en/VMware-GemFire/9.15/gf/managing-security-custom_security_manager_example.html).
 
-Note this package supports [GemFire](https://tanzu.vmware.com/gemfire) version 9.10.0 or higher and [nyla.solutions.core](https://github.com/nyla-solutions/nyla/tree/master) version 1.2.4 or higher.
+Note this package supports [GemFire](https://tanzu.vmware.com/gemfire) version 10.0.0 or higher and [nyla.solutions.core](https://github.com/nyla-solutions/nyla/tree/master) version 2.2.2 or higher.
 
 
 ## Cluster Startup
 
 1) Set the CRYPTION_KEY environment variable used for encrypting/decrypting passwords prior to starting the cluster
-	
-		export CRYPTION_KEY=PIVOTAL
-		
+
+```shell
+export CRYPTION_KEY=PIVOTAL
+```
+
 You should assert that the CRYPTION_KEY value is a minimum of 16 characters.
 
 2) Setup GemFire Security Property File
 
 The following is an example security property file content (ex: gfldapsecurity.properties)
 
-		# LDAP PROXY user DN used to for all authentication LDAP request
-		security-ldap-proxy-dn=uid=admin,ou=system
+
+```properties
+# LDAP PROXY user DN used to for all authentication LDAP request
+security-ldap-proxy-dn=uid=admin,ou=system
+
+# LDAP PROXY user password (encrypted or un-encrypted passwords supported) 
+security-ldap-proxy-password=secret
+
+# LDAP server URL
+security-ldap-server-url=ldap://localhost:389
+
+# LDAP base dn to search for user for authentication reques
+security-ldap-base-dn=ou=system
+
+# LDAP attribute that will match the user ID
+security-ldap-uid-attribute=uid
+
+# The LDAP  attribute the indicates the users' group associations
+security-ldap-memberOf-attribute=memberOf
+
+# The LDAP GROUP attribute that will match the security-ldap-acl-group-${??} property
+security-ldap-group-attribute=CN
+
+# Example Access Control Lists
+# user nyla has permission to read data
+
+security-ldap-acl-user-nyla=DATA:READ
 		
-		# LDAP PROXY user password (encrypted or un-encrypted passwords supported) 
-		security-ldap-proxy-password=secret
-		
-		# LDAP server URL
-		security-ldap-server-url=ldap://localhost:389
-		
-		# LDAP base dn to search for user for authentication reques
-		security-ldap-base-dn=ou=system
-		
-		# LDAP attribute that will match the user ID
-		security-ldap-uid-attribute=uid
-		
-		# The LDAP  attribute the indicates the users' group associations
-		security-ldap-memberOf-attribute=memberOf
-		
-		# The LDAP GROUP attribute that will match the security-ldap-acl-group-${??} property
-		security-ldap-group-attribute=CN
-		
-		# Example Access Control Lists
-		# user nyla has permission to read data
-		
-		security-ldap-acl-user-nyla=DATA:READ
-		
-		# user cluster has permission to performance any cluster operation
-		security-ldap-acl-user-cluster=CLUSTER
-		
-		# user admin ALL permissions
-		security-ldap-acl-user-admin=ALL
-		security-ldap-acl-group-administrator=ALL
-		
-		
-		# User credentials used to join the GemFire cluster
-		security-username=cluster
-		security-password={cryption}6rvSAHPquoSszq1SVlbnrw==
+# user cluster has permission to performance any cluster operation
+security-ldap-acl-user-cluster=CLUSTER
+
+# user admin ALL permissions
+security-ldap-acl-user-admin=ALL
+security-ldap-acl-group-administrator=ALL
+
+
+# User credentials used to join the GemFire cluster
+security-username=cluster
+security-password={cryption}6rvSAHPquoSszq1SVlbnrw==
+```
+
 
 
 
@@ -63,13 +69,15 @@ The Access Control List (ACL) permissions the property file are based on the Gem
 
 The following is an example file content
 
-	# Users
-	security-ldap-acl-user.<userName1>=[privilege] [,privilege]* 
-	security-ldap-acl-user.<userName2>=[privilege] [,privilege]* 
-	
-	# Groups
-	security-ldap-acl-group-${groupID1}=[privilege] [,privilege]*
-	security-ldap-acl-group-${groupID2}=[privilege] [,privilege]*
+```properties
+# Users
+security-ldap-acl-user.<userName1>=[privilege] [,privilege]* 
+security-ldap-acl-user.<userName2>=[privilege] [,privilege]* 
+
+# Groups
+security-ldap-acl-group-${groupID1}=[privilege] [,privilege]*
+security-ldap-acl-group-${groupID2}=[privilege] [,privilege]*
+```
 
 
 The following are example ACLs permissions privilege
@@ -94,24 +102,27 @@ The following are example ACLs permissions privilege
 
 In the following file content property example, the "cluster" LDAP user is given both CLUSTER:READ and CLUSTER:MANAGE permissions.
 
-	security-ldap-acl-user-cluster=CLUSTER:READ,CLUSTER:MANAGE
+```properties
+security-ldap-acl-user-cluster=CLUSTER:READ,CLUSTER:MANAGE
+```
 
 See the following are all supported permissions: 
 
-
-[https://gemfire.docs.pivotal.io/geode/managing/security/implementing_authorization.html](https://gemfire.docs.pivotal.io/geode/managing/security/implementing_authorization.html)
+[GemFire Authorization](https://docs.vmware.com/en/VMware-GemFire/10.1/gf/managing-security-implementing_authorization.html)
 
 
 ## Password Encryption Support
 
-You can use the [dataTx-geode-password-encryption-app-<VERSION>.jar][../security-password-app] to generate an encrypted password. 
+You can use the [security-password-app](../../applications/security/security-password-app) to generate an encrypted password. 
 
 Usage java -DCRYPTION_KEY=<HASH -jar dataTx-geode-password-encryption-app-2.0.0.jar  <pass>
 
 Example:
 
-	java -DCRYPTION_KEY=MYSALT -jar security-password-app/target/dataTx-geode-password-encryption-app-2.0.0.jar mypassword
-	{cryption}sdsdk7h7LmK3WO+dQlGQsds==
+```shell
+java -DCRYPTION_KEY=MYSALT -jar applications/security/security-password-app/build/libs/security-password-app-0.0.1-SNAPSHOT.jar mypassword	
+{cryption}OUTPUT_EXAMPLE
+```
 
 The encrypted password is always prefixed with {cryption}. This prefixed should be included in the property passwords.
 
@@ -119,7 +130,12 @@ The encrypted password is always prefixed with {cryption}. This prefixed should 
 
 The following are example gfsh commands to start a single locator
 
-		start locator --name=local  --J=-DCRYPTION_KEY=PIVOTAL --http-service-bind-address=localhost --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar --enable-cluster-configuration  --http-service-port=7070 --security-properties-file=/Projects/solutions/gedi/dev/gedi-geode/gedi-geode-extensions-core/src/test/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.ldap.LdapSecurityMgr   --connect=false
+```shell
+cd $GEMFIRE_HOME/bin
+export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
+
+$GEMFIRE_HOME/bin/gfsh -e "start locator --name=local  --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --http-service-bind-address=localhost --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.2.jar --enable-cluster-configuration  --http-service-port=7070 --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr   --connect=false"
+```
 
  Note, it is recommended to replace --J=-DCRYPTION_KEY=PIVOTAL with setting an environment variable (ex: export CRYPTION_KEY=MYSALT) for added security protection. This will provide user for know the cryption salt by inspecting the arguments to the GemFire process.
  
@@ -128,11 +144,17 @@ The following are example gfsh commands to start a single locator
 
 The following are example gfsh commands to start two data node cache servers
 
-		start server --name=server1  --J=-DCRYPTION_KEY=PIVOTAL --use-cluster-configuration=true --server-port=9001 --locators=localhost[10334] --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar  --http-service-port=7070 --security-properties-file=/Projects/solutions/gedi/dev/gedi-geode/gedi-geode-extensions-core/src/test/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.ldap.LdapSecurityMgr --user=admin --password={cryption}g1bq3hd3jagIbdlXixsBg==
+```shell
+cd $GEMFIRE_HOME/bin
+export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
+
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server1   --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10001 --http-service-port=7071 --locators=localhost[10334]  --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.2.jar   --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr" 
 		
-		start server --name=server2  --J=-DCRYPTION_KEY=PIVOTAL --use-cluster-configuration=true --server-port=9002 --locators=localhost[10334] --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar  --http-service-port=7070 --security-properties-file=/Projects/solutions/gedi/dev/gedi-geode/gedi-geode-extensions-core/src/test/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.ldap.LdapSecurityMgr --user=admin --password=secret
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server2  --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10002  --http-service-port=7072  --locators=localhost[10334] --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.2.jar   --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties  --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr"
+```
+		
 	
- Note, it is recommended to replace --J=-DCRYPTION_KEY=PIVOTAL with setting an environment variable (ex: export CRYPTION_KEY=MYSALT) and to use encrypted passwords.
+Note, it is recommended to replace --J=-DCRYPTION_KEY=PIVOTAL with setting an environment variable (ex: export CRYPTION_KEY=MYSALT) and to use encrypted passwords.
  
 After startup, gfsh and pulse will require a username/password to connect.
 
@@ -145,25 +167,31 @@ When using  both LDAPS and enables  GemFire SSL components like JMX, you should 
 
 LDAP properties
 
-|  Property | Notes  |
-|---|---|
-| LDAP_USE_SSL_CONFIG_FACTORY  |(**true** or **false**)  Boolean value to determine if LDAPS is used with the following configurations properties |
-|  LDAP_SSL_KEYSTORE         | The SSL KEYSTORE file path location |
-|  LDAP_SSL_TRUSTSTORE          | The SSL KEYSTORE file path location |
-| LDAP_SSL_KEYSTORE_PASSWORD    | The password for the key store  |
-| LDAP_SSL_TRUSTSTORE_PASSSWORD | The password for the trust store |
+| Property                      | Notes                                                                                                             |
+|-------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| LDAP_USE_SSL_CONFIG_FACTORY   | (**true** or **false**)  Boolean value to determine if LDAPS is used with the following configurations properties |
+| LDAP_SSL_KEYSTORE             | The SSL KEYSTORE file path location                                                                               |
+| LDAP_SSL_TRUSTSTORE           | The SSL KEYSTORE file path location                                                                               |
+| LDAP_SSL_KEYSTORE_PASSWORD    | The password for the key store                                                                                    |
+| LDAP_SSL_TRUSTSTORE_PASSSWORD | The password for the trust store                                                                                  |
 
 EXAMPLE
 
-    export LDAP_USE_SSL_CONFIG_FACTORY=true
+```shell
+export LDAP_USE_SSL_CONFIG_FACTORY=true
+```
+    
 
 You will also need to set the following in the setenv, based on a separate keystore
 to used for LDAP.
 
-    export LDAP_SSL-KEYSTORE=...
-    export LDAP-SSL-TRUSTSTORE=..
-    export LDAP-SSL-KEYSTORE-PASSWORD=..
-    export LDAP-SSL-TRUSTSTORE-PASSSWORD=..
+```shell
+export LDAP_SSL-KEYSTORE=...
+export LDAP-SSL-TRUSTSTORE=..
+export LDAP-SSL-KEYSTORE-PASSWORD=..
+export LDAP-SSL-TRUSTSTORE-PASSSWORD=..
+```
+    
 
 # Local Integration LDAP Testings
 
@@ -171,19 +199,20 @@ to used for LDAP.
 
 For local testing, it is recommended to use [ApacheDS](http://directory.apache.org/apacheds/).
 
-For an easy install on a Mac, it is also recommended to use the [h3nrik/apacheds](https://hub.docker.com/r/h3nrik/apacheds) docker image.
 
-Use the following to build the image
+```shell
+cd /Users/devtools/repositories/ds/ApacheDS/apacheds-2.0.0.AM28-SNAPSHOT/
+./bin/apacheds.sh default start
+```
 
-	docker build -t h3nrik/apacheds .
-
-Run the container using the following command
-
-	docker run --name ldap -d -p 389:10389 h3nrik/apacheds
-
-
-The Apache DS will now be available on port 389. 
+The Apache DS will be available on port 10389. 
 The default user/password is admin/secret.
+
+```properties
+uid=admin,ou=system
+password=secret
+port=10389
+```
 
 You can use  [ApacheDS Studio](http://directory.apache.org/studio/) the add users for testing.
 

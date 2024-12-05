@@ -1,9 +1,10 @@
 dn: uid=nyla,ou=system
 objectClass: inetOrgPerson
 objectClass: top
-objectClass: person 
+objectClass: person
 objectClass: organizationalPerson
 cn: nyla 
-uid: nyla 
+uid: nyla
+displayName: Directory Superuser
 sn: administrator
 userPassword: nyla

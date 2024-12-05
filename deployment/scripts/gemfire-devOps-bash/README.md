@@ -399,7 +399,7 @@ You must set the CRYPTION_KEY environment variable or as a JVM system property o
 To use file property based security set the Geode security property in the setenv.sh.
 
 
-  export SECURITY_MANAGER=io.pivotal.dataTx.geode.security.UserSecurityManager
+  export SECURITY_MANAGER=showcase.gemfire.security.UserSecurityManager
 
   ### Configured Users
 
@@ -446,7 +446,7 @@ To use file property based security set the Geode security property in the seten
 
 Use the following to enable LDAP security.
 
-    export SECURITY_MANAGER=io.pivotal.dataTx.geode.security.ldap.LdapSecurityMgr
+    export SECURITY_MANAGER=ldap.showcase.gemfire.security.LdapSecurityMgr
 
 
     export SECURITY_LDAP_SERVER_URL=ldap://host:389
@@ -585,11 +585,11 @@ export SECURITY_PASSWORD={cryption}cndnirPoK+LecJOcWhnXmg==
 export CRYPTION_KEY=PIVOTAL
 
 # File based security Support
-export SECURITY_MANAGER=io.pivotal.dataTx.geode.security.UserSecurityManager
+export SECURITY_MANAGER=showcase.gemfire.security.UserSecurityManager
 #export SECURITY_MANAGER=
 export SECURITY_USER_PROPERTIES=$PWD/config/users.properties
 
-#export SECURITY_MANAGER=io.pivotal.dataTx.geode.security.ldap.LdapSecurityMgr
+#export SECURITY_MANAGER=ldap.showcase.gemfire.security.LdapSecurityMgr
 
 # LDAP support
 

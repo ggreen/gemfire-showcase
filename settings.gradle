@@ -17,3 +17,4 @@ include 'components', 'shared', 'applications:examples:spring:spring-gateway-hea
 include 'components', 'shared', 'applications:examples:account-gemfire-service'
 include 'components', 'shared', 'applications:examples:spring:pdx-migration'
 include 'components', 'shared', 'applications:examples:spring:batch:account-web-batch'
+include 'components', 'shared', 'applications:security:security-password-app'

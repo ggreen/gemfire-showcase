@@ -1,9 +1,10 @@
 dn: uid=cluster,ou=system
 objectClass: inetOrgPerson
 objectClass: top
-objectClass: person 
+objectClass: person
 objectClass: organizationalPerson
-cn: cluster 
-uid: cluster 
+cn: cluster
+uid: cluster
+displayName: cluster
 sn: administrator
 userPassword: cluster

@@ -1,9 +1,9 @@
 dn: uid=datawrite,ou=system
 objectClass: inetOrgPerson
 objectClass: top
-objectClass: person 
+objectClass: person
 objectClass: organizationalPerson
-cn: datawrite 
-uid: datawrite 
+cn: datawrite
+uid: datawrite
 sn: administrator
 userPassword: datawrite

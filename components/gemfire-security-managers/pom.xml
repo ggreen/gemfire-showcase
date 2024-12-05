@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.pivotal.services.dataTx</groupId>
 	<artifactId>gemfire-security-managers</artifactId>
-	<version>2.1.2-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 	<name>gemfire-security-managers</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,7 +12,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<gemfire-version>9.15.3</gemfire-version>
 		<java.version>17</java.version>
-		<nyla.solutions.core.version>2.0.0</nyla.solutions.core.version>
+		<nyla.solutions.core.version>2.2.2</nyla.solutions.core.version>
 	</properties>
 	<dependencies>
 		<dependency>

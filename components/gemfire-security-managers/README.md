@@ -55,10 +55,10 @@ See [LDAP Security manager](README_LDAP_SecurityMgr.md)
   
 # Property File Security Manager
 
-The class [io.pivotal.dataTx.geode.security.UserSecurityManager](https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions/blob/master/security-core/src/main/java/io/pivotal/dataTx/geode/security/UserSecurityManager.java) implementation property file based security implementation. The following explains how to deploy the file properties based user implementation of the
+The class [showcase.gemfire.security.UserSecurityManager](https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions/blob/master/security-core/src/main/java/io/pivotal/dataTx/geode/security/UserSecurityManager.java) implementation property file based security implementation. The following explains how to deploy the file properties based user implementation of the
 security manager.
 
-Set the GemFire security property **security-manager**=*io.pivotal.dataTx.geode.security.UserSecurityManager* 
+Set the GemFire security property **security-manager**=*showcase.gemfire.security.UserSecurityManager* 
 
 
  
@@ -67,18 +67,18 @@ Set the GemFire security property **security-manager**=*io.pivotal.dataTx.geode.
 The following is an example gfsh command to start the locator
 
 
-The key is setting the Gemfire property `security-manager=io.pivotal.dataTx.geode.security.UserSecurityManager`. Note the jar nyla.solutions.core-VERSION.jar and `dataTx-geode-security-extensions-VERSION.jar` jars must be added to the CLASSPATH.
+The key is setting the Gemfire property `security-manager=showcase.gemfire.security.UserSecurityManager`. Note the jar nyla.solutions.core-VERSION.jar and `dataTx-geode-security-extensions-VERSION.jar` jars must be added to the CLASSPATH.
  
  Inside of gfsh execute the following
  
  
-    start locator --name=locator --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties"  --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.UserSecurityManager --J=-Dgemfire.jmx-manager-start=true --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar --enable-cluster-configuration --locators=localhost[10334]  --connect=false
+    start locator --name=locator --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties"  --J=-Dgemfire.security-manager=showcase.gemfire.security.UserSecurityManager --J=-Dgemfire.jmx-manager-start=true --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar --enable-cluster-configuration --locators=localhost[10334]  --connect=false
     
 The following is an example gfsh command to start two servers where the JARS and properties must be set similar to the locator.
     
-    start server --name=server1 --locators=localhost[10334] --server-port=10201  --use-cluster-configuration=true --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties" --user=admin --password="admin" --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.UserSecurityManager  --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar
+    start server --name=server1 --locators=localhost[10334] --server-port=10201  --use-cluster-configuration=true --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties" --user=admin --password="admin" --J=-Dgemfire.security-manager=showcase.gemfire.security.UserSecurityManager  --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar
     
-    start server --name=server2 --locators=localhost[10334] --server-port=10202  --use-cluster-configuration=true --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties" --user=admin --password="admin" --J=-Dgemfire.security-manager=io.pivotal.dataTx.geode.security.UserSecurityManager  --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar
+    start server --name=server2 --locators=localhost[10334] --server-port=10202  --use-cluster-configuration=true --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties" --user=admin --password="admin" --J=-Dgemfire.security-manager=showcase.gemfire.security.UserSecurityManager  --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar
     
  *Note it is recommended to use encrypted passwords*. 
   
