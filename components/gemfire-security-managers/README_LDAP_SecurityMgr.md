@@ -2,7 +2,11 @@
 
 This module contains an LDAP based implementation of the GemFire [security manager](https://docs.vmware.com/en/VMware-GemFire/9.15/gf/managing-security-custom_security_manager_example.html).
 
-Note this package supports [GemFire](https://tanzu.vmware.com/gemfire) version 10.0.0 or higher and [nyla.solutions.core](https://github.com/nyla-solutions/nyla/tree/master) version 2.2.2 or higher.
+Note this package supports the following
+
+- [GemFire](https://tanzu.vmware.com/gemfire) version 10.0.0 or higher
+- [nyla.solutions.core](https://github.com/nyla-solutions/nyla/tree/master) version 2.2.3 or higher.
+- Java JDK 17 or higher
 
 
 ## Cluster Startup
@@ -134,7 +138,7 @@ The following are example gfsh commands to start a single locator
 cd $GEMFIRE_HOME/bin
 export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
 
-$GEMFIRE_HOME/bin/gfsh -e "start locator --name=local  --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --http-service-bind-address=localhost --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.2.jar --enable-cluster-configuration  --http-service-port=7070 --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr   --connect=false"
+$GEMFIRE_HOME/bin/gfsh -e "start locator --name=local  --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --http-service-bind-address=localhost --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.3.jar --enable-cluster-configuration  --http-service-port=7070 --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr   --connect=false"
 ```
 
  Note, it is recommended to replace --J=-DCRYPTION_KEY=PIVOTAL with setting an environment variable (ex: export CRYPTION_KEY=MYSALT) for added security protection. This will provide user for know the cryption salt by inspecting the arguments to the GemFire process.
@@ -148,13 +152,19 @@ The following are example gfsh commands to start two data node cache servers
 cd $GEMFIRE_HOME/bin
 export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
 
-$GEMFIRE_HOME/bin/gfsh -e "start server --name=server1   --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10001 --http-service-port=7071 --locators=localhost[10334]  --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.2.jar   --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr" 
-		
-$GEMFIRE_HOME/bin/gfsh -e "start server --name=server2  --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10002  --http-service-port=7072  --locators=localhost[10334] --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.2.jar   --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties  --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr"
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server1   --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10001 --http-service-port=7071 --locators=localhost[10334]  --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.3.jar   --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr"
+```
+
+Stop Server 2
+```shell
+cd $GEMFIRE_HOME/bin
+export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
+
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server2  --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10002  --http-service-port=7072  --locators=localhost[10334] --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-2.0.1-SNAPSHOT.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.3.jar   --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/main/resources/ldap/gfldapsecurity.properties  --J=-Dgemfire.security-manager=showcase.gemfire.security.ldap.LdapSecurityMgr"
 ```
 		
 	
-Note, it is recommended to replace --J=-DCRYPTION_KEY=PIVOTAL with setting an environment variable (ex: export CRYPTION_KEY=MYSALT) and to use encrypted passwords.
+Note, it is recommended to replace --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND with setting an environment variable (ex: export CRYPTION_KEY=MYSALT) and to use encrypted passwords.
  
 After startup, gfsh and pulse will require a username/password to connect.
 
@@ -167,13 +177,13 @@ When using  both LDAPS and enables  GemFire SSL components like JMX, you should 
 
 LDAP properties
 
-| Property                      | Notes                                                                                                             |
-|-------------------------------|-------------------------------------------------------------------------------------------------------------------|
-| LDAP_USE_SSL_CONFIG_FACTORY   | (**true** or **false**)  Boolean value to determine if LDAPS is used with the following configurations properties |
-| LDAP_SSL_KEYSTORE             | The SSL KEYSTORE file path location                                                                               |
-| LDAP_SSL_TRUSTSTORE           | The SSL KEYSTORE file path location                                                                               |
-| LDAP_SSL_KEYSTORE_PASSWORD    | The password for the key store                                                                                    |
-| LDAP_SSL_TRUSTSTORE_PASSSWORD | The password for the trust store                                                                                  |
+| Property                     | Notes                                                                                                             |
+|------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| LDAP_USE_SSL_CONFIG_FACTORY  | (**true** or **false**)  Boolean value to determine if LDAPS is used with the following configurations properties |
+| LDAP_SSL_KEYSTORE            | The SSL KEYSTORE file path location                                                                               |
+| LDAP_SSL_TRUSTSTORE          | The SSL KEYSTORE file path location                                                                               |
+| LDAP_SSL_KEYSTORE_PASSWORD   | The password for the key store                                                                                    |
+| LDAP_SSL_TRUSTSTORE_PASSWORD | The password for the trust store                                                                                  |
 
 EXAMPLE
 

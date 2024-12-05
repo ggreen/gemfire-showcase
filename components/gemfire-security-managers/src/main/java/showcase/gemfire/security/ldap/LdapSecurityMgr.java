@@ -90,10 +90,13 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 				return false;
 			}
 
+			var startTime = System.currentTimeMillis();
+
 			boolean authorized = acl.checkPermission((Principal) principal, toString(context));
 
-			securityLogger
-			.debug("principal:" + principal + " context:" + context + " authorized:" + authorized + " acl:" + acl);
+            securityLogger
+					.debug("AUTH: {}, in {} milliseconds for principal:{} context:{} authorized:{} acl:{}",
+							authorized, System.currentTimeMillis()-startTime, principal, context, authorized, acl);
 
 			return authorized;
 
@@ -220,14 +223,18 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 		if(props == null)
 			throw new AuthenticationFailedException(
 			"Authentication securities properties not provided");
-		
+
+		var startTime = System.currentTimeMillis();
+
 		//Keeping if local caching is configured
 		if(this.cachedCredentials != null)
 		{
 			Principal cachedPrincipal = this.cachedCredentials.getValue(this.toCredentialKey(props));
-			
-			if(cachedPrincipal != null)
+
+			if(cachedPrincipal != null) {
+				securityLogger.info("Authenticated user: {} in {} milliseconds",cachedPrincipal.getName(),System.currentTimeMillis()-startTime);
 				return cachedPrincipal;
+			}
 		}
 
 		String userName = props.getProperty(LdapSecurityConstants.USER_NAME_PROP);
@@ -256,8 +263,9 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 			}
 			catch(Exception e)
 			{
-				securityLogger.warn("Detected password interpration error. This may be caused by an incorrect password, but you should check that the CRYPTION_KEY environment variable is a minimum of 16 characters, then regenerate any needed passwords.");
-				throw new AuthenticationFailedException(e.getMessage());
+				securityLogger.warn("Authentication failed user: {} ,Detected password interpretation error. This may be caused by an incorrect password, but you should check that the CRYPTION_KEY environment variable is a minimum of 16 characters, then regenerate any needed passwords. See https://github.com/nyla-solutions/nyla?tab=readme-ov-file#cryption",
+						userName);
+				throw new AuthenticationFailedException("Authentication due to decryption error, check the value of check that the encryption environment variables.");
 			
 			}
 		
@@ -266,20 +274,22 @@ public class LdapSecurityMgr implements org.apache.geode.security.SecurityManage
 			
 			Principal principal = ldap.authenicate(userName, passwd.toCharArray(), this.basedn, uidAttribute, memberOfAttrNm,
 			groupAttrNm, timeout);
-			
-			securityLogger.debug("AUTHENTICATED:"+principal);
+
+            securityLogger.debug("AUTHENTICATED:{}", userName);
 			
 			//Cached the authenticated user if configured caching
 			if(this.cachedCredentials != null)
 			{
 				this.temporaryCacheCredentails(props, principal);
 			}
-			
+
+			securityLogger.info("Authenticated user: {} in {} milliseconds",userName,System.currentTimeMillis()-startTime);
+
 			return principal;
 		}
 		catch(AuthenticationFailedException e)
 		{
-			securityLogger.warn(e);
+            securityLogger.warn("Failed authentication for: {}", userName);
 			throw e;
 		}
 		catch (NamingException |RuntimeException e)

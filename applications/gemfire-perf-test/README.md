@@ -36,7 +36,11 @@ docker push cloudnativedata/apache-gemfire-perf-test:0.0.1-SNAPSHOT
 
 # Running test
 
-
+Security Properties
+```properties
+spring.data.gemfire.security.username=admin
+spring.data.gemfire.security.password=secret
+```
 
 ## Region Put Test
 
