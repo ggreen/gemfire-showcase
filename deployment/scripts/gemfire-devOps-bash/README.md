@@ -399,7 +399,7 @@ You must set the CRYPTION_KEY environment variable or as a JVM system property o
 To use file property based security set the Geode security property in the setenv.sh.
 
 
-  export SECURITY_MANAGER=showcase.gemfire.security.UserSecurityManager
+  export SECURITY_MANAGER=tanzu.gemfire.security.UserSecurityManager
 
   ### Configured Users
 
@@ -585,7 +585,7 @@ export SECURITY_PASSWORD={cryption}cndnirPoK+LecJOcWhnXmg==
 export CRYPTION_KEY=PIVOTAL
 
 # File based security Support
-export SECURITY_MANAGER=showcase.gemfire.security.UserSecurityManager
+export SECURITY_MANAGER=tanzu.gemfire.security.UserSecurityManager
 #export SECURITY_MANAGER=
 export SECURITY_USER_PROPERTIES=$PWD/config/users.properties
 
