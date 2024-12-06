@@ -21,7 +21,7 @@ Supported Security Extensions
  - LDAPS/TLS/SSL
  - Supports LDAP authentication caching with a timeout to survive LDAP network hiccups and optimizations when using  the GemFire REST API.
 
-**2- [File Properties](README.md)**
+**2- [File Properties](README.md#property-file-security-manager)**
 
  - User level permissions
  - Password encryption in-flight 
