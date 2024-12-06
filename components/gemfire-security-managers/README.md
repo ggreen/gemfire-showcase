@@ -6,6 +6,10 @@ capabilities for an [GemFire](https://tanzu.vmware.com/gemfire)/[Apache Geode cl
 This implementation is derived from other [open source framework](https://github.com/nyla-solutions/gedi-geode-security-extensions).
 
 
+This reference implementation security manager has been proven to work in
+production for several GemFire deployments.
+
+
 Supported Security Extensions
 
 **1 - [LDAP](README_LDAP_SecurityMgr.md)** 
