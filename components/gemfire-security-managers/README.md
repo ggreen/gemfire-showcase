@@ -1,4 +1,4 @@
-# Geode Security Extensions
+# GemFire Security Managers
 
 This project provides a simple file or LDAP based Security Manager 
 capabilities for an [GemFire](https://tanzu.vmware.com/gemfire)/[Apache Geode cluster](https://geode.apache.org/).
