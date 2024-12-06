@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import nyla.solutions.core.util.Cryption;
 import nyla.solutions.core.util.Debugger;
+import tanzu.gemfire.security.settings.SettingsUserService;
 
 
 /**
@@ -24,7 +25,8 @@ public class UserSecurityManager implements SecurityManager
 	
     private Logger logger = null;
     private final UserService userService;
-	
+	private final Cryption userSecurityManagerCryption;
+
 	public UserSecurityManager()
 	{
 		this(new SettingsUserService());
@@ -32,19 +34,20 @@ public class UserSecurityManager implements SecurityManager
 
 	
 	public UserSecurityManager(UserService userService)
-	{		
+	{
+		this.userSecurityManagerCryption = new Cryption();
 		this.userService = userService;
 	}
 
 	@Override
 	public Object authenticate(Properties credentials) throws AuthenticationFailedException
 	{
-		if(credentials == null )
-			throw new AuthenticationFailedException("null properties, properties required");
+		if(credentials == null || credentials.isEmpty())
+			throw new AuthenticationFailedException("null or empties properties, properties required");
 			
 		String userName  = null;
 		
-		userName = credentials.getProperty(SecurityConstants.USERNAME_PROP);	
+		userName = credentials.getProperty(SecurityConstants.USERNAME_PROP);
 		if (userName == null || userName.length() == 0){
 				throw new AuthenticationFailedException(SecurityConstants.USERNAME_PROP+" required");
 		}
@@ -58,64 +61,62 @@ public class UserSecurityManager implements SecurityManager
 			
 			try
 			{
-				password = Cryption.removePrefix(password);
-				
 				User user = this.userService.findUser(userName);
-				
+
 				if(user == null)
 					throw new AuthenticationFailedException("user \""+userName+"\" not found");
-		
-				
+
+
 				byte[] userEncryptedPasswordBytes = user.getEncryptedPassword();
-				
 				if(userEncryptedPasswordBytes == null || userEncryptedPasswordBytes.length == 0)
 					throw new AuthenticationFailedException("password is required");
-				
-				Cryption cryption = new Cryption();
+
 				String userEncryptedPassword =  new String(userEncryptedPasswordBytes,StandardCharsets.UTF_8);
-			
-				
-				String storedUnEncrypted = null;
-				
-				//test encrypted
-				if(userEncryptedPassword.equals(password))
-					return user;
-				
-				
-				//test without encrypt
-				storedUnEncrypted = cryption.decryptText(userEncryptedPassword);
-				
-				if(storedUnEncrypted.equals(password))
-					return user;
-				
-			
-				try
-				{
-					String unencryptedPassword = cryption.decryptText(password);
-					
-					if(unencryptedPassword.equals(storedUnEncrypted))
-							return user;
+
+                String decryptedUserPassword = null;
+                try {
+                    decryptedUserPassword = userSecurityManagerCryption.decryptText(userEncryptedPassword);
+                } catch (Exception e) {
+                    throw new AuthenticationFailedException("Check saved user properties password encrypted with proper encryption key");
+                }
+
+                //not encrypted
+				String decryptedPassword;
+				try {
+					decryptedPassword = Cryption.interpret(password);
+				} catch (Exception e) {
+					throw new AuthenticationFailedException("Check provided password encrypted with proper encryption key");
 				}
-				catch(IllegalArgumentException e)
-				{
-					throw new AuthenticationFailedException("Security password or user not found.");
+
+
+				if(decryptedUserPassword.equals(decryptedPassword))
+					return user;
+
+
+				try {
+					decryptedPassword = userSecurityManagerCryption.decryptText(password);
+				} catch (Exception e) {
+					throw new AuthenticationFailedException("Security password or user not found");
 				}
-				
-				throw new AuthenticationFailedException("Security user or password not found");
+
+				if(decryptedUserPassword.equals(decryptedPassword))
+					return user;
+
+				throw new AuthenticationFailedException("Security password or user does not match or exist");
 			}
 			catch(SecurityException e)
 			{
-				this.getLogger().warn("SECURITY EXCEPTION user:"+userName+" ERROR:"+Debugger.stackTrace(e));
+                this.getLogger().warn("SECURITY EXCEPTION user:{} ERROR:{}", userName, Debugger.stackTrace(e));
 				throw new AuthenticationFailedException(e.getMessage(),e);
 			}
 			catch(AuthenticationFailedException e)
 			{
-				this.getLogger().warn(" AuthenticationFailedException user:"+userName+" ERROR:"+e.getMessage());
+                this.getLogger().warn(" AuthenticationFailedException user:{} ERROR:{}", userName, e.getMessage());
 				throw e;
 			}
 			catch (Exception e)
 			{
-				this.getLogger().error("Exception:"+Debugger.stackTrace(e));
+                this.getLogger().error("Exception:{}", Debugger.stackTrace(e));
 				throw new AuthenticationFailedException(e.getMessage()+" ERROR:"+Debugger.stackTrace(e));
 			}
 			
@@ -131,8 +132,6 @@ public class UserSecurityManager implements SecurityManager
     		return false;
     	User user = (User)principal;
     	
-
-    	
     	//this MUST BE FAST!!!
     	
     	Collection<String> privileges = user.getPriviledges();
@@ -146,11 +145,11 @@ public class UserSecurityManager implements SecurityManager
     	
     	if(!hasPermission)
     	{
-        	getLogger().warn("user:"+user.getUserName()+" DOES NOT HAVE permission:"+textPermission);
+            getLogger().warn("user:{} DOES NOT HAVE permission:{}", user.getUserName(), textPermission);
     	}
     	else
 		{
-			getLogger().info("user:"+user.getUserName()+" HAS permission:"+textPermission);
+            getLogger().info("user:{} HAS permission:{}", user.getUserName(), textPermission);
 		}
     	
     	return hasPermission;

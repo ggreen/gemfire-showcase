@@ -1,4 +1,4 @@
-package tanzu.gemfire.security;
+package tanzu.gemfire.security.settings;
 
 import nyla.solutions.core.data.MapEntry;
 import nyla.solutions.core.util.Config;
@@ -8,6 +8,7 @@ import nyla.solutions.core.util.settings.Settings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import tanzu.gemfire.security.User;
 
 import java.io.File;
 import java.io.FileWriter;

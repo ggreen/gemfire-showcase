@@ -1,4 +1,4 @@
-package tanzu.gemfire.security;
+package tanzu.gemfire.security.settings;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -14,6 +14,8 @@ import nyla.solutions.core.patterns.observer.SubjectObserver;
 import nyla.solutions.core.util.Config;
 import nyla.solutions.core.util.Cryption;
 import nyla.solutions.core.util.settings.Settings;
+import tanzu.gemfire.security.User;
+import tanzu.gemfire.security.UserService;
 
 /**
  * <pre>
@@ -25,7 +27,7 @@ import nyla.solutions.core.util.settings.Settings;
  *
  */
 
-public class SettingsUserService implements CacheLoader<String, User>,  UserService, 
+public class SettingsUserService implements CacheLoader<String, User>, UserService,
 SubjectObserver<Settings>
 {
 	private Map<String, User> declaredUsersMap = null;

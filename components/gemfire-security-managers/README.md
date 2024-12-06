@@ -43,7 +43,7 @@ You must set the CRYPTION_KEY environment variable or as a JVM system property o
     
 Example
 
-    export CRYPTION_KEY=PIVOTAL
+    export CRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND
 
 
 ---------------------------------------------------
@@ -55,7 +55,8 @@ See [LDAP Security manager](README_LDAP_SecurityMgr.md)
   
 # Property File Security Manager
 
-The class [tanzu.gemfire.security.UserSecurityManager](https://github.com/pivotalservices/dataTx-geode-security-mgr-extensions/blob/master/security-core/src/main/java/io/pivotal/dataTx/geode/security/UserSecurityManager.java) implementation property file based security implementation. The following explains how to deploy the file properties based user implementation of the
+The class [tanzu.gemfire.security.UserSecurityManager](src/main/java/tanzu/gemfire/security/UserSecurityManager.java) implementation property file based security implementation. 
+The following explains how to deploy the file properties based user implementation of the
 security manager.
 
 Set the GemFire security property **security-manager**=*tanzu.gemfire.security.UserSecurityManager* 
@@ -69,18 +70,34 @@ The following is an example gfsh command to start the locator
 
 The key is setting the Gemfire property `security-manager=tanzu.gemfire.security.UserSecurityManager`. Note the jar nyla.solutions.core-VERSION.jar and `dataTx-geode-security-extensions-VERSION.jar` jars must be added to the CLASSPATH.
  
- Inside of gfsh execute the following
+
+Start Locator 
+
+```shell
+cd $GEMFIRE_HOME/bin
+export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
+$GEMFIRE_HOME/bin/gfsh -e "start locator --name=locator --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND  --J=-Dconfig.properties=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/gemfire_users.properties  --J=-Dgemfire.security-manager=tanzu.gemfire.security.UserSecurityManager --J=-Dgemfire.jmx-manager-start=true --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-3.0.0.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.3.jar --enable-cluster-configuration --locators=localhost[10334]   --connect=false --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/settings/user-security.properties --J=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8880"
+```
+
+Start  Servers
+
+Server 1
+
+```shell
+cd $GEMFIRE_HOME/bin
+export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server1   --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10001 --http-service-port=7071 --locators=localhost[10334]  --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-3.0.0.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.3.jar    --J=-Dconfig.properties=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/gemfire_users.properties --J=-Dgemfire.security-manager=tanzu.gemfire.security.UserSecurityManager  --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/settings/user-security.properties --J=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8881"
+``` 
+
+Server 
+```shell
+cd $GEMFIRE_HOME/bin
+export PROJECT_ROOT=/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server2   --J=-DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND --use-cluster-configuration=true --server-port=10002 --http-service-port=7072 --locators=localhost[10334]  --disable-classloader-isolation=true --classpath=$PROJECT_ROOT/components/gemfire-security-managers/build/libs/gemfire-security-managers-3.0.0.jar:$PROJECT_ROOT/applications/libs/nyla.solutions.core-2.2.3.jar    --J=-Dconfig.properties=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/gemfire_users.properties --J=-Dgemfire.security-manager=tanzu.gemfire.security.UserSecurityManager  --security-properties-file=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/settings/user-security.properties --J=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8882"
+``` 
+
  
- 
-    start locator --name=locator --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties"  --J=-Dgemfire.security-manager=tanzu.gemfire.security.UserSecurityManager --J=-Dgemfire.jmx-manager-start=true --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar --enable-cluster-configuration --locators=localhost[10334]  --connect=false
-    
-The following is an example gfsh command to start two servers where the JARS and properties must be set similar to the locator.
-    
-    start server --name=server1 --locators=localhost[10334] --server-port=10201  --use-cluster-configuration=true --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties" --user=admin --password="admin" --J=-Dgemfire.security-manager=tanzu.gemfire.security.UserSecurityManager  --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar
-    
-    start server --name=server2 --locators=localhost[10334] --server-port=10202  --use-cluster-configuration=true --J="-DCRYPTION_KEY=PIVOTAL"  --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties" --user=admin --password="admin" --J=-Dgemfire.security-manager=tanzu.gemfire.security.UserSecurityManager  --classpath=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/target/dataTx-geode-security-extensions-2.0.0.jar:/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/lib/nyla.solutions.core-1.2.4.jar
-    
- *Note it is recommended to use encrypted passwords*. 
+*Note it is recommended to use encrypted passwords*. 
   
 **Configured Users**
 
@@ -89,8 +106,9 @@ You can pass a **config.properties** JVM property to set a file that contains th
 
 The following is an example to set this JVM property using gfsh --J option.
 
-
-    --J="-Dconfig.properties=/Projects/Pivotal/dataTx/dev/gemfire/security/dataTx-geode-security-mgr-extensions/security-core/src/test/resources/geode_users.properties"
+```shell
+--J=-Dconfig.properties=$PROJECT_ROOT/components/gemfire-security-managers/src/test/resources/gemfire_users.properties
+```
 
 The following is an example file content
 
@@ -107,10 +125,9 @@ gemfire.security-users.<userName1>=userEncryptedPassword,[privilege] [,privilege
 ```
 
 
-The following is an example default setting for an **admin** user with the **ALL** privilege and password:admin with in encrypted format when  `CRYPTION_KEY=PIVOTAL`
+The following is an example default setting for an **admin** user with the **ALL** privilege and password:admin with in encrypted format when  `CRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND`
 
 ```properties
-
 gemfire.security-users.admin={cryption}.....,ALL
 
 ```
@@ -118,14 +135,16 @@ gemfire.security-users.admin={cryption}.....,ALL
 
 You can also add the following GemFire security property to configure users thru system properties
 
-    -Dgemfire.security-users.<userName1>=userEncryptedPassword,[privilege] [,privilege]* 
-    
-    -Dgemfire.security-users.<userName2>=userEncryptedPassword,[privilege] [,privilege]* 
-    
+```shell
+-Dgemfire.security-users.<userName1>=userEncryptedPassword,[privilege] [,privilege]* 
+-Dgemfire.security-users.<userName2>=userEncryptedPassword,[privilege] [,privilege]* 
+```
+
 *Example System Property:*
 
-     -Dgemfire.security-users.admin={cryption}....,ALL
-     
+```shell
+-Dgemfire.security-users.admin={cryption}....,ALL
+```
      
 
 ### Privilege
@@ -150,7 +169,7 @@ The User privileges are based on the GemFire ResourePermission (Resource:Operati
 
 
 See the following for more details on GemFire permissions.
-[http://gemfire.docs.pivotal.io/geode/managing/security/implementing_authorization.html](http://gemfire.docs.pivotal.io/geode/managing/security/implementing_authorization.html)
+[GemFire Resource Permissions](https://docs.vmware.com/en/VMware-GemFire/9.15/gf/managing-security-implementing_authorization.html)
 
 
 
@@ -161,7 +180,10 @@ Use the following sample command to encrypt a password. NOTE: CRYPTION_KEY varia
 
 Usage:
 
-     java -jar target/dataTx-geode-password-encryption-app-2.0.0.jar mypassword
+```shell
+java -DCRYPTION_KEY=PIVOTAL-ALWAYS-BE-KIND -jar applications/security/security-password-app/build/libs/security-password-app-0.0.1-SNAPSHOT.jar mypassword
+```
+     
 
 Example:
 
@@ -187,21 +209,11 @@ The security-username and security-password must initialize as GemFire propertie
 
 See the following link for details:
 
-[https://gemfire.docs.pivotal.io/geode/managing/security/implementing_authentication.html](https://gemfire.docs.pivotal.io/geode/managing/security/implementing_authentication.html)
+[GemFire Security Manager](https://docs.vmware.com/en/VMware-GemFire/9.15/gf/managing-security-authentication_overview.html)
 
 
 Note that the security-password can be encrypted or unencrypted.
 
-
-
-
- 
-# GemFire Commercial Repository
-
-
-See the following for instruction to down the GemFire artifacts.
-
-    https://gemfire.docs.pivotal.io/gemfire/getting_started/installation/obtain_gemfire_maven.html
 
 # Building Notes
 
