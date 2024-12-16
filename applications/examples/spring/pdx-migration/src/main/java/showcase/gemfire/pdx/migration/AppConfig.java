@@ -21,19 +21,6 @@ import java.util.Map;
 public class AppConfig {
 
 
-//    @Bean
-//    CommandLineRunner load (ClientCache cache, Region<String, MyData> region){
-//        return args -> {
-//
-//            region.put("1", new MyData("1", MyEnum.CODE10));
-//            region.put("2", new MyData("2", MyEnum.CODE12));
-//
-//
-//            log.info("Loaded cnt = {}",region.keySetOnServer().size());
-//
-//        };
-//    }
-
     @Bean
     CommandLineRunner migration (ClientCache cache, Region<String, MyData> region){
         return args -> {
@@ -62,7 +49,6 @@ public class AppConfig {
                     //migrate remove enum or change Enum
                     region.put(key, new MyData(value.getField("id").toString(),
                             newEnum));
-
 
                 }
             } finally {
