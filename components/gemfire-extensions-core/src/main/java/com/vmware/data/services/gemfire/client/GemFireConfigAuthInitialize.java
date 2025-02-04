@@ -3,6 +3,7 @@ package com.vmware.data.services.gemfire.client;
 import java.util.Properties;
 
 import nyla.solutions.core.util.settings.Settings;
+import org.apache.geode.cache.Declarable;
 import org.apache.geode.distributed.DistributedMember;
 import org.apache.geode.security.AuthInitialize;
 import org.apache.geode.security.AuthenticationFailedException;

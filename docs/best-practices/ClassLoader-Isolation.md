@@ -173,6 +173,58 @@ jar {
 ```
 
 
+The family is example shade
+
+```xml
+<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.5.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<excludes>
+									<exclude>com.vmware.gemfire:*</exclude>
+									<exclude>com.fasterxml.jackson.core:*</exclude>
+									<exclude>com.fasterxml.jackson:*</exclude>
+									<exclude>jackson-datatype-joda:*</exclude>
+									<exclude>jackson-datatype-joda:*</exclude>
+									<exclude>antlr:*</exclude>
+									<exclude>io.micrometer:micrometer-core:*</exclude>
+									<exclude>javax.resource:*</exclude>
+									<exclude>org.apache.shiro:shiro-core:*</exclude>
+									<exclude>org.jgroups:jgroups:*</exclude>
+									<exclude>org.projectlombok:*</exclude>
+								</excludes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>com/vmware/**</exclude>
+										<exclude>com/fasterxml/**</exclude>
+										<exclude>org/slf4j/**</exclude>
+										<exclude>org/apache/**</exclude>
+										<exclude>org/bson/**</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+```
+
 ## Known Issues
 
 Exclude the following dependencies: 

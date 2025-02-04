@@ -39,6 +39,7 @@ Start and startup GemFire using the provided script
 ## Web Account
 
 ```shell
+export LOCATORS=host1[10334]
 java -jar applications/examples/account-gemfire-service/build/libs/account-gemfire-service-*.jar --FACTORY_REPOSITORY=showcase.gemfire.account.repository.AccountGemFireRepository
 ```
 
