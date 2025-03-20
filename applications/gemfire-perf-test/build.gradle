@@ -38,7 +38,7 @@ dependencies {
 //    implementation project(':components:gemfire-extensions-core')
     compileOnly "com.vmware.gemfire:spring-boot-3.1-gemfire-10.1:$springBootForGemFireVersion"
 //    implementation "com.vmware.gemfire:gemfire-core:$vmwareGemFireVersion"
-    implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.1"
+    implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.0"
     implementation "com.vmware.gemfire:gemfire-core:10.1.1"
     implementation "com.vmware.gemfire:gemfire-cq:10.1.1"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -65,7 +65,7 @@ repositories {
         url = uri("https://packages.broadcom.com/artifactory/gemfire/")
         credentials {
             username System.getenv('BROADCOM_MAVEN_USERNAME')
-            password System.getenv('BROADCOM_MAVEN_PASSWORD')
+            password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
         }
     }
 }

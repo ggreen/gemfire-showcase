@@ -54,7 +54,7 @@ repositories {
         }
         credentials {
             username System.getenv('BROADCOM_MAVEN_USERNAME')
-            password System.getenv('BROADCOM_MAVEN_PASSWORD')
+            password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
         }
     }
 }
@@ -66,11 +66,8 @@ dependencies {
     implementation group: 'com.vmware.gemfire', name: 'gemfire-common'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-//    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
-//    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-cq'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
-//    implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'org.slf4j:slf4j-api'
     implementation("com.zaxxer:HikariCP:4.0.3")
             {
@@ -140,7 +137,7 @@ publishing {
             url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
                 username System.getenv('BROADCOM_MAVEN_USERNAME')
-                password System.getenv('BROADCOM_MAVEN_PASSWORD')
+                password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
             }
         }
     }

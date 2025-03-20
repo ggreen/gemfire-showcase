@@ -15,7 +15,7 @@ See https://gemfire.dev/quickstart/java/
 
 ```shell
 export BROADCOM_MAVEN_USERNAME=$HARBOR_USER
-export BROADCOM_MAVEN_PASSWORD=$HARBOR_PASSWORD
+export BROADCOM_GEMFIRE_MAVEN_PASSWORD=$HARBOR_PASSWORD
 ```
 
 Change directory to components from the root project directory

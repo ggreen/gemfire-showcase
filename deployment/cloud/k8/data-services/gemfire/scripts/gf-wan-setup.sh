@@ -1,5 +1,5 @@
 kubectl create namespace tanzu-data-site-1
-kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-1 --docker-server=registry.tanzu.vmware.com --docker-username=$HARBOR_USER --docker-password=$HARBOR_PASSWORD
+kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-1 --docker-server=registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
 kubectl config set-context --current --namespace=tanzu-data-site-1
 
 kubectl apply -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_a.yml
@@ -27,7 +27,7 @@ kubectl exec gemfire-cluster-a-locator-0 --  gfsh -e "connect --locator=gemfire-
 #------
 # Cluster 2
 kubectl create namespace tanzu-data-site-2
-kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-2 --docker-server=registry.tanzu.vmware.com --docker-username=$HARBOR_USER --docker-password=$HARBOR_PASSWORD
+kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-2 --docker-server=registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
 kubectl config set-context --current --namespace=tanzu-data-site-2
 
 kubectl apply -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_b.yml
@@ -55,6 +55,8 @@ kubectl exec  gemfire-cluster-b-locator-0 --  gfsh -e "connect --locator=gemfire
 
 kubectl apply -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-a.yml --namespace=tanzu-data-site-1
 
+# gemfire-cluster-b-locator-0.gemfire-cluster-b-locator.tanzu-data-site-2.svc.cluster.local
+
 kubectl apply -f deployment/cloud/k8/apps/account-service/wan-ha/account-service-cluster-b.yml --namespace=tanzu-data-site-2
 
 
@@ -69,3 +71,9 @@ sleep 5
 
 
 kubectl wait pod -l=name=spring-gateway-healthcheck --for=condition=Ready --timeout=160s  --namespace=tanzu-data-wan
+
+# -----------
+kubectl apply -f deployment/cloud/k8/data-services/gemfire/gideonConsole/gemfire-management-console.yml --namespace=tanzu-data-wan
+
+
+kubectl get services --namespace=tanzu-data-wan

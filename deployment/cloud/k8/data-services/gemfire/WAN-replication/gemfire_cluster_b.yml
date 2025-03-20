@@ -6,7 +6,6 @@ spec:
   image: gemfire/gemfire:10.1
   security:
     tls: {}
-  antiAffinityPolicy: None
   metrics:
     emission: Default
   persistentVolumeClaim:
@@ -23,13 +22,13 @@ spec:
       resources:
         requests:
           storage: 2Gi
+      deleteOnShutdown: true
     overrides:
       gemFireProperties:
         - name: "distributed-system-id"
           value: "2"
         - name: "remote-locators"
           value: "gemfire-cluster-a-locator-0.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local[10334]"
-                 "gemfire-cluster-a-locator-0.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local[10334]"
   servers:
     replicas: 2
     resources:
@@ -39,6 +38,7 @@ spec:
       resources:
         requests:
           storage: 4Gi
+      deleteOnShutdown: true
     overrides:
       gemFireProperties:
         - name: "distributed-system-id"

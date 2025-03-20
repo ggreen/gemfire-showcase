@@ -22,6 +22,7 @@ spec:
       resources:
         requests:
           storage: 2Gi
+      deleteOnShutdown: true
     overrides:
       gemFireProperties:
         - name: "distributed-system-id"
@@ -37,6 +38,7 @@ spec:
       resources:
         requests:
           storage: 4Gi
+      deleteOnShutdown: true
     overrides:
       gemFireProperties:
         - name: "distributed-system-id"

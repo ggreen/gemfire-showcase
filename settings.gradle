@@ -9,6 +9,7 @@ include 'components', 'shared', 'components:functions:gemfire-clear-region-funct
 include 'components', 'shared', 'components:functions:gemfire-delete-region-function'
 include 'components', 'shared', 'components:functions:gemfire-search-function'
 include 'components', 'shared', 'applications:gemfire-health-shell-app'
+include 'components', 'shared', 'applications:gemfire-health-analyzer'
 include 'components', 'shared', 'applications:gemfire-rest-app'
 include 'components', 'shared', 'applications:gemfire-perf-test'
 include 'components', 'shared', 'applications:gemfire-sink-app'

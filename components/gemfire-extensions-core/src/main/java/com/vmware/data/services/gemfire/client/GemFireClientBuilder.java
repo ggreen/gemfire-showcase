@@ -97,6 +97,9 @@ public class GemFireClientBuilder  implements Builder
     @Override
     public GemFireClient build()
     {
+        if(clientName == null || clientName.isEmpty())
+            throw new RequiredException("clientName");
+
         Iterable<URI> uris = getUris();
 
         //check for exists client cache

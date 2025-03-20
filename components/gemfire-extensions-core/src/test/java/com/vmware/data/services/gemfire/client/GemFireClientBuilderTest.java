@@ -79,4 +79,25 @@ class GemFireClientBuilderTest
         assertEquals("password",Config.settings().getProperty(GemFireConfigAuthInitialize.SECURITY_PASSWORD_PROP));
 
     }
+
+
+    @Test
+    void when_build_client_name_cannot_be_null() {
+
+        assertThrows(RequiredException.class,
+                () ->  subject.locators("localhost[10334]").clientName(null).build());
+    }
+
+    @Test
+    void when_build_client_name_cannot_be_empty() {
+
+        assertThrows(RequiredException.class,
+                () ->  subject.locators("localhost[10334]").clientName("").build());
+    }
+
+    @Test
+    void when_build_client_name_ok() {
+
+        assertDoesNotThrow( () -> subject.locators("localhost[10334]").clientName("name").build());
+    }
 }

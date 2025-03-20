@@ -31,7 +31,7 @@ spec:
         - env:
             - name: server.port
               value: "8080"
-          image: gemfire/gemfire-management-console:1.2.1
+          image: gemfire/gemfire-management-console:1.3.1
           name: gemfire-management-console
           imagePullPolicy: IfNotPresent
 #      volumes:

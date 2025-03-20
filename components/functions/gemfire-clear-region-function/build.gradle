@@ -31,7 +31,7 @@ repositories {
         url "https://packages.broadcom.com/artifactory/gemfire/"
         credentials {
             username System.getenv('BROADCOM_MAVEN_USERNAME')
-            password System.getenv('BROADCOM_MAVEN_PASSWORD')
+            password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
         }
     }
 }
