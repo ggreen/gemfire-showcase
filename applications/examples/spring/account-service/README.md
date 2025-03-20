@@ -69,16 +69,17 @@ curl -X 'GET' \
 # Docker building image
 
 ```shell
-cd examples/spring-data-gemfire/applications/userAccount-service
-mvn package
+gradle publishMavenPublicationToMavenLocalRepository
+cd applications/examples/spring/account-service
+gradle build
 
-docker build   --platform linux/amd64,linux/arm64 -t userAccount-service-gemfire-showcase:0.0.1-SNAPSHOT .
+docker build   --platform linux/amd64,linux/arm64 -t  cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT .
 #docker build   --platform linux/amd64,linux/arm64 --build-arg JAR_FILE=build/libs/\*.jar -t userAccount-service:0.0.1-SNAPSHOT .
 #docker build  --platform linux/amd64,linux/arm64 -t userAccount-service-gemfire-showcase:0.0.1-SNAPSHOT .
 
 ```
 
 ```shell
-docker tag userAccount-service-gemfire-showcase:0.0.1-SNAPSHOT cloudnativedata/userAccount-service-gemfire-showcase:0.0.1-SNAPSHOT
-docker push cloudnativedata/userAccount-service-gemfire-showcase:0.0.1-SNAPSHOT
+docker tag  cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT cloudnativedata/ cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
+docker push cloudnativedata/ cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
 ```

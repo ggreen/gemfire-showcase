@@ -1,11 +1,11 @@
 # Demo on GemFire management console
 
 ```shell
-./deployment/scripts/gideon-console/start-clusters.sh
+./deployment/scripts/gideon-console/docker/start-docker-gemfire.sh
 ```
 
 ```shell
-./deployment/scripts/gideon-console/start-console.sh
+./deployment/scripts/gideon-console/docker/start-gmc-gideon-console.sh
 ```
 
 Open GemFire Management Console
@@ -23,7 +23,7 @@ Add Cluster 1
 
 ```properties
 name=gf1-cluster-1
-host=host.docker.internal
+host=gf1-gl-locator
 port=7071
 ```
 
@@ -33,19 +33,9 @@ Add Cluster 2
 
 ```properties
 name=gf2-cluster-2
-host=host.docker.internal
+host=gf2-gl-locator
 port=7072
 ```
-
-
-Fix Monitor settings
-
-Click Settings icon (upper right hand corner) -> Monitoring Settings
-
-
-Change hostname to host.docker.internal
-
-For gf2-cluster-1 and gf2-cluster-2
 
 
 
@@ -54,7 +44,7 @@ For gf2-cluster-1 and gf2-cluster-2
 Start Application
 
 ```shell
-java -jar applications/examples/spring/account-service/build/libs/account-service-0.0.1-SNAPSHOT.jar --spring.data.gemfire.pool.locators="localhost[10334]" --server.port=8050
+docker run -it --rm --name account-service-gemfire-showcase --network=gemfire-cache  -p 8050:8050  cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT --spring.data.gemfire.pool.locators="gf1-gl-locator[10334]" --server.port=8050
 ```
 Open application UI
 
@@ -106,21 +96,20 @@ Deploy Clear Function
 list clients
 ```
 
-
 # Performance Testing
-
 
 putString
 
 ```shell
-java -Xmx1g -Xms1g  -Daction=putString -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
+
+docker run -it --rm  --name=gemfire-perf-test --network=gemfire-cache cloudnativedata/gemfire-perf-test:0.0.2-SNAPSHOT --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="gf1-gl-locator[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
 ```
 
 
 putAndGetAndQuery
 
 ```shell
-java -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putAndGetAndQuery --regionName=test  --batchSize=10 --keyPadLength=10 --seedText=TEST --queryByKey="select key from /test.entries where key = \$1" --valueLength=500 --startKeyValue=1 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
+docker run -it --rm  --name=gemfire-perf-test --network=gemfire-cache -e JAVA_OPTS=" -Xmx1g -Xms1g" cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT --action=putAndGetAndQuery --regionName=test  --batchSize=10 --keyPadLength=10 --seedText=TEST --queryByKey="select key from /test.entries where key = \$1" --valueLength=500 --startKeyValue=1 --spring.data.gemfire.pool.locators="gf1-gl-locator[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
 
 
 ```
@@ -130,5 +119,12 @@ java -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-t
 Stress Testing (Will cause out of memory errors)
 
 ```shell
-java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar  --regionName="test"  --threadCount=5  --threadSleepMs=1000  --loopCount=1000 --batchSize=100 --keyPadLength=10 --valueLength=500 --seedText=T1 --server.port=0
+docker run -it --rm  --name=gemfire-perf-test --network=gemfire-cache -e JAVA_OPTS=" -Xmx1g -Xms1g" cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT  --action=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar  --regionName="test"  --threadCount=5  --threadSleepMs=1000  --loopCount=1000 --batchSize=100 --keyPadLength=10 --valueLength=500 --seedText=T1 --server.port=0
+```
+
+
+# Shutdown
+
+```shell
+docker rm -f gf1-gl-locator gf1-gl-server gf2-gl-locator gf2-gl-server gideon-console account-service-gemfire-showcase
 ```

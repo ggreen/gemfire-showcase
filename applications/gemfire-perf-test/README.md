@@ -24,7 +24,7 @@ create region --name=test --type=PARTITION
 
 Remove previous image
 ```shell
-docker rmi gemfire-perf-test:0.0.1-SNAPSHOT
+docker rmi gemfire-perf-test:0.0.3-SNAPSHOT
 ```
 
 Build new image
@@ -33,10 +33,14 @@ gradle clean build :applications:gemfire-perf-test:bootBuildImage
 ```
 
 
+
+
 ```shell script
-docker tag gemfire-perf-test:0.0.1-SNAPSHOT cloudnativedata/apache-gemfire-perf-test:0.0.1-SNAPSHOT 
+cd applications/gemfire-perf-test
+docker build   --platform linux/amd64,linux/arm64 -t gemfire-perf-test:0.0.3-SNAPSHOT .
+docker tag gemfire-perf-test:0.0.3-SNAPSHOT cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT 
 docker login
-docker push cloudnativedata/apache-gemfire-perf-test:0.0.1-SNAPSHOT
+docker push cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT
 
 ```
 
