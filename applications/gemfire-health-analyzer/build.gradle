@@ -1,0 +1,55 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'showcase.gemfire'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
+
+dependencies {
+	implementation platform('com.vmware.gemfire:gemfire-all-bom:10.0.0')
+	implementation group: 'com.vmware.gemfire', name: 'gemfire-core'
+	implementation group: 'com.vmware.gemfire', name: 'gemfire-common'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation group: 'com.vmware.gemfire', name: 'gemfire-cq'
+	implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
+
+	implementation project(':components:gemfire-extensions-core')
+	implementation 'com.github.nyla-solutions:nyla.solutions.core:2.3.0-SNAPSHOT'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.postgresql:postgresql:42.7.5'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+	maven {
+		url = uri("https://packages.broadcom.com/artifactory/gemfire/")
+		credentials {
+			username System.getenv('BROADCOM_MAVEN_USERNAME')
+			password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
+		}
+	}
+}
