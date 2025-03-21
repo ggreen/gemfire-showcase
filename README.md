@@ -18,7 +18,7 @@ This project contains example APIs, applications, design patterns implementation
 | Demo                                                                              | Notes                                                                                                                                                  |
 |-----------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [WAN REPLICATION ACTIVE_ACTIVE](docs/demo/local/WAN_REPLICATION_ACTIVE_ACTIVE.md) | Showcases the GemFire WAN replications                                                                                                                 |
-| [GemFire Management Console](deployment/scripts/gideon-console/docker)            | This demo will setup 2 WAN replication connected GemFire clusters. The GemFire Manage Console will be used to showcase the fleet management abilities. |
+| [GemFire Management Console](docs/demo/local/monitoring)                          | This demo will setup 2 WAN replication connected GemFire clusters. The GemFire Manage Console will be used to showcase the fleet management abilities. |
 
 # Sub Projects
 
