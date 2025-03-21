@@ -1,12 +1,33 @@
 # Demo on GemFire management console
 
+
+This demo will setup 2 WAN replication connected GemFire clusters.
+The GemFire Manage Console will be used to showcase the fleet
+management abilities.
+
+
+*Required Components*
+
+- Docker
+- 
+
+## Getting Started
+
+Use the following script to start GemFire in docker
+
 ```shell
 ./deployment/scripts/gideon-console/docker/start-docker-gemfire.sh
 ```
 
+Use the following script to start the management console in Docker
+
 ```shell
 ./deployment/scripts/gideon-console/docker/start-gmc-gideon-console.sh
 ```
+
+
+
+### Setup GemFire Management Console
 
 Open GemFire Management Console
 
@@ -14,47 +35,63 @@ Open GemFire Management Console
 open http://localhost:8080
 ```
 
+Click Enable Development Mode
+
+![enable-development-mode.png](docs/enable-development-mode.png)
 
 
+#### Add GemFire Cluster 1
+
+Click Connect 
 
 
-Add Cluster 1
- 
+The following
 
 ```properties
-name=gf1-cluster-1
-host=gf1-gl-locator
-port=7071
+Nickname=gf1-cluster-1
+Host=gf1-gl-locator
+Port=7071
 ```
 
+![add-cluster.png](docs/add-cluster.png)
+
+
+Click Add Another Cluster
 
 Add Cluster 2
 
 
 ```properties
-name=gf2-cluster-2
-host=gf2-gl-locator
-port=7072
+Nickname=gf2-cluster-2
+Host=gf2-gl-locator
+Port=7072
 ```
 
+There should be 2 GemFire clusters
+
+![gemfire-clusters.png](docs/gemfire-clusters.png)
 
 
-# Account Service
+# Starting Demo
 
-Start Application
+
+## Connect Spring GemFire client application
+
+Start example Spring Application
 
 ```shell
 docker run -it --rm --name account-service-gemfire-showcase --network=gemfire-cache  -p 8050:8050  cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT --spring.data.gemfire.pool.locators="gf1-gl-locator[10334]" --server.port=8050
 ```
-Open application UI
+Open application Swagger UI
 
 
 ```shell
 open http://localhost:8050
 ```
 
+### Load Data
 
-## Load Data
+Use the following bash script to write records into the Account region
 
 ```shell
 for i in {1..300}
@@ -74,29 +111,57 @@ do
 done
 ```
 
-Get Record
+Get a single Record
 
 ```shell
 curl -X 'GET' \
   'http://localhost:8050/accounts/1' \
   -H 'accept: */*'
 ```
-# Deploy Jars
 
-Deploy Clear Function
+View account data in the Data Explorer
 
-```shell
-/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase/components/functions/gemfire-clear-region-function/build/libs
-```
+Note: data is sync in both clusters
 
+![data-explorer.png](docs/data-explorer.png)
+
+## Deploy Jars
+
+Deploy Function
+
+![deploy-functions.png](docs/deploy-functions.png)
 
 ## Gfsh Commands
+
+Click GFSH
+
+Executed the following command
 
 ```shell
 list clients
 ```
 
-# Performance Testing
+Show metrics
+```shell
+show metrics
+```
+
+----------------------------------
+# Monitoring
+
+Click Monitoring to get default views.
+
+
+## Update Monitoring Settings
+
+Click Settings -> Monitoring Settings
+
+![update-monitoring.png](docs/update-monitoring.png)
+
+Select option "Use Embedded Prometheus Server (only available for OVA and OCI distributions)"
+
+
+## Performance Testing
 
 putString
 

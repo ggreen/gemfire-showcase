@@ -1,7 +1,7 @@
 # GemFire Extension 
 
 
-This project contains example APIs, applications, design patterns implementations and documentation for enabling the use of [GemFire](https://tanzu.vmware.com/gemfire).
+This project contains example APIs, applications, design patterns implementations, demos and documentation for enabling the use of [GemFire](https://tanzu.vmware.com/gemfire).
 
 
 ## Prerequisites
@@ -12,6 +12,13 @@ This project contains example APIs, applications, design patterns implementation
 - vmware-gemfire-10.1.0 or higher
 
 
+## Demos
+
+
+| Demo                                                                              | Notes                                                                                                                                                  |
+|-----------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [WAN REPLICATION ACTIVE_ACTIVE](docs/demo/local/WAN_REPLICATION_ACTIVE_ACTIVE.md) | Showcases the GemFire WAN replications                                                                                                                 |
+| [GemFire Management Console](deployment/scripts/gideon-console/docker)            | This demo will setup 2 WAN replication connected GemFire clusters. The GemFire Manage Console will be used to showcase the fleet management abilities. |
 
 # Sub Projects
 
