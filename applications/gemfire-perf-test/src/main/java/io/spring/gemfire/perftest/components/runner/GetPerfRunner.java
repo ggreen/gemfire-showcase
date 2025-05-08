@@ -40,7 +40,7 @@ public class GetPerfRunner implements Runnable, ApplicationListener<ContextRefre
 
 
         SelectResults<Object> results = (SelectResults<Object>) cache.getClientCache().getQueryService()
-                .newQuery("select * from /"+regionName+"regionName.keySet limit 1")
+                .newQuery("select * from /"+regionName+".keySet limit 1")
                 .execute();
 
         if (results.size() == 0) {

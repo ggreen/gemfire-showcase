@@ -43,7 +43,7 @@ public class GemFireConfig {
     }
 
     @Bean("perfTestRegion")
-    Region<Object,Object> getRegion(GemFireClient gemFire){
+    Region<?,?> getRegion(GemFireClient gemFire){
         return gemFire.getRegion(regionName);
     }
 

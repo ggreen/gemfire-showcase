@@ -31,9 +31,7 @@ public class PutAllStringPerfRunnerTest {
 
     @Test
     void run() {
-        var subject = new PutAllStringPerfRunner(putCount, keyLength, valueLength,seedText);
-
-        subject.setRegion(region);
+        var subject = new PutAllStringPerfRunner(putCount, keyLength, valueLength,seedText,region);
 
         subject.run();
 

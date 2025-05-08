@@ -3,6 +3,7 @@ package io.spring.gemfire.perftest.components.runner;
 import jakarta.annotation.Resource;
 import nyla.solutions.core.patterns.creational.generator.MapTextCreator;
 import org.apache.geode.cache.Region;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,7 @@ public class PutAllStringPerfRunner implements  Runnable{
     private final int valueLength;
     private final String seedText;
 
-    @Resource(name = "perfTestRegion")
-    private Region<String, String> region;
+    private final Region<String, String> region;
 
     private final Map<String, String> map;
 
@@ -30,12 +30,15 @@ public class PutAllStringPerfRunner implements  Runnable{
             @Value("${valueLength}")
             int valueLength,
             @Value("${seedText}")
-            String seedText) {
+            String seedText,
+            @Qualifier("perfTestRegion")
+            Region<String, String> region) {
 
         this.batchSize = batchSize;
         this.keyPadLength = keyPadLength;
         this.valueLength = valueLength;
         this.seedText = seedText;
+        this.region = region;
 
         map = MapTextCreator.builder().size(batchSize)
                 .keyPadLength(keyPadLength)
@@ -46,9 +49,6 @@ public class PutAllStringPerfRunner implements  Runnable{
 
     }
 
-    public void setRegion(Region<String, String> region) {
-        this.region = region;
-    }
 
 
     void init() {

@@ -20,8 +20,7 @@ class PutStringThroughputRunnerTest {
 
     @BeforeEach
     void setUp() {
-        subject = new PutStringThroughputRunner(10,"1",10);
-        subject.setRegion(region);
+        subject = new PutStringThroughputRunner(10,"1",10,region);
     }
 
     @Test

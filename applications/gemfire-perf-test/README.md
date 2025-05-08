@@ -4,7 +4,22 @@ This project is a open-source perf test for GemFire.
 It measures latency and throughput based on the GemFire Java client.
 
 
-A GemFire cluster can be limited by a number of factors such as 
+This application will print the following Example report to stand output:
+
+```shell
+report:
+mean ms 0.054246415
+min ms  0.04725
+max ms  0.141291
+70th ms 0.054041
+90th ms 0.059458
+99.9th ms       0.1315
+99.999th ms     0.141291
+stddev ms       0.008577032621179393
+
+```
+
+Note: A GemFire cluster can be limited by a number of factors such as 
 infrastructure (e.g. network bandwidth, configurations 
 and topology to applications. This project's goal is demonstrated baseline performance of a server or a cluster .
 
@@ -35,7 +50,7 @@ This action performs the following operations
 Example General test performance test
 
 ```shell
-java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1000 --server.port=0
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1 --server.port=0
 ```
 
 The following are the action specific properties
@@ -109,28 +124,39 @@ The following are the action specific properties
 | endKeyValue   | The maximum number to use for a single randomly generated region key |               |
 
 
+# action=putStringThroughput
+
+
+Performance generates a new key for get put operations.
+Warning that this test can cause out of memory issues. 
+
+Example 
+```shell
+java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10 --maxCountPerThread=10 --valueLength=5 --keyPrefix=T1
+```
+
+The following are the action specific properties
+
+| Property          | Notes                                                                                             | Default Value |
+|-------------------|---------------------------------------------------------------------------------------------------|---------------|
+| regionName        | The GemFire server-side region used for the performance test                                      |               |
+| valueLength       | The fixed length size to use for generating random region entry values                            |               |
+| keyPrefix         | The string prefix to use when generating a key                                                    |               |
+| maxCountPerThread | The maximum number of unique keys per thread to generate in order to prevent out of memory errors |               |
+
+
 
 # Local Setup
 
-Gfsh start
+See the example start script
 
 ```shell
-start locator --name=locator  --locators=127.0.0.1[10334]  --max-heap=250m --initial-heap=250m --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
-configure gemFireJson --read-serialized=true --disk-store
-start server --name=server1 --max-heap=32g  --locators=127.0.0.1[10334]  --initial-heap=10g  --bind-address=127.0.0.1 --hostname-for-clients=127.0.0.1  --jmx-manager-hostname-for-clients=127.0.0.1 --http-service-bind-address=127.0.0.1
+./deployment/local/gemfire/start.sh
 ```
 
 
-```shell
-create region --name=test --type=PARTITION
-```
 ## Docker Setup
 
-
-Remove previous image
-```shell
-docker rmi gemfire-perf-test:0.0.3-SNAPSHOT
-```
 
 Build new image
 ```shell
@@ -138,7 +164,7 @@ gradle clean build :applications:gemfire-perf-test:bootBuildImage
 ```
 
 
-
+The use the following to create multi-arch container images
 
 ```shell script
 cd applications/gemfire-perf-test
@@ -150,13 +176,6 @@ docker push cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT
 ```
 
 
-# Running test
-
-Security Properties
-```properties
-spring.data.gemfire.security.username=admin
-spring.data.gemfire.security.password=secret
-```
 
 ## Region Put Test
 
@@ -164,21 +183,7 @@ spring.data.gemfire.security.password=secret
 
 
 
-Load Testing
 
-```shell
-java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar  --regionName="test"  --threadCount=10  --threadSleepMs=1000  --loopCount=2147483647 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1 --server.port=0
-```
-
-
-
-Throughput putStringThroughput
-
-
-
-```shell
-java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=25005000 --maxCountPerThread=25005000 --valueLength=5 --keyPrefix=T1
-```
 
 
 

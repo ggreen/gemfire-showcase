@@ -1,7 +1,9 @@
 package io.spring.gemfire.perftest.components.runner;
 
+import jakarta.annotation.Resource;
 import nyla.solutions.core.util.Text;
 import org.apache.geode.cache.Region;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -13,7 +15,7 @@ public class PutStringThroughputRunner implements Runnable{
     private final int maxCountPerThread;
     private final String valueString;
 
-    private Region<String, String> region;
+    private final Region<String, String> region;
     private final String keyPrefix;
 
     public PutStringThroughputRunner(
@@ -22,9 +24,11 @@ public class PutStringThroughputRunner implements Runnable{
             @Value("${keyPrefix}")
             String keyPrefix,
             @Value("${maxCountPerThread}")
-            int maxCountPerThread) {
+            int maxCountPerThread,
+            @Qualifier("perfTestRegion")
+            Region<String, String> region) {
         this.putCount  =0;
-
+        this.region = region;
         this.maxCountPerThread = maxCountPerThread;
         this.keyPrefix = keyPrefix;
         valueString = Text.generateAlphabeticId(valueSize);
@@ -38,7 +42,4 @@ public class PutStringThroughputRunner implements Runnable{
         region.put(keyPrefix+"-"+putCount+"-"+Thread.currentThread().getId(), valueString);
     }
 
-    public void setRegion(Region<String, String> region) {
-        this.region = region;
-    }
 }
