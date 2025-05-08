@@ -1,6 +1,5 @@
 package io.spring.gemfire.perftest.components.runner;
 
-import jakarta.annotation.Resource;
 import nyla.solutions.core.patterns.creational.generator.MapTextCreator;
 import org.apache.geode.cache.Region;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +8,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+
+/**
+ * Performance action for PutAll operations with strings
+ *
+ * @author Gregory Green
+ */
 
 @Component
 @ConditionalOnProperty(name = "action", havingValue = "putAllString")
@@ -45,11 +50,7 @@ public class PutAllStringPerfRunner implements  Runnable{
                 .valueLength(valueLength)
                 .seedText(seedText)
                 .build().create();
-
-
     }
-
-
 
     void init() {
 

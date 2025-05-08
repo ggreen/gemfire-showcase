@@ -1,6 +1,5 @@
 package io.spring.gemfire.perftest.components.runner;
 
-import jakarta.annotation.Resource;
 import nyla.solutions.core.util.Text;
 import org.apache.geode.cache.Region;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,6 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+/**
+ * Performance action for Put operations with strings
+ *
+ * @author Gregory Green
+ */
 @Component
 @ConditionalOnProperty(name = "action", havingValue = "putStringThroughput")
 public class PutStringThroughputRunner implements Runnable{

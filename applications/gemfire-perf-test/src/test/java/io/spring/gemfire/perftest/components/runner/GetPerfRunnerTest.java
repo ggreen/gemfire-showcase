@@ -1,7 +1,6 @@
 package io.spring.gemfire.perftest.components.runner;
 
 import com.vmware.data.services.gemfire.client.GemFireClient;
-import org.apache.geode.cache.GemFireCache;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.client.ClientCache;
 import org.apache.geode.cache.query.*;

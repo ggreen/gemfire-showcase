@@ -3,7 +3,6 @@ package io.spring.gemfire.perftest.components.runner;
 import com.vmware.data.services.gemfire.client.GemFireClient;
 import lombok.SneakyThrows;
 import nyla.solutions.core.exception.SetupException;
-import org.apache.geode.cache.GemFireCache;
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.query.SelectResults;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +11,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+/**
+ * Performance action for Get operations
+ * @author Gregory Green
+ */
 @Component
 @ConditionalOnProperty(name = "action", havingValue = "get")
 public class GetPerfRunner implements Runnable, ApplicationListener<ContextRefreshedEvent> {

@@ -10,8 +10,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+
 /**
- * --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey="select key from /test.entries where key = $1" --server.port=0
+ * Performance action for Put, Get and Query operations
+ *
+ * Example arguments
+ * --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10
+ * --seedText=TEST --queryByKey="select key from /test.entries where key = $1" --server.port=0
+ *
+ * @author Gregory Green
+ */
+/**
+ *
  */
 @Component
 @ConditionalOnProperty(name = "action", havingValue = "putAndGetAndQuery")

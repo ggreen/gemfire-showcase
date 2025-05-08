@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 
 import static java.lang.String.valueOf;
 
+/**
+ * Performance action for Put operations with strings
+ *
+ * @author Gregory Green
+ */
 @Component
 @ConditionalOnProperty(name = "action", havingValue = "putString")
 public class PutStringInRegionRunner implements Runnable {

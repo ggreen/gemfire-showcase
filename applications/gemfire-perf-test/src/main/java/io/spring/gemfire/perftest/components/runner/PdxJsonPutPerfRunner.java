@@ -8,6 +8,7 @@ import org.apache.geode.pdx.PdxInstance;
 import java.util.function.Function;
 
 /**
+ * Performance action for Put operations
  * @author Gregory Green
  */
 public class PdxJsonPutPerfRunner<K> implements Runnable
