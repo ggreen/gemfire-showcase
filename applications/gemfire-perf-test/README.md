@@ -26,16 +26,17 @@ and topology to applications. This project's goal is demonstrated baseline perfo
 
 ## Common Properties
 
-| Property                              | Notes                                                                      | Default Value |
-|---------------------------------------|----------------------------------------------------------------------------|---------------|
-| spring.application.name               | The GemFire connection client name                                         |               |
-| spring.data.gemfire.security.username | GemFire authentication user                                                | admin         |
-| spring.data.gemfire.security.password | GemFire authentication password                                            | admin         |
-| threadCount                           | the number of thread to use to for the performance test action             |               |
-| threadSleepMs                         | Number of the milliseconds to pause between test in a loop                 |               |
-| rampUPSeconds                         | The number of seconds to pause when adding mutliple threads                |               |
-| loopCount                             | The number of time to execute the performance test action                  |               |
-| threadLifeTimeSeconds                 | The number of seconds to await for termination of threads after loop count |               | 
+| Property                              | Notes                                                                      | Default Value         |
+|---------------------------------------|----------------------------------------------------------------------------|-----------------------|
+| spring.data.gemfire.pool.locators     | List locators ex: HOST1[10334],HOST2[10334]                                | localhost[10334]      |
+| spring.application.name               | The GemFire connection client name                                         |                       |
+| spring.data.gemfire.security.username | GemFire authentication user                                                | admin                 |
+| spring.data.gemfire.security.password | GemFire authentication password                                            | admin                 |
+| threadCount                           | the number of thread to use to for the performance test action             | 10                    |
+| threadSleepMs                         | Number of the milliseconds to pause between test in a loop                 | 0                     |
+| rampUPSeconds                         | The number of seconds to pause when adding mutliple threads                | 1                     |
+| loopCount                             | The number of time to execute the performance test action                  | 100000                |
+| threadLifeTimeSeconds                 | The number of seconds to await for termination of threads after loop count | threadLifeTimeSeconds | 
 | action                                | The GemFire performance test strategy (ex: putAndGetAndQuery)              |
 
 
@@ -53,16 +54,21 @@ Example General test performance test
 java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1 --server.port=0
 ```
 
+
+Running in docker
+
+
+
 The following are the action specific properties
 
-| Property                              | Notes                                                                                           | Default Value |
-|---------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
-| regionName                            | The GemFire server-side region used for the performance test                                    |               |
-| batchSize                             | The number of entries to use for bulk operations such as Put all                                |               |
-| keyPadLength                          | The fixed length size to use for generating random region entry keys                            |               |
-| valueLength                           | The fixed length size to use for generating random region entry values                          |               |
-| seedText                              | The fixed string to used within a general region entry key or value                             |
- | queryByKey                            | An GemFire query in OQL format for keys values Ex: select key from /test.entries where key = $1 |               | 
+| Property     | Notes                                                                                           | Default Value |
+|--------------|-------------------------------------------------------------------------------------------------|---------------|
+| regionName   | The GemFire server-side region used for the performance test                                    | test          |
+| batchSize    | The number of entries to use for bulk operations such as Put all                                |               |
+| keyPadLength | The fixed length size to use for generating random region entry keys                            |               |
+| valueLength  | The fixed length size to use for generating random region entry values                          |               |
+| seedText     | The fixed string to used within a general region entry key or value                             |
+ | queryByKey   | An GemFire query in OQL format for keys values Ex: select key from /test.entries where key = $1 |               | 
 
 
 
@@ -78,9 +84,9 @@ java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar 
 
 The following are the action specific properties
 
-| Property                              | Notes                                                                                           | Default Value |
-|---------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
-| regionName                            | The GemFire server-side region used for the performance test                                    |               |
+| Property   | Notes                                                        | Default Value |
+|------------|--------------------------------------------------------------|---------------|
+| regionName | The GemFire server-side region used for the performance test | test          |
 
 
 # action=putAllString
@@ -93,15 +99,17 @@ Example putall into the test region
 java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0
 ```
 
+
+
 The following are the action specific properties
 
-| Property                              | Notes                                                                                           | Default Value |
-|---------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
-| regionName                            | The GemFire server-side region used for the performance test                                    |               |
-| batchSize                             | The number of entries to use for bulk operations such as Put all                                |               |
-| keyPadLength                          | The fixed length size to use for generating random region entry keys                            |               |
-| valueLength                           | The fixed length size to use for generating random region entry values                          |               |
-| seedText                              | The fixed string to used within a general region entry key or value                             |
+| Property     | Notes                                                                  | Default Value |
+|--------------|------------------------------------------------------------------------|---------------|
+| regionName   | The GemFire server-side region used for the performance test           | test          |
+| batchSize    | The number of entries to use for bulk operations such as Put all       |               |
+| keyPadLength | The fixed length size to use for generating random region entry keys   |               |
+| valueLength  | The fixed length size to use for generating random region entry values |               |
+| seedText     | The fixed string to used within a general region entry key or value    |
 
 
 # action=putString
@@ -118,10 +126,10 @@ The following are the action specific properties
 
 | Property      | Notes                                                                | Default Value |
 |---------------|----------------------------------------------------------------------|---------------|
-| regionName    | The GemFire server-side region used for the performance test         |               |
-| valueSize     | The number of character used to generated the entry string value     |               |
-| startKeyValue | The minimum number to use for a single randomly generated region key |               |
-| endKeyValue   | The maximum number to use for a single randomly generated region key |               |
+| regionName    | The GemFire server-side region used for the performance test         | test          |
+| valueSize     | The number of character used to generated the entry string value     | 10            |
+| startKeyValue | The minimum number to use for a single randomly generated region key | 1             |
+| endKeyValue   | The maximum number to use for a single randomly generated region key | 20            |
 
 
 # action=putStringThroughput
@@ -139,7 +147,7 @@ The following are the action specific properties
 
 | Property          | Notes                                                                                             | Default Value |
 |-------------------|---------------------------------------------------------------------------------------------------|---------------|
-| regionName        | The GemFire server-side region used for the performance test                                      |               |
+| regionName        | The GemFire server-side region used for the performance test                                      | test          |
 | valueLength       | The fixed length size to use for generating random region entry values                            |               |
 | keyPrefix         | The string prefix to use when generating a key                                                    |               |
 | maxCountPerThread | The maximum number of unique keys per thread to generate in order to prevent out of memory errors |               |
@@ -178,15 +186,15 @@ docker push cloudnativedata/gemfire-perf-test:0.0.3
 
 
 
-## Region Put Test
+
+# Running in Podman
 
 
+Running Podman (replace podman with docker based on your container engineer)
 
-
-
-
-
-
+```shell
+podman run cloudnativedata/gemfire-perf-test:0.0.3 -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0 --spring.data.gemfire.pool.locators=locatorHostInDocker[]
+```
 
 
 
