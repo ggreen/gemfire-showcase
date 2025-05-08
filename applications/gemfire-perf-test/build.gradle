@@ -28,16 +28,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-//    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
-//    implementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
-//    implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: "1.0.0"
-//    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
-//    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
-
     implementation project(':components:gemfire-extensions-core')
-//    implementation project(':components:gemfire-extensions-core')
     compileOnly "com.vmware.gemfire:spring-boot-3.1-gemfire-10.1:$springBootForGemFireVersion"
-//    implementation "com.vmware.gemfire:gemfire-core:$vmwareGemFireVersion"
     implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.0"
     implementation "com.vmware.gemfire:gemfire-core:10.1.1"
     implementation "com.vmware.gemfire:gemfire-cq:10.1.1"

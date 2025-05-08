@@ -1,9 +1,114 @@
 # GemFire Perf Test
 
+This project is a open-source perf test for GemFire.
+It measures latency and throughput based on the GemFire Java client.
 
-| action | notes | args | example |
-|--------|-------|------|---------|
-| 
+
+A GemFire cluster can be limited by a number of factors such as 
+infrastructure (e.g. network bandwidth, configurations 
+and topology to applications. This project's goal is demonstrated baseline performance of a server or a cluster .
+
+
+## Common Properties
+
+| Property                              | Notes                                                                      | Default Value |
+|---------------------------------------|----------------------------------------------------------------------------|---------------|
+| spring.application.name               | The GemFire connection client name                                         |               |
+| spring.data.gemfire.security.username | GemFire authentication user                                                | admin         |
+| spring.data.gemfire.security.password | GemFire authentication password                                            | admin         |
+| threadCount                           | the number of thread to use to for the performance test action             |               |
+| threadSleepMs                         | Number of the milliseconds to pause between test in a loop                 |               |
+| rampUPSeconds                         | The number of seconds to pause when adding mutliple threads                |               |
+| loopCount                             | The number of time to execute the performance test action                  |               |
+| threadLifeTimeSeconds                 | The number of seconds to await for termination of threads after loop count |               | 
+| action                                | The GemFire performance test strategy (ex: putAndGetAndQuery)              |
+
+
+# action=putAndGetAndQuery
+
+This action performs the following operations
+- Region Put 
+- Region Get 
+- OQL based Query
+
+
+Example General test performance test
+
+```shell
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1000 --server.port=0
+```
+
+The following are the action specific properties
+
+| Property                              | Notes                                                                                           | Default Value |
+|---------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
+| regionName                            | The GemFire server-side region used for the performance test                                    |               |
+| batchSize                             | The number of entries to use for bulk operations such as Put all                                |               |
+| keyPadLength                          | The fixed length size to use for generating random region entry keys                            |               |
+| valueLength                           | The fixed length size to use for generating random region entry values                          |               |
+| seedText                              | The fixed string to used within a general region entry key or value                             |
+ | queryByKey                            | An GemFire query in OQL format for keys values Ex: select key from /test.entries where key = $1 |               | 
+
+
+
+# action=get
+
+This action performs region GET operations
+
+Ex: Region Get 10,000 times of an entry of the first data entry in the region
+
+```shell
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000
+```
+
+The following are the action specific properties
+
+| Property                              | Notes                                                                                           | Default Value |
+|---------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
+| regionName                            | The GemFire server-side region used for the performance test                                    |               |
+
+
+# action=putAllString
+
+This action performance testing region putall operations using strings
+
+Example putall into the test region
+
+```shell
+java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0
+```
+
+The following are the action specific properties
+
+| Property                              | Notes                                                                                           | Default Value |
+|---------------------------------------|-------------------------------------------------------------------------------------------------|---------------|
+| regionName                            | The GemFire server-side region used for the performance test                                    |               |
+| batchSize                             | The number of entries to use for bulk operations such as Put all                                |               |
+| keyPadLength                          | The fixed length size to use for generating random region entry keys                            |               |
+| valueLength                           | The fixed length size to use for generating random region entry values                          |               |
+| seedText                              | The fixed string to used within a general region entry key or value                             |
+
+
+# action=putString
+
+This action will put a single entry string into a given region
+
+Example:
+
+```shell
+java  -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
+```
+
+The following are the action specific properties
+
+| Property      | Notes                                                                | Default Value |
+|---------------|----------------------------------------------------------------------|---------------|
+| regionName    | The GemFire server-side region used for the performance test         |               |
+| valueSize     | The number of character used to generated the entry string value     |               |
+| startKeyValue | The minimum number to use for a single randomly generated region key |               |
+| endKeyValue   | The maximum number to use for a single randomly generated region key |               |
+
+
 
 # Local Setup
 
@@ -57,25 +162,12 @@ spring.data.gemfire.security.password=secret
 
 
 
-Put String 10 character string, 10000 times with the key is generated in the range of 1 to 20
-
-```shell
-
-java -Xmx1g -Xms1g  -Daction=putAndGetAndQuery -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
-
-```
-
-
-```shell
-cd /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/apache-gemfire-extensions
-java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0
-```
 
 
 Load Testing
 
 ```shell
-java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar  --regionName="test"  --threadCount=10  --threadSleepMs=1000  --loopCount=2147483647 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1 --server.port=0
+java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar  --regionName="test"  --threadCount=10  --threadSleepMs=1000  --loopCount=2147483647 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1 --server.port=0
 ```
 
 
@@ -85,24 +177,11 @@ Throughput putStringThroughput
 
 
 ```shell
-java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=25005000 --maxCountPerThread=25005000 --valueLength=5 --keyPrefix=T1
-```
-## Region Get Test
-
-
-Region Get 10,000 times of an entry of the first data entry in the region
-```shell
-cd /Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/apache-gemfire-extensions
-java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000
+java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3-SNAPSHOT.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=25005000 --maxCountPerThread=25005000 --valueLength=5 --keyPrefix=T1
 ```
 
 
-General test
 
-
-```shell
-java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.2-SNAPSHOT.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=2147483647 --threadSleepMs=1000 --server.port=0
-```
 
 
 # Building Docker
