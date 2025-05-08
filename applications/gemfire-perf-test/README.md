@@ -190,10 +190,16 @@ docker push cloudnativedata/gemfire-perf-test:0.0.3
 # Running in Podman
 
 
+Start GemFire cluster in Podman
+
+```shell
+./deployment/scripts/podman/start-podman-perftest-gemfire.sh
+```
+
 Running Podman (replace podman with docker based on your container engineer)
 
 ```shell
-podman run cloudnativedata/gemfire-perf-test:0.0.3 -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0 --spring.data.gemfire.pool.locators=locatorHostInDocker[]
+podman run -it --network=gemfire-cache  cloudnativedata/gemfire-perf-test:0.0.3 -Xmx1g -Xms1g --action=putAllString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10 --batchSize=10 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0 --spring.data.gemfire.pool.locators="gf-locator[10334]"
 ```
 
 
