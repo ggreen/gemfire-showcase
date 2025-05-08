@@ -3,7 +3,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 
-sourceCompatibility = 11
+sourceCompatibility = 17 
 version = '2.0.0'
 
 
@@ -23,8 +23,8 @@ ext {
 
 
 compileJava   {
-    sourceCompatibility = '11'
-    targetCompatibility = '11'
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
 }
 
 task myJavadocs(type: Javadoc) {

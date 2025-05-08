@@ -167,6 +167,7 @@ gradle clean build :applications:gemfire-perf-test:bootBuildImage
 The use the following to create multi-arch container images
 
 ```shell script
+gradle build
 cd applications/gemfire-perf-test
 docker build   --platform linux/amd64,linux/arm64 -t gemfire-perf-test:0.0.3 .
 docker tag gemfire-perf-test:0.0.3 cloudnativedata/gemfire-perf-test:0.0.3 
