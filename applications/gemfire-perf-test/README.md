@@ -39,8 +39,40 @@ and topology to applications. This project's goal is demonstrated baseline perfo
 | threadLifeTimeSeconds                 | The number of seconds to await for termination of threads after loop count | threadLifeTimeSeconds | 
 | action                                | The GemFire performance test strategy (ex: putAndGetAndQuery)              |
 
+## Getting Start
 
-# action=putAndGetAndQuery
+
+Download
+
+```shell
+wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-perf-test-0.0.3/gemfire-perf-test-0.0.3.jar
+```
+
+Example Jar
+
+```shell
+java -jar gemfire-perf-test-0.0.3.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10
+```
+
+Hit control/command ^C to stop 
+
+# Performance Testing Actions
+
+The performance test using a strategy pattern to perform a needed performance test.
+This section explains the detail arguments for the various actions.
+
+
+Supported Actions
+
+| action              |                                                            |
+|---------------------|------------------------------------------------------------|
+ | putAndGetAndQuery   | Put, GET, and Query performance testing for a region       |
+ | get                 | GET performance testing for a region                       | 
+ | putAllString        | PutAll performance testing for a region                    |
+ | putString           | Put of a string performance testing for a region           |
+ | putStringThroughput | Put of a configured number of strings as a throughput test |
+
+## action=putAndGetAndQuery
 
 This action performs the following operations
 - Region Put 
@@ -58,7 +90,6 @@ java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar 
 Running in docker
 
 
-
 The following are the action specific properties
 
 | Property     | Notes                                                                                           | Default Value |
@@ -72,7 +103,7 @@ The following are the action specific properties
 
 
 
-# action=get
+## action=get
 
 This action performs region GET operations
 
@@ -89,7 +120,7 @@ The following are the action specific properties
 | regionName | The GemFire server-side region used for the performance test | test          |
 
 
-# action=putAllString
+## action=putAllString
 
 This action performance testing region putall operations using strings
 
@@ -112,7 +143,7 @@ The following are the action specific properties
 | seedText     | The fixed string to used within a general region entry key or value    |
 
 
-# action=putString
+## action=putString
 
 This action will put a single entry string into a given region
 
@@ -132,13 +163,14 @@ The following are the action specific properties
 | endKeyValue   | The maximum number to use for a single randomly generated region key | 20            |
 
 
-# action=putStringThroughput
+## action=putStringThroughput
 
 
 Performance generates a new key for get put operations.
 Warning that this test can cause out of memory issues. 
 
-Example 
+Example
+
 ```shell
 java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10 --maxCountPerThread=10 --valueLength=5 --keyPrefix=T1
 ```
@@ -153,6 +185,7 @@ The following are the action specific properties
 | maxCountPerThread | The maximum number of unique keys per thread to generate in order to prevent out of memory errors |               |
 
 
+---------------------------------
 
 # Local Setup
 

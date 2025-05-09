@@ -5,6 +5,10 @@ This API is currently used by the [GemFire Management Console](https://community
 
 This API allows you to execute [Gfsh](https://gemfire.dev/tutorials/java/gem-fire-basics) commands using the HTTP endpoint.
 
+**WARNING** this is not an officially documented GemFire API in GemFire version 10.x.
+It is subject to change or removal in future versions. The preferred approach to execute 
+commands is using the Gfsh command line interface directly.
+
 The following is an example gfsh list members command
 
 http://localhost:7070/geode-mgmt/v1/management/commands?cmd=list members
