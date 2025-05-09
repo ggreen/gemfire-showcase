@@ -62,7 +62,7 @@ This section explains the detail arguments for the various actions.
 
 Supported Actions
 
-| action              |                                                            |
+| action              | Notes                                                      |
 |---------------------|------------------------------------------------------------|
 | putAndGetAndQuery   | Put, GET, and Query performance testing for a region       |
 | get                 | GET performance testing for a region                       | 
@@ -83,9 +83,6 @@ Example General test performance test
 ```shell
 java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1 --server.port=0
 ```
-
-
-Running in docker
 
 
 The following are the action specific properties
