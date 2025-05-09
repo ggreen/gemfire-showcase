@@ -56,7 +56,7 @@ Hit control/command ^C to stop
 
 # Performance Testing Actions
 
-The performance test using a strategy pattern to perform a needed performance test.
+The performance test uses a strategy pattern to perform a needed performance test.
 This section explains the detail arguments for the various actions.
 
 
