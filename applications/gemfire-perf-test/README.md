@@ -3,7 +3,6 @@
 This project is a open-source perf test for GemFire.
 It measures latency and throughput based on the GemFire Java client.
 
-
 This application will print the following Example report to stand output:
 
 ```shell
@@ -23,6 +22,22 @@ Note: A GemFire cluster can be limited by a number of factors such as
 infrastructure (e.g. network bandwidth, configurations 
 and topology to applications. This project's goal is demonstrated baseline performance of a server or a cluster .
 
+## Getting Started
+
+
+Download
+
+```shell
+wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-perf-test-0.0.3/gemfire-perf-test-0.0.3.jar
+```
+
+Example Jar
+
+```shell
+java -jar gemfire-perf-test-0.0.3.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10
+```
+
+Hit control/command ^C to stop
 
 ## Common Properties
 
@@ -39,22 +54,7 @@ and topology to applications. This project's goal is demonstrated baseline perfo
 | threadLifeTimeSeconds                 | The number of seconds to await for termination of threads after loop count | threadLifeTimeSeconds | 
 | action                                | The GemFire performance test strategy (ex: putAndGetAndQuery)              |
 
-## Getting Start
 
-
-Download
-
-```shell
-wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-perf-test-0.0.3/gemfire-perf-test-0.0.3.jar
-```
-
-Example Jar
-
-```shell
-java -jar gemfire-perf-test-0.0.3.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10
-```
-
-Hit control/command ^C to stop 
 
 # Performance Testing Actions
 
