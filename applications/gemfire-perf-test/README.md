@@ -1,9 +1,9 @@
 # GemFire Perf Test
 
-This project is a open-source perf test for GemFire.
+This project is an open-source perf test for GemFire.
 It measures latency and throughput based on the GemFire Java client.
 
-This application will print the following Example report to stand output:
+This application will print the following Example report to standard output:
 
 ```shell
 report:
@@ -15,7 +15,6 @@ max ms  0.141291
 99.9th ms       0.1315
 99.999th ms     0.141291
 stddev ms       0.008577032621179393
-
 ```
 
 Note: A GemFire cluster can be limited by a number of factors such as 
@@ -49,11 +48,10 @@ Hit control/command ^C to stop
 | spring.data.gemfire.security.password | GemFire authentication password                                            | admin                 |
 | threadCount                           | the number of thread to use to for the performance test action             | 10                    |
 | threadSleepMs                         | Number of the milliseconds to pause between test in a loop                 | 0                     |
-| rampUPSeconds                         | The number of seconds to pause when adding mutliple threads                | 1                     |
+| rampUPSeconds                         | The number of seconds to pause when adding multiple threads                | 1                     |
 | loopCount                             | The number of time to execute the performance test action                  | 100000                |
 | threadLifeTimeSeconds                 | The number of seconds to await for termination of threads after loop count | threadLifeTimeSeconds | 
-| action                                | The GemFire performance test strategy (ex: putAndGetAndQuery)              |
-
+| action                                | The GemFire performance test strategy (ex: putAndGetAndQuery)              |                       |
 
 
 # Performance Testing Actions
@@ -66,11 +64,11 @@ Supported Actions
 
 | action              |                                                            |
 |---------------------|------------------------------------------------------------|
- | putAndGetAndQuery   | Put, GET, and Query performance testing for a region       |
- | get                 | GET performance testing for a region                       | 
- | putAllString        | PutAll performance testing for a region                    |
- | putString           | Put of a string performance testing for a region           |
- | putStringThroughput | Put of a configured number of strings as a throughput test |
+| putAndGetAndQuery   | Put, GET, and Query performance testing for a region       |
+| get                 | GET performance testing for a region                       | 
+| putAllString        | PutAll performance testing for a region                    |
+| putString           | Put of a string performance testing for a region           |
+| putStringThroughput | Put of a configured number of strings as a throughput test |
 
 ## action=putAndGetAndQuery
 
