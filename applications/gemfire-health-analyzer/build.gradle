@@ -28,7 +28,7 @@ dependencies {
 	implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
 
 	implementation project(':components:gemfire-extensions-core')
-	implementation 'com.github.nyla-solutions:nyla.solutions.core:2.3.0'
+	implementation 'com.github.nyla-solutions:nyla.solutions.core:2.3.1-SNAPSHOT'
 	implementation 'org.springframework.boot:spring-boot-starter'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
