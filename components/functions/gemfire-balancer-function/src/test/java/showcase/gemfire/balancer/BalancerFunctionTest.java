@@ -35,11 +35,7 @@ class BalancerFunctionTest {
 
     @Mock
     private RebalanceFactory rebalanceFactory;
-    @Mock
-    private RebalanceOperation simulateOps;
 
-    @Mock
-    private RebalanceResults simulateOpsResults;
     @Mock
     private RebalanceOperation ops;
     @Mock
@@ -53,13 +49,10 @@ class BalancerFunctionTest {
     }
 
     @Test
-    void execute_simulatedTotalMembersExecutedOn_iszero() throws InterruptedException {
+    void execute_noServersArguments() throws InterruptedException {
         when(cache.getResourceManager()).thenReturn(resourceManager);
         when(resourceManager.createRebalanceFactory()).thenReturn(rebalanceFactory);
-        when(rebalanceFactory.simulate()).thenReturn(simulateOps);
-        when((simulateOps.getResults())).thenReturn(simulateOpsResults);
         when(context.getResultSender()).thenReturn(sender);
-        when(simulateOpsResults.getTotalMembersExecutedOn()).thenReturn(3);
         when(rebalanceFactory.start()).thenReturn(ops);
         when(ops.getResults()).thenReturn(opsResults);
 

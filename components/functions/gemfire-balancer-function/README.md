@@ -75,12 +75,6 @@ put --key=33 --value=33 --region=/TestBalance
 The following is an example of how to execute the function on the given a region in Gfsh.
 
 ```shell
-execute function --id=BalancerFunction --arguments=2
+execute function --id=BalancerFunction --member=server1 --arguments=2
 ```
 
-Get data values should be null
-
-```shell
-get --key=1 --region=/TestClear
-get --key=2 --region=/TestClear
-```

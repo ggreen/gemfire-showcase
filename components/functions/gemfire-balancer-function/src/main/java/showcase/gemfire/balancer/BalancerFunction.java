@@ -69,27 +69,15 @@ public class BalancerFunction implements Function, Declarable {
                     sender.lastResult(0);
                     return;
                 }
-
             }
 
             var  rebalanceFactory = resourceManager.createRebalanceFactory();
-            var simulateOps = rebalanceFactory.simulate();
 
-            var simulateOpsResults = simulateOps.getResults();
-            logger.info("simulateOpsResults: {}",simulateOpsResults);
-
-            var simulatedTotalMembersExecutedOn = simulateOpsResults.getTotalMembersExecutedOn();
-            logger.info("simulatedTotalMembersExecutedOn: {}",simulatedTotalMembersExecutedOn);
-
-            if(simulatedTotalMembersExecutedOn == 0) {
-                sender.lastResult(simulatedTotalMembersExecutedOn);
-                return;
-            }
 
             var ops = rebalanceFactory.start();
             var results = ops.getResults();
 
-            logger.info("results: {}",simulateOpsResults);
+            logger.info("results: {}",results);
             sender.lastResult(results.getTotalMembersExecutedOn());
 
         } catch (InterruptedException e) {
