@@ -1,4 +1,4 @@
-package showcase.gemfire.health.check;
+package showcase.gemfire.health;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
