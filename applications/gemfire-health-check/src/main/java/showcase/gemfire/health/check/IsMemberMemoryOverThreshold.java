@@ -6,8 +6,9 @@ import org.apache.geode.management.MemberMXBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.Query;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -21,11 +22,11 @@ import java.util.function.Supplier;
 @Component("IsMemberMemoryOverThreshold")
 @Slf4j
 public class IsMemberMemoryOverThreshold implements Supplier<Boolean> {
-    private final MBeanServer jmxConnection;
+    private final MBeanServerConnection jmxConnection;
     private final Function<ObjectName,MemberMXBean> getMemberBeanFunction;
     private final double memoryThreshold;
 
-    public IsMemberMemoryOverThreshold(MBeanServer jmxConnection,
+    public IsMemberMemoryOverThreshold(MBeanServerConnection jmxConnection,
                                        Function<ObjectName, MemberMXBean> getMemberBeanFunction,
                                        @Value("${gemfire.threshold.memory.percentage}")
                                        double memoryThreshold) {
@@ -36,13 +37,18 @@ public class IsMemberMemoryOverThreshold implements Supplier<Boolean> {
 
     @SneakyThrows
     public Boolean get(){
-        Set<ObjectName> members = jmxConnection.queryNames(new ObjectName("GemFire:type=Member,*"), null);
+        Set<ObjectName> members = jmxConnection.queryNames(new ObjectName("GemFire:type=Member,member=*"),
+                null         );
 
         MemberMXBean memberBean;
         for (ObjectName member : members) {
             memberBean =  getMemberBeanFunction.apply(member);
 
+            log.info("Checking member: {}",memberBean);
+
             var name = memberBean.getName();
+            log.info("Member name: {}",name);
+
             var maxHeap = memberBean.getMaxMemory();
             var usedHeap = memberBean.getUsedMemory();
 
