@@ -1,10 +1,12 @@
 package showcase.gemfire.health.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import showcase.gemfire.health.fix.RebalanceCommand;
-import showcase.gemfire.health.check.IsMemberMemoryOverThreshold;
+
+import java.util.function.Supplier;
 
 /**
  * Execute Check the cluster and execute a autoSafe as needed
@@ -14,19 +16,21 @@ import showcase.gemfire.health.check.IsMemberMemoryOverThreshold;
 @Slf4j
 public class HealthCheckService {
 
-    private final IsMemberMemoryOverThreshold isMemberMemoryOverThreshold;
+    private final Supplier<Boolean> isRebalanceRequired;
 
     private final RebalanceCommand rebalanceCommand;
 
-    public HealthCheckService(IsMemberMemoryOverThreshold isMemberMemoryOverThreshold, RebalanceCommand rebalanceCommand) {
-        this.isMemberMemoryOverThreshold = isMemberMemoryOverThreshold;
+    public HealthCheckService(@Qualifier("IsRebalanceRequired") Supplier<Boolean> isRebalanceRequired,
+                              RebalanceCommand rebalanceCommand) {
+        this.isRebalanceRequired = isRebalanceRequired;
         this.rebalanceCommand = rebalanceCommand;
     }
 
 
-    @Scheduled(cron = "0 * * * * *") // every minute at 0 seconds
+//    @Scheduled(cron = "0 * * * * *") // every minute at 0 seconds
+    @Scheduled(cron = "${gemfire.check.schedule.cron:0 * * * * *}")
     public void checkAndRepair()  {
-        if (isMemberMemoryOverThreshold.get())
+        if (isRebalanceRequired.get())
         {
             log.info("Executing rebalance");
             rebalanceCommand.execute();

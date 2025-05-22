@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
 
+
 @Component("IsMemberCountOverThreshold")
 public class IsMemberCountOverThreshold implements Supplier<Boolean> {
 
@@ -13,7 +14,7 @@ public class IsMemberCountOverThreshold implements Supplier<Boolean> {
     private final int minimumCacheServerCount;
 
     public IsMemberCountOverThreshold(DistributedSystemMXBean distributedSystemMBean,
-                                      @Value("${gemfire.threshold.members.count}")
+                                      @Value("${gemfire.rebalance.threshold.members.count}")
                                       int minimumCacheServerCount) {
         this.distributedSystemMBean = distributedSystemMBean;
         this.minimumCacheServerCount = minimumCacheServerCount;

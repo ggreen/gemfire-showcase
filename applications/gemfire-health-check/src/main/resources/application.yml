@@ -1,15 +1,15 @@
 analyzer:
   directory: /tmp
 gemfire:
-  threshold:
-    members:
-      count: 3
+  rebalance:
+    threshold:
+      members:
+        count: 3
+  check:
     memory:
       percentage: 70
   jmx:
     locator:
       mBean:
-        name: "GemFire:type=Member,member=locator1"
-jmx:
-  service:
-    url: service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi
+        name: "GemFire:type=Member,member=${gemfire.locator.name}"
+#      url: service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi

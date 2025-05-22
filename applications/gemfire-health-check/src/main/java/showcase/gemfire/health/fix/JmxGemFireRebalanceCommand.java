@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
 
+/**
+ * JmxGemFireRebalanceCommand using JMX to execute a gfsh rebalance command
+ * @author gregory green
+ */
 @Component
 public class JmxGemFireRebalanceCommand implements RebalanceCommand{
 

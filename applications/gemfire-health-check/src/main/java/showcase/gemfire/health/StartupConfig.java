@@ -8,7 +8,7 @@ import showcase.gemfire.health.service.HealthCheckService;
 
 @Configuration
 @Slf4j
-public class AppConfig {
+public class StartupConfig {
 
     @Bean
     CommandLineRunner  commandLineRunner(HealthCheckService service)

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import showcase.gemfire.health.check.IsMemberMemoryOverThreshold;
+import showcase.gemfire.health.check.IsRebalanceRequired;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -20,9 +20,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IsMemberMemoryOverThresholdTest {
+class IsRebalanceRequiredTest {
 
-    private IsMemberMemoryOverThreshold subject;
+    private IsRebalanceRequired subject;
 
     @Mock
     private MBeanServer jmxConnection;
@@ -39,7 +39,7 @@ class IsMemberMemoryOverThresholdTest {
 
     @BeforeEach
     void setUp() {
-        subject = new IsMemberMemoryOverThreshold(jmxConnection,
+        subject = new IsRebalanceRequired(jmxConnection,
                 getMemberBeanFunction,
                 memoryThreshold);
     }
@@ -54,9 +54,6 @@ class IsMemberMemoryOverThresholdTest {
         Long usedMemory = 9L;
         when(memberMxBean.getMaxMemory()).thenReturn(maxMemory);
         when(memberMxBean.getUsedMemory()).thenReturn(usedMemory);
-
-
-
         var actual = subject.get();
 
         assertThat(actual).isTrue();

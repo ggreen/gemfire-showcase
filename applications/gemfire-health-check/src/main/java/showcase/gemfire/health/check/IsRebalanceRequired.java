@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import javax.management.Query;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -19,16 +18,16 @@ import java.util.function.Supplier;
  *
  * @author gregory green
  */
-@Component("IsMemberMemoryOverThreshold")
+@Component("IsRebalanceRequired")
 @Slf4j
-public class IsMemberMemoryOverThreshold implements Supplier<Boolean> {
+public class IsRebalanceRequired implements Supplier<Boolean> {
     private final MBeanServerConnection jmxConnection;
     private final Function<ObjectName,MemberMXBean> getMemberBeanFunction;
     private final double memoryThreshold;
 
-    public IsMemberMemoryOverThreshold(MBeanServerConnection jmxConnection,
-                                       Function<ObjectName, MemberMXBean> getMemberBeanFunction,
-                                       @Value("${gemfire.threshold.memory.percentage}")
+    public IsRebalanceRequired(MBeanServerConnection jmxConnection,
+                               Function<ObjectName, MemberMXBean> getMemberBeanFunction,
+                               @Value("${gemfire.threshold.memory.percentage}")
                                        double memoryThreshold) {
         this.jmxConnection = jmxConnection;
         this.getMemberBeanFunction = getMemberBeanFunction;

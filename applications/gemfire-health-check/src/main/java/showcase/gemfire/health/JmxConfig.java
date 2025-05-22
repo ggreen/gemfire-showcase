@@ -11,6 +11,7 @@ import org.springframework.jmx.support.MBeanServerConnectionFactoryBean;
 
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.Query;
 import javax.management.remote.JMXConnector;
 import java.util.Map;
 import java.util.Properties;
@@ -23,20 +24,19 @@ import java.util.function.Function;
 @Configuration
 public class JmxConfig {
 
-    @Value("${jmx.service.url}")
+    @Value("${gemfire.jmx.locator.url}")
     private String url;
 
-    @Value("${jmx.service.username:}")
+    @Value("${gemfire.security.username:}")
     private String userid;
 
-    @Value("${jmx.service.password:}")
+    @Value("${gemfire.security.password:}")
     private String password;
 
     @Value(("${gemfire.jmx.distributeSystem.mBean.name:GemFire:service=System,type=Distributed}"))
     private String distributeSystemMBeanName;
 
-    @Value(("${gemfire.jmx.locator.mBean.name}"))
-    private String locatorMBeanName;
+    private static  final String locatorObjectNameQuery = "GemFire:type=Member,member=*";
 
     /**
      *
@@ -77,13 +77,15 @@ public class JmxConfig {
 
     @SneakyThrows
     @Bean
-    MBeanProxyFactoryBean getLocatorMemberMXBean(MBeanServerConnection server)
+    MemberMXBean getLocatorMemberMXBean(MBeanServerConnection connection)
     {
-        var factory = new MBeanProxyFactoryBean();
-        factory.setObjectName(locatorMBeanName);
-        factory.setProxyInterface(MemberMXBean.class);
-        factory.setServer(server);
+        var locators = connection.queryNames(new ObjectName(locatorObjectNameQuery), Query.eq(Query.attr("CacheServer"), Query.value(false)));
 
-        return factory;
+        if(locators == null || locators.isEmpty())
+            throw new IllegalStateException("No locators found that match object name "+locatorObjectNameQuery);
+
+        var objectName = locators.iterator().next();
+
+        return javax.management.JMX.newMBeanProxy(connection, objectName, MemberMXBean.class);
     }
 }
