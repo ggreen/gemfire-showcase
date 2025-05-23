@@ -3,6 +3,7 @@ package showcase.gemfire.health;
 import lombok.SneakyThrows;
 import org.apache.geode.management.DistributedSystemMXBean;
 import org.apache.geode.management.MemberMXBean;
+import org.apache.geode.management.RegionMXBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +49,13 @@ public class JmxConfig {
     {
         return objectName -> javax.management.JMX.newMBeanProxy(mbeanServerConnection, objectName, MemberMXBean.class);
     }
+
+    @Bean
+    Function<ObjectName, RegionMXBean> toRegionMXBean(MBeanServerConnection mbeanServerConnection)
+    {
+        return objectName -> javax.management.JMX.newMBeanProxy(mbeanServerConnection, objectName, RegionMXBean.class);
+    }
+
 
     @SneakyThrows
     @Bean

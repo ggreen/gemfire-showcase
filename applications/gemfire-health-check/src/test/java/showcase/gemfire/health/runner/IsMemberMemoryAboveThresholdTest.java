@@ -7,11 +7,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import showcase.gemfire.health.check.IsRebalanceRequired;
+import showcase.gemfire.health.check.IsMemberMemoryAboveThreshold;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -20,9 +21,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IsRebalanceRequiredTest {
+class IsMemberMemoryAboveThresholdTest {
 
-    private IsRebalanceRequired subject;
+    private IsMemberMemoryAboveThreshold subject;
 
     @Mock
     private MBeanServer jmxConnection;
@@ -39,7 +40,7 @@ class IsRebalanceRequiredTest {
 
     @BeforeEach
     void setUp() {
-        subject = new IsRebalanceRequired(jmxConnection,
+        subject = new IsMemberMemoryAboveThreshold(jmxConnection,
                 getMemberBeanFunction,
                 memoryThreshold);
     }
@@ -57,5 +58,21 @@ class IsRebalanceRequiredTest {
         var actual = subject.get();
 
         assertThat(actual).isTrue();
+    }
+
+    @Test
+    void notRebalance() {
+//        System.out.println(subject.unbalanced(List.of(50,60,60,60)));
+
+        assertThat(subject.isBalance(
+                List.of(3l,8l,8l,100l),25)).isFalse();
+    }
+
+    @Test
+    void isbalanced() {
+//        System.out.println(subject.unbalanced(List.of(50,60,60,60)));
+
+        assertThat(subject.isBalance(
+                List.of(7l,8l,8l,10l),25)).isTrue();
     }
 }
