@@ -12,16 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IsMemberCountOverThresholdTest {
+class HasMemberCountThresholdTest {
 
-    private IsMemberCountOverThreshold subject;
+    private HasMemberCountThreshold subject;
     @Mock
     private DistributedSystemMXBean distributeSystem;
     private int minCacheServerCount = 2;
 
     @BeforeEach
     void setUp() {
-        subject = new IsMemberCountOverThreshold(distributeSystem,minCacheServerCount);
+        subject = new HasMemberCountThreshold(distributeSystem,minCacheServerCount);
     }
 
     @Test

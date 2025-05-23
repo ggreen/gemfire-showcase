@@ -1,13 +1,13 @@
 analyzer:
   directory: /tmp
 gemfire:
-  rebalance:
-    threshold:
-      members:
-        count: 3
-  check:
-    memory:
-      percentage: 70
+#  rebalance:
+#    threshold:
+#      members:
+#        count: 3
+#  check:
+#    memory:
+#      percentage: 70
   jmx:
     locator:
       mBean:

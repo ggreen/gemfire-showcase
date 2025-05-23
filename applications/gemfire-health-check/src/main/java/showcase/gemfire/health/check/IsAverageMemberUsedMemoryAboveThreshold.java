@@ -29,39 +29,11 @@ public class IsAverageMemberUsedMemoryAboveThreshold implements Supplier<Boolean
 
     public IsAverageMemberUsedMemoryAboveThreshold(MBeanServerConnection jmxConnection,
                                                    Function<ObjectName, MemberMXBean> getMemberBeanFunction,
-                                                   @Value("${gemfire.check.threshold.member.memory.used.above.average:25}")
+                                                   @Value("${gemfire.check.threshold.member.memory.used.above.average:50}")
                                        int memoryPercentageThreshold) {
         this.jmxConnection = jmxConnection;
         this.getMemberBeanFunction = getMemberBeanFunction;
         this.memoryPercentageThreshold = memoryPercentageThreshold;
-    }
-
-
-    public List<Long> getValuesGreaterThanAverageByPercentage(List<Long> numbers, int percentage) {
-        if (numbers == null || numbers.isEmpty()) {
-            return null;
-        }
-
-        var average = numbers.stream().mapToLong(val-> val).average().orElse(0);
-        log.info("Average memory usages is {}",average);
-
-        var matchesMemoryOverPercentageThreshold = new ArrayList<Long>();
-        for (Long usedMemory : numbers)
-        {
-            log.info("Memory usages: {}",usedMemory);
-
-            //5 5 5 10
-            var differenceFromAverage = average-usedMemory;
-            log.info("differenceFromAverage: {} with avg:{}: note negatives mean use memory is above avergage",differenceFromAverage,average);
-            var differencePercentage = (differenceFromAverage/average)*100;
-
-            log.info("differencePercentage: {}",differencePercentage);
-            if( differencePercentage >= percentage) //if greater than percentage
-                    matchesMemoryOverPercentageThreshold.add(usedMemory);
-        }
-
-        return !matchesMemoryOverPercentageThreshold.isEmpty()? matchesMemoryOverPercentageThreshold : null;
-
     }
 
 
@@ -75,6 +47,10 @@ public class IsAverageMemberUsedMemoryAboveThreshold implements Supplier<Boolean
         var serversUsedMemory = new ArrayList<Long>(members.size());
         for (ObjectName member : members) {
             memberBean =  getMemberBeanFunction.apply(member);
+            if(memberBean.isLocator()){
+                log.info("Skipping locator: ",member);
+                continue;
+            }
             serversUsedMemory.add(memberBean.getUsedMemory());
         }
 
@@ -83,6 +59,8 @@ public class IsAverageMemberUsedMemoryAboveThreshold implements Supplier<Boolean
 
     public boolean isBalance(List<Long> serversUsedMemory) {
 
+        log.info("Servers used memory: {}",serversUsedMemory);
+
         var average = serversUsedMemory.stream().mapToDouble(v -> v).average().orElse(0);
 
         for (Long usedMemory  : serversUsedMemory)
@@ -90,7 +68,7 @@ public class IsAverageMemberUsedMemoryAboveThreshold implements Supplier<Boolean
             var differenceFromAverage = average - usedMemory;
 
             var diffPercentage = (differenceFromAverage/average)*100;
-            log.info("usedMemory: {}, differenceFromAverage: {}, diffPercentage:",
+            log.info("usedMemory: {}, differenceFromAverage: {}, diffPercentage: {}",
                     usedMemory, differenceFromAverage,diffPercentage);
 
             if(diffPercentage > memoryPercentageThreshold)

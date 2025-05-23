@@ -8,15 +8,15 @@ import org.springframework.stereotype.Component;
 import java.util.function.Supplier;
 
 
-@Component("IsMemberCountOverThreshold")
+@Component("HasMemberCountThreshold")
 @Slf4j
-public class IsMemberCountOverThreshold implements Supplier<Boolean> {
+public class HasMemberCountThreshold implements Supplier<Boolean> {
 
     private final DistributedSystemMXBean distributedSystemMBean;
     private final int minimumCacheServerCount;
 
-    public IsMemberCountOverThreshold(DistributedSystemMXBean distributedSystemMBean,
-                                      @Value("${gemfire.rebalance.threshold.members.count}")
+    public HasMemberCountThreshold(DistributedSystemMXBean distributedSystemMBean,
+                                   @Value("${gemfire.rebalance.threshold.server.count}")
                                       int minimumCacheServerCount) {
         this.distributedSystemMBean = distributedSystemMBean;
         this.minimumCacheServerCount = minimumCacheServerCount;

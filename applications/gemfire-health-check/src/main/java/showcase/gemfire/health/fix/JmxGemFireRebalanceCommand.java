@@ -18,22 +18,23 @@ import java.util.function.Supplier;
 public class JmxGemFireRebalanceCommand implements RebalanceCommand{
 
     private static final Logger log = LoggerFactory.getLogger(JmxGemFireRebalanceCommand.class);
-    private final Supplier<Boolean> memberCountOverThreshold;
+    private final Supplier<Boolean> hasMemberCountThreshold;
     private final MemberMXBean locatorBean;
     private final String rebalanceCommand = "rebalance";
 
-    public JmxGemFireRebalanceCommand(@Qualifier("IsMemberCountOverThreshold") Supplier<Boolean> memberCountOverThreshold,
+    public JmxGemFireRebalanceCommand(@Qualifier("HasMemberCountThreshold") Supplier<Boolean> hasMemberCountThreshold,
                                       MemberMXBean locatorBean) {
-        this.memberCountOverThreshold = memberCountOverThreshold;
+        this.hasMemberCountThreshold = hasMemberCountThreshold;
         this.locatorBean = locatorBean;
     }
 
     @Override
     public void execute() {
 
-        var isMemberCountOver = memberCountOverThreshold.get();
-        log.info("isMemberCountOver: {}",isMemberCountOver);
-        if(Boolean.TRUE.equals(isMemberCountOver)) {
+        var isHasMemberCountThreshold = this.hasMemberCountThreshold.get();
+        log.info("isHasMemberCountThreshold: {}",isHasMemberCountThreshold);
+
+        if(Boolean.TRUE.equals(isHasMemberCountThreshold)) {
             log.info("Executing rebalanceCommand: {}",rebalanceCommand);
             var result = locatorBean.processCommand(rebalanceCommand);
             log.info("result: {} from Executed rebalanceCommand: {}",result, rebalanceCommand);
