@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 import java.util.function.Supplier;
 
 
+/**
+ * Determines is a rebalance is required
+ * @author gregory green
+ */
 @Component("IsRebalanceRequired")
 @RequiredArgsConstructor
 public class IsRebalanceRequired implements Supplier<Boolean> {

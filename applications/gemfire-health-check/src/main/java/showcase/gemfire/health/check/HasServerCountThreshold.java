@@ -7,15 +7,18 @@ import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;
 
-
-@Component("HasMemberCountThreshold")
+/**
+ * This class can be used to prevent a rebalance based on the available servers
+ * @author gregory green
+ */
+@Component("HasServerCountThreshold")
 @Slf4j
-public class HasMemberCountThreshold implements Supplier<Boolean> {
+public class HasServerCountThreshold implements Supplier<Boolean> {
 
     private final DistributedSystemMXBean distributedSystemMBean;
     private final int minimumCacheServerCount;
 
-    public HasMemberCountThreshold(DistributedSystemMXBean distributedSystemMBean,
+    public HasServerCountThreshold(DistributedSystemMXBean distributedSystemMBean,
                                    @Value("${gemfire.rebalance.threshold.server.count}")
                                       int minimumCacheServerCount) {
         this.distributedSystemMBean = distributedSystemMBean;
