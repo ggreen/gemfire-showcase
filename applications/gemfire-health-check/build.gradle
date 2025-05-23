@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	implementation platform('com.vmware.gemfire:gemfire-all-bom:10.0.0')
 	implementation group: 'com.vmware.gemfire', name: 'gemfire-core'
 	implementation group: 'com.vmware.gemfire', name: 'gemfire-common'
@@ -27,9 +28,7 @@ dependencies {
 	implementation group: 'com.vmware.gemfire', name: 'gemfire-cq'
 	implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
 
-	implementation project(':components:gemfire-extensions-core')
-	implementation 'com.github.nyla-solutions:nyla.solutions.core:2.3.1-SNAPSHOT'
-	implementation 'org.springframework.boot:spring-boot-starter'
+//	implementation 'org.springframework.boot:spring-boot-starter'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.postgresql:postgresql:42.7.5'
