@@ -21,11 +21,13 @@ class isRebalanceRequiredTest {
     private HasNumBucketsWithoutRedundancy redundancyCheck;
     @Mock
     private IsAverageMemberUsedMemoryAboveThreshold memoryCheck;
+    @Mock
+    private AreBucketsUnBalanced areBucketsUnBalanced;
 
 
     @BeforeEach
     void setUp() {
-        subject = new IsRebalanceRequired(redundancyCheck,memoryCheck);
+        subject = new IsRebalanceRequired(redundancyCheck,memoryCheck,areBucketsUnBalanced );
     }
 
     @Test
@@ -41,6 +43,14 @@ class isRebalanceRequiredTest {
 
         assertThat(subject.get()).isTrue();
     }
+
+    @Test
+    void trueIsWheRegionUnbalanced() {
+        when (areBucketsUnBalanced.get()).thenReturn(true);
+
+        assertThat(subject.get()).isTrue();
+    }
+
 
     @Test
     void falseWhenEverythingOk() {

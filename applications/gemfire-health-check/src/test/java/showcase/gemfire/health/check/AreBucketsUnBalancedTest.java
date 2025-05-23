@@ -15,63 +15,56 @@ import java.util.Set;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class HasNumBucketsWithoutRedundancyTest {
+class AreBucketsUnBalancedTest {
 
-    private HasNumBucketsWithoutRedundancy subject;
 
-    @Mock
-    private Function<ObjectName, RegionMXBean> getRegionMxBeanFunction;
+    private AreBucketsUnBalanced subject;
 
     @Mock
     private MBeanServerConnection jmxConnection;
 
     @Mock
-    private ObjectName objectName;
+    private Set<ObjectName> regions;
+
+    @Mock
+    private ObjectName objectName1,objectName2;
+
+    @Mock
+    private Function<ObjectName, RegionMXBean> getRegionMxBeanFunction;
 
     @Mock
     private RegionMXBean regionMXBean;
 
-    private Set<ObjectName> regions;
 
     @BeforeEach
     void setUp() {
-       regions = Set.of(objectName);
+        regions = Set.of(objectName1,objectName2);
 
-        subject = new HasNumBucketsWithoutRedundancy(jmxConnection,getRegionMxBeanFunction);
+        subject = new AreBucketsUnBalanced(jmxConnection,getRegionMxBeanFunction);
     }
 
     @Test
-    void isFalseIfWithoutRedundancy() throws IOException {
+    void isTrueIfHasBucketCountZero() throws IOException {
 
         when(jmxConnection.queryNames(any(ObjectName.class), Mockito.isNull())).thenReturn(regions);
         when(getRegionMxBeanFunction.apply(any())).thenReturn(regionMXBean);
-        when(regionMXBean.getNumBucketsWithoutRedundancy()).thenReturn(0);
-        var actual = subject.get();
-        assertThat(actual).isFalse();
+        when(regionMXBean.getBucketCount()).thenReturn(50)
+                .thenReturn(0);
+        assertThat(subject.get()).isTrue();
     }
+
 
     @Test
-    void isFalseNoRegions() throws IOException {
-
-        var actual = subject.get();
-        assertThat(actual).isFalse();
-    }
-
-
-        @Test
-    void isTrueIfWithoutRedundancy() throws IOException {
-
+    void isFalseIfBucketCountEquals() throws IOException {
 
         when(jmxConnection.queryNames(any(ObjectName.class), Mockito.isNull())).thenReturn(regions);
         when(getRegionMxBeanFunction.apply(any())).thenReturn(regionMXBean);
-        when(regionMXBean.getNumBucketsWithoutRedundancy()).thenReturn(1);
-        var actual = subject.get();
-        assertThat(actual).isTrue();
-
+        when(regionMXBean.getBucketCount()).thenReturn(50)
+                .thenReturn(50);
+        assertThat(subject.get()).isFalse();
     }
 }

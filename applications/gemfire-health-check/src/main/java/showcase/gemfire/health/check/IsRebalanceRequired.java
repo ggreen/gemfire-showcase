@@ -12,9 +12,12 @@ public class IsRebalanceRequired implements Supplier<Boolean> {
 
     private final HasNumBucketsWithoutRedundancy hasNumBucketsWithoutRedundancy;
     private final IsAverageMemberUsedMemoryAboveThreshold isAverageMemberUsedMemoryAboveThreshold;
+    private final AreBucketsUnBalanced areBucketsUnBalanced;
 
     @Override
     public Boolean get() {
-        return hasNumBucketsWithoutRedundancy.get() || isAverageMemberUsedMemoryAboveThreshold.get();
+        return hasNumBucketsWithoutRedundancy.get() ||
+                isAverageMemberUsedMemoryAboveThreshold.get() ||
+                areBucketsUnBalanced.get();
     }
 }
