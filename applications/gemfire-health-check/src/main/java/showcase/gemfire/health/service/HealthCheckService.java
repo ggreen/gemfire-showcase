@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import showcase.gemfire.health.fix.RebalanceCommand;
-
 import java.util.function.Supplier;
 
 /**
@@ -26,8 +25,9 @@ public class HealthCheckService {
         this.rebalanceCommand = rebalanceCommand;
     }
 
-
-//    @Scheduled(cron = "0 * * * * *") // every minute at 0 seconds
+    /**
+     * If rebalance is required than execute rebalance
+     */
     @Scheduled(cron = "${gemfire.check.schedule.cron:0 * * * * *}")
     public void checkAndRepair()  {
         if (isRebalanceRequired.get())
@@ -36,5 +36,4 @@ public class HealthCheckService {
             rebalanceCommand.execute();
         }
     }
-
 }

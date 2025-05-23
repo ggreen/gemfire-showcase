@@ -1,6 +1,9 @@
 package showcase.gemfire.health.fix;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.geode.management.MemberMXBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -11,8 +14,10 @@ import java.util.function.Supplier;
  * @author gregory green
  */
 @Component
+@Slf4j
 public class JmxGemFireRebalanceCommand implements RebalanceCommand{
 
+    private static final Logger log = LoggerFactory.getLogger(JmxGemFireRebalanceCommand.class);
     private final Supplier<Boolean> memberCountOverThreshold;
     private final MemberMXBean locatorBean;
     private final String rebalanceCommand = "rebalance";
@@ -26,7 +31,12 @@ public class JmxGemFireRebalanceCommand implements RebalanceCommand{
     @Override
     public void execute() {
 
-        if(Boolean.TRUE.equals(memberCountOverThreshold.get()))
-            locatorBean.processCommand(rebalanceCommand);
+        var isMemberCountOver = memberCountOverThreshold.get();
+        log.info("isMemberCountOver: {}",isMemberCountOver);
+        if(Boolean.TRUE.equals(isMemberCountOver)) {
+            log.info("Executing rebalanceCommand: {}",rebalanceCommand);
+            var result = locatorBean.processCommand(rebalanceCommand);
+            log.info("result: {} from Executed rebalanceCommand: {}",result, rebalanceCommand);
+        }
     }
 }

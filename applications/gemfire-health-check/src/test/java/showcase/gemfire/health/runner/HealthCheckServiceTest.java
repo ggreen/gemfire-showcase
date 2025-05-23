@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import showcase.gemfire.health.check.IsMemberMemoryAboveThreshold;
+import showcase.gemfire.health.check.IsAverageMemberUsedMemoryAboveThreshold;
 import showcase.gemfire.health.fix.RebalanceCommand;
 import showcase.gemfire.health.service.HealthCheckService;
 
@@ -21,19 +21,19 @@ class HealthCheckServiceTest {
     private RebalanceCommand rebalanceCommand;
 
     @Mock
-    private IsMemberMemoryAboveThreshold isMemberMemoryAboveThreshold;
+    private IsAverageMemberUsedMemoryAboveThreshold isAverageMemberUsedMemoryAboveThreshold;
 
 
     @BeforeEach
     void setUp() {
-        subject = new HealthCheckService(isMemberMemoryAboveThreshold,rebalanceCommand);
+        subject = new HealthCheckService(isAverageMemberUsedMemoryAboveThreshold,rebalanceCommand);
     }
 
     @DisplayName("Given Member over threshold When checkAndRepair Then Rebalance command")
     @Test
     void autoRebalance() throws Exception {
 
-        when(isMemberMemoryAboveThreshold.get()).thenReturn(true);
+        when(isAverageMemberUsedMemoryAboveThreshold.get()).thenReturn(true);
 
         subject.checkAndRepair();
 
@@ -45,7 +45,7 @@ class HealthCheckServiceTest {
     @Test
     void autoRebalance_lessThanExpectedMembers() throws Exception {
 
-        subject = new HealthCheckService(isMemberMemoryAboveThreshold,rebalanceCommand);
+        subject = new HealthCheckService(isAverageMemberUsedMemoryAboveThreshold,rebalanceCommand);
 
         subject.checkAndRepair();
 

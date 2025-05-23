@@ -20,16 +20,16 @@ import java.util.function.Supplier;
  *
  * @author gregory green
  */
-//@Component("IsMemberMemoryAboveThreshold")
+@Component("IsAverageMemberUsedMemoryAboveThreshold")
 @Slf4j
-public class IsMemberMemoryAboveThreshold implements Supplier<Boolean> {
+public class IsAverageMemberUsedMemoryAboveThreshold implements Supplier<Boolean> {
     private final MBeanServerConnection jmxConnection;
     private final Function<ObjectName,MemberMXBean> getMemberBeanFunction;
     private final int memoryPercentageThreshold;
 
-    public IsMemberMemoryAboveThreshold(MBeanServerConnection jmxConnection,
-                                        Function<ObjectName, MemberMXBean> getMemberBeanFunction,
-                                        @Value("${}")
+    public IsAverageMemberUsedMemoryAboveThreshold(MBeanServerConnection jmxConnection,
+                                                   Function<ObjectName, MemberMXBean> getMemberBeanFunction,
+                                                   @Value("${gemfire.check.threshold.member.memory.used.above.average:25}")
                                        int memoryPercentageThreshold) {
         this.jmxConnection = jmxConnection;
         this.getMemberBeanFunction = getMemberBeanFunction;

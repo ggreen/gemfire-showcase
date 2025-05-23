@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import showcase.gemfire.health.check.IsMemberMemoryAboveThreshold;
+import showcase.gemfire.health.check.IsAverageMemberUsedMemoryAboveThreshold;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -21,9 +21,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IsMemberMemoryAboveThresholdTest {
+class IsAverageMemberUsedMemoryAboveThresholdTest {
 
-    private IsMemberMemoryAboveThreshold subject;
+    private IsAverageMemberUsedMemoryAboveThreshold subject;
 
     @Mock
     private MBeanServer jmxConnection;
@@ -40,7 +40,7 @@ class IsMemberMemoryAboveThresholdTest {
 
     @BeforeEach
     void setUp() {
-        subject = new IsMemberMemoryAboveThreshold(jmxConnection,
+        subject = new IsAverageMemberUsedMemoryAboveThreshold(jmxConnection,
                 getMemberBeanFunction,
                 memoryThreshold);
     }

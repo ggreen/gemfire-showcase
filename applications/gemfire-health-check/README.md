@@ -24,13 +24,14 @@ java -jar applications/gemfire-health-check/build/libs/gemfire-health-check-0.0.
 Argument/Properties
 
 
-| Property                                  | Notes                                                                                                                               | Default     |
-|-------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| gemfire.jmx.locator.url                   | JMX connection URL of the GemFire locator                                                                                           |             | 
-| gemfire.security.username                 | GemFire security user name if security manager is implemented                                                                       |
-| gemfire.security.password                 | GemFire security password if security manager is implemented                                                                        |
-| gemfire.rebalance.threshold.members.count |                                                                                                                                     |             | 
-| gemfire.check.schedule.cron               | See [Spring Cron Express](https://docs.spring.io/spring-framework/reference/integration/scheduling.html#scheduling-cron-expression) | 0 * * * * * |
+| Property                                                 | Notes                                                                                                                               | Default     |
+|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| gemfire.jmx.locator.url                                  | JMX connection URL of the GemFire locator                                                                                           |             | 
+| gemfire.security.username                                | GemFire security user name if security manager is implemented                                                                       |
+| gemfire.security.password                                | GemFire security password if security manager is implemented                                                                        |
+| gemfire.rebalance.threshold.members.count                |                                                                                                                                     |             |
+| gemfire.check.threshold.member.memory.used.above.average | Triggers a rebalance repair when the memory for a member is above the average by this percentage                                    | 25          |
+| gemfire.check.schedule.cron                              | See [Spring Cron Express](https://docs.spring.io/spring-framework/reference/integration/scheduling.html#scheduling-cron-expression) | 0 * * * * * |
 
 
 

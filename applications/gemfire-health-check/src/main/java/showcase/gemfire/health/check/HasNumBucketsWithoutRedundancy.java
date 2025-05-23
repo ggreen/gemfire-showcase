@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  *
  * @author gregory green
  */
-@Component("IsRebalanceRequired")
+@Component("HasNumBucketsWithoutRedundancy")
 @Slf4j
 public class HasNumBucketsWithoutRedundancy implements Supplier<Boolean> {
     private final MBeanServerConnection jmxConnection;
