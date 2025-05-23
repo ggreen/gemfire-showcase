@@ -31,7 +31,7 @@ class IsMemberMemoryAboveThresholdTest {
     @Mock
     private Function<ObjectName, MemberMXBean> getMemberBeanFunction;
 
-    private double memoryThreshold = 50;
+    private int memoryThreshold = 25;
 
     @Mock
     private MemberMXBean memberMxBean;
@@ -51,28 +51,29 @@ class IsMemberMemoryAboveThresholdTest {
         Set<ObjectName> objectNames= Set.of(memberObjectName);
         when(jmxConnection.queryNames(any(), Mockito.isNull())).thenReturn(objectNames);
         when(getMemberBeanFunction.apply(any())).thenReturn(memberMxBean);
-        Long maxMemory = 10L;
         Long usedMemory = 9L;
-        when(memberMxBean.getMaxMemory()).thenReturn(maxMemory);
         when(memberMxBean.getUsedMemory()).thenReturn(usedMemory);
         var actual = subject.get();
 
-        assertThat(actual).isTrue();
+        assertThat(actual).isFalse();
     }
 
     @Test
     void notRebalance() {
-//        System.out.println(subject.unbalanced(List.of(50,60,60,60)));
-
         assertThat(subject.isBalance(
-                List.of(3l,8l,8l,100l),25)).isFalse();
+                List.of(3l,8l,8l,100l))).isFalse();
     }
 
     @Test
-    void isbalanced() {
-//        System.out.println(subject.unbalanced(List.of(50,60,60,60)));
+    void isbalancedSingleValue() {
 
         assertThat(subject.isBalance(
-                List.of(7l,8l,8l,10l),25)).isTrue();
+                List.of(7l))).isTrue();
+    }
+    @Test
+    void isbalanced() {
+
+        assertThat(subject.isBalance(
+                List.of(7l,8l,8l,10l))).isTrue();
     }
 }

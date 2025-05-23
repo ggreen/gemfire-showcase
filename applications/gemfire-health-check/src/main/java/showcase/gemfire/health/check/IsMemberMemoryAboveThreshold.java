@@ -25,15 +25,15 @@ import java.util.function.Supplier;
 public class IsMemberMemoryAboveThreshold implements Supplier<Boolean> {
     private final MBeanServerConnection jmxConnection;
     private final Function<ObjectName,MemberMXBean> getMemberBeanFunction;
-    private final double memoryThreshold;
+    private final int memoryPercentageThreshold;
 
     public IsMemberMemoryAboveThreshold(MBeanServerConnection jmxConnection,
                                         Function<ObjectName, MemberMXBean> getMemberBeanFunction,
                                         @Value("${}")
-                                       double memoryThreshold) {
+                                       int memoryPercentageThreshold) {
         this.jmxConnection = jmxConnection;
         this.getMemberBeanFunction = getMemberBeanFunction;
-        this.memoryThreshold = memoryThreshold;
+        this.memoryPercentageThreshold = memoryPercentageThreshold;
     }
 
 
@@ -71,33 +71,17 @@ public class IsMemberMemoryAboveThreshold implements Supplier<Boolean> {
                 null         );
 
         MemberMXBean memberBean;
+
+        var serversUsedMemory = new ArrayList<Long>(members.size());
         for (ObjectName member : members) {
             memberBean =  getMemberBeanFunction.apply(member);
-
-            log.info("Checking member: {}",memberBean);
-
-            var name = memberBean.getName();
-            log.info("Member name: {}",name);
-
-            var maxHeap = memberBean.getMaxMemory();
-            var usedHeap = memberBean.getUsedMemory();
-
-
-            double usagePercentage = ((double) usedHeap / maxHeap) * 100;
-
-            log.info("Member: {}, Heap Usage: {}} ({}}dMB/{}}MB)", name, usagePercentage, usedHeap, maxHeap);
-
-            if (usagePercentage > memoryThreshold) {
-                log.info("  WARNING: Member {}} is above heap usage threshold!", name);
-
-                return true;
-            }
+            serversUsedMemory.add(memberBean.getUsedMemory());
         }
 
-        return false;
+        return !isBalance(serversUsedMemory);
     }
 
-    public boolean isBalance(List<Long> serversUsedMemory, int percentageThreshold) {
+    public boolean isBalance(List<Long> serversUsedMemory) {
 
         var average = serversUsedMemory.stream().mapToDouble(v -> v).average().orElse(0);
 
@@ -109,7 +93,7 @@ public class IsMemberMemoryAboveThreshold implements Supplier<Boolean> {
             log.info("usedMemory: {}, differenceFromAverage: {}, diffPercentage:",
                     usedMemory, differenceFromAverage,diffPercentage);
 
-            if(diffPercentage > percentageThreshold)
+            if(diffPercentage > memoryPercentageThreshold)
                 return false;
         }
         return true;
