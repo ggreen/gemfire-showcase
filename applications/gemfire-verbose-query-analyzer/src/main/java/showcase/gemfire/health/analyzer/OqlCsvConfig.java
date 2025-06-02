@@ -1,5 +1,6 @@
 package showcase.gemfire.health.analyzer;
 
+import lombok.SneakyThrows;
 import nyla.solutions.core.io.csv.CsvWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,16 +10,19 @@ import java.io.File;
 import java.nio.file.Paths;
 
 @Configuration
-public class G1GCConfig {
+public class OqlCsvConfig {
 
     @Value("${reporting.directory}")
     private String reportDirectory;
 
+    @SneakyThrows
     @Bean
     CsvWriter gcCsvWriter()
     {
-        File file = Paths.get(reportDirectory+"/gc.csv").toFile();
+        File file = Paths.get(reportDirectory+"/oql.csv").toFile();
         file.delete();
-        return new CsvWriter(file);
+        var writer = new CsvWriter(file);
+        writer.writeHeader("oql","Time(Ms)");
+        return writer;
     }
 }
