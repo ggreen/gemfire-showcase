@@ -37,7 +37,7 @@ public class StatsToChartApp
 			File cpuFilePath = new File(args[1]+"/cpu.png");
 			File parNewCollectionTimesFilePath = new File(args[1]+"/parNewCollectionTimes.png");
 			File parNewCollectionsFilePath = new File(args[1]+"/parNewCollections.png");
-			File jvmMemoryFilePath = new File(args[1]+"/jvmMemory.png");
+			File jvmMemoryFilePath = new File(args[1]+"/jvmMaxMemory.png");
 			
 			Chart cpuChart = cpuChartConvert.convert(inputFileOrDirectory);
 			IO.writeFile(cpuFilePath, cpuChart.getBytes());
