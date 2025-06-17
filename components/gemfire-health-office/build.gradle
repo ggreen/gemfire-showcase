@@ -11,7 +11,7 @@ java {
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
 
-version = '1.0.1-SNAPSHOT'
+version = '1.0.1-'
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
 archivesBaseName = 'gemfire-health-office'

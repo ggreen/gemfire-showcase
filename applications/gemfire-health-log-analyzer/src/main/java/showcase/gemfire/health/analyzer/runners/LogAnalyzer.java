@@ -61,21 +61,26 @@ public class LogAnalyzer implements ApplicationRunner {
 
                 );
 
-        for(var result : serverResults){
+        if(serverResults != null)
+        {
+            for(var result : serverResults){
 
-            IO.writeAppend(issueFile,decorator.decorate(result));
-            log.info("result: {}",result);
+                IO.writeAppend(issueFile,decorator.decorate(result));
+                log.info("result: {}",result);
+            }
         }
 
         //Analyzer Results
 
-        var issueResults = Grep.file(issueFile)
-                .searchFirst(line -> line.contains("DISTRIBUTED_NO_ACK but enable-network-partition-detection is enabled in the distributed system."));
+        if(issueFile.exists())
+        {
+            var issueResults = Grep.file(issueFile)
+                    .searchFirst(line -> line.contains("DISTRIBUTED_NO_ACK but enable-network-partition-detection is enabled in the distributed system."));
 
-        if(issueResults != null)
-            csvWriter.appendRow("Data Safety","There is a potential inconsistent data when using DISTRIBUTED_NO_ACK for regions",issueResults.results());
+            if(issueResults != null)
+                csvWriter.appendRow("Data Safety","There is a potential inconsistent data when using DISTRIBUTED_NO_ACK for regions",issueResults.results());
 
-
+        }
     }
 
 }

@@ -45,7 +45,10 @@ public class G1GCReview {
 
 
     public void reportLogs(File directory) {
-        var files = IO.listFileRecursive(directory.getAbsolutePath(),"gc-*.log");
+        var files = IO.listFileRecursive(directory.getAbsolutePath(),"*gc*.log");
+
+        if(files == null)
+            return;
 
         for (var file : files)
         {
