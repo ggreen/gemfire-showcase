@@ -25,7 +25,7 @@ You must deploy the function using the gfsh deploy command.
 Example:
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/gemfire-object-sizing-function/build/libs/gemfire-object-sizing-function-1.0.0-SNAPSHOT.jar"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/gemfire-object-sizing-function/build/libs/gemfire-object-sizing-function-0.0.1.jar"
 ```
 
 The function can executed on a GemFire region

@@ -8,7 +8,7 @@ java {
     }
 }
 
-version = '1.0.0-SNAPSHOT'
+version = '0.0.1'
 
 allprojects {
     tasks.withType(Javadoc) {
