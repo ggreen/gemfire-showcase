@@ -1,7 +1,7 @@
 # gemfire-object-sizing-function
 
 This function allows you to determine the top region data entries based on the entry values bytes sizes. 
-This is function should help to identify unbalanced data in GemFire due 
+This function should help to identify unbalanced data in GemFire due 
 to large entry objects with nested collections , maps, etc.
 
 Note this function uses the GemFire ReflectionObjectSizer of the 
