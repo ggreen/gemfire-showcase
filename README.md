@@ -26,16 +26,26 @@ This project contains example APIs, applications, design patterns implementation
 | Project                                                                                                                                               | Notes                                                                                                                                                      |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)                       | GemFire client API wrapper                                                                                                                                 |
- | [gemfire-perf-test](applications/gemfire-perf-test)                                                                                                   | GemFire Performance test Tool                                                                                                                              |
+| [gemfire-perf-test](applications/gemfire-perf-test)                                                                                                   | GemFire Performance test Tool                                                                                                                              |
 | [gemfire-health-check](applications/gemfire-health-check)                                                                                             | GemFire Health Check Tool                                                                                                                                  |
 | [components/gemfire-extensions-spring-security](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-spring-security) | Spring Security implements backed by GemFire                                                                                                               | 
 | [applications/gemfire-health-shell-app](https://github.com/ggreen/gemfire-extensions/tree/main/applications/gemfire-health-shell-app)                 | [Spring Shell](https://spring.io/projects/spring-shell) application to analyzer GemFire statistics                                                         |
 | [components/gemfire-health-office](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-health-office)                           | Tools for analyzing GemFire statistics                                                                                                                     |
 | [components/gemfire-http-dotnet-api](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-http-dotnet-api)                       | Wrapper Dotnet Core client that uses the GemFire HTTP API                                                                                                  |
 | [components/gemfire-security-managers](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-security-managers)                   | [GemFire security manager](https://tanzu.vmware.com/developer/data/gemfire/blog/security-manager-basics-authentication-and-authorization/) implementations |
-| [components/gemfire-touch-function](components/gemfire-touch-function)                                                                                | GemFire function to synchronize region in WAN replicated GemFire clusters                                                                                  |
 | [components/functions/gemfire-clear-region-function](components/functions/gemfire-clear-region-function)                                              | GemFire function to clear region data in a GemFire partitioned region                                                                                      |
 | [deployments/scripts/gemfire-devOps-bash](deployment/scripts/gemfire-devOps-bash)                                                                     | GemFire cluster operations DevOps management scripts                                                                                                       |
+
+
+The following are GemFire utility functions
+
+| Functions                                                                             | Notes                                                                     |
+|---------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| [components/gemfire-touch-function](components/gemfire-touch-function)                | GemFire function to synchronize region in WAN replicated GemFire clusters |
+| [gemfire-clear-region-function](components/functions/gemfire-clear-region-function)   | Clear all entries delete in a partitioned/replicated region               |
+| [gemfire-delete-region-function](components/functions/gemfire-delete-region-function) | Delete entries in a region based on a matching sql statement              |
+| [gemfire-object-sizing-function](components/functions/gemfire-object-sizing-function) | Determine the top entries sizes in region for debugging unbalanced data   |
+| [gemfire-search-function](components/functions/gemfire-search-function)               | Function to perform a Full text search using GemFire Search               |
 
 
 ## Building Source Code
