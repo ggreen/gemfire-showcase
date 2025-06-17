@@ -1,35 +1,35 @@
 # gemfire-object-sizing-function
 
-This function allows you determine the top entries bytes sizes in
-region data. This is importance to determine why data may be unbalanced
-in GemFire due large entries such as objects with nested collections , maps, 
-etc.
+This function allows you to determine the top region data entries based on the entry values bytes sizes. 
+This is function should help to identify unbalanced data in GemFire due 
+to large entry objects with nested collections , maps, etc.
 
 Note this function uses the GemFire ReflectionObjectSizer of the 
 [ObjectSizer](https://developer.broadcom.com/xapis/vmware-gemfire-java-api-reference/latest/org/apache/geode/cache/util/ObjectSizer.html).
 
 The ReflectionObjectSizer implementation is the most accurate ObjectSizer calculator. 
-Teh function will identify the key an entry value size in bytes
-to the caller. The results are printed to standard out when using the gfsh command line tooo.
+The function will identify the key and entry value size in bytes
+to the caller. The results are printed to standard out when using the gfsh command line tool.
 
-This function has been tested with the following
 
-- GemFire version 10.1.0 
-- Java 17
-- Gradle 8.4
 
 
 ## Getting Started 
 
 You must deploy the function using the gfsh deploy command.
+This function has been tested with the following
 
-Download Function
+- GemFire version 10.1.0
+- Java 17
+- Gradle 8.4
+
+**Download Function**
 
 ```shell
 wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-object-sizing-function.0.0.1/gemfire-object-sizing-function-0.0.1.jar
 ```
 
-Deploy the function
+**Deploy the function**
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/gemfire-object-sizing-function-0.0.1.jar"
@@ -37,6 +37,12 @@ $GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/gemfire-object-sizing-
 
 The function can be executed on a GemFire region.
 The following is an example of how to execute the function on the given a region in Gfsh.
+
+Example in Gfsh
+
+```gfsh
+execute function --id=TopNByteSizesPerServerFunction --region=$REGION --arguments=$TopNNumberOfEntries
+```
 
 Inputs
 
@@ -46,13 +52,10 @@ Inputs
 | region    | name of the region to execute                              |
 | arguments | The top N number of the entries to return per cache server |
 
-```shell
-execute function --id=TopNByteSizesPerServerFunction --region=$REGION --arguments=$TopNNumberOfEntries
-```
 
-Get Top 3 entry by byte sizes per data node cache server in a cluster 
+Example in Gfsh: Get Top 3 entry by byte sizes per data node cache server in a cluster 
 
-```shell
+```gfsh
 execute function --id=TopNByteSizesPerServerFunction --region=/TestObjectSizes --arguments=3
 ```
 
