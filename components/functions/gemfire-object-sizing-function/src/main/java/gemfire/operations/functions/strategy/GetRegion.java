@@ -1,4 +1,4 @@
-package com.vmware.data.services.gemfire.operations.functions.strategy;
+package gemfire.operations.functions.strategy;
 
 import org.apache.geode.cache.Region;
 import org.apache.geode.cache.execute.FunctionContext;
@@ -23,6 +23,6 @@ public class GetRegion implements Function<FunctionContext<?>,Region<Object,Obje
         if(dataSet.getAttributes().getDataPolicy().withReplication())
             return dataSet;
 
-        return PartitionRegionHelper.getLocalData(rfc.getDataSet());
+        return PartitionRegionHelper.getLocalData(dataSet);
     }
 }

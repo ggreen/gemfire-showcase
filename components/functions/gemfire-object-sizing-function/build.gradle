@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+version = '1.0.0-SNAPSHOT'
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+group = 'io.pivotal.services.dataTx'
+archivesBaseName = 'gemfire-object-sizing-function'
+
+ext {
+    gemFireVersion = '10.1.0'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url "https://packages.broadcom.com/artifactory/gemfire/"
+        metadataSources {
+            mavenPom()
+            artifact()
+            ignoreGradleMetadataRedirection()
+        }
+        credentials {
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
+        }
+    }
+}
+dependencies {
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
+    implementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.6.1'
+
+}
+
+test {
+    useJUnitPlatform()
+}
