@@ -8,7 +8,9 @@ etc.
 Note this function uses the GemFire ReflectionObjectSizer of the 
 [ObjectSizer](https://developer.broadcom.com/xapis/vmware-gemfire-java-api-reference/latest/org/apache/geode/cache/util/ObjectSizer.html).
 
-This  implementation is the most accurate ObjectSizer calculator.
+The ReflectionObjectSizer implementation is the most accurate ObjectSizer calculator. 
+Teh function will identify the key an entry value size in bytes
+to the caller. The results are printed to standard out when using the gfsh command line tooo.
 
 This function has been tested with the following
 
