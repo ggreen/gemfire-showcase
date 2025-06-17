@@ -8,6 +8,10 @@ import org.apache.geode.cache.partition.PartitionRegionHelper;
 
 import java.util.function.Function;
 
+/**
+ * Return the region based on the function context
+ * @author gregory Green
+ */
 public class GetRegion implements Function<FunctionContext<?>,Region<Object,Object>> {
 
 

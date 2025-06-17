@@ -11,6 +11,11 @@ import org.apache.geode.cache.execute.RegionFunctionContext;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+
+/**
+ * Return the region based on the function context
+ * @author gregory Green
+ */
 public class GetRegionFromFunctionContext implements Function<FunctionContext, Region<Object,Object>> {
 
     private final Supplier<Cache> cacheSupplier;
