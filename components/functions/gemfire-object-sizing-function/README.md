@@ -1,7 +1,16 @@
 # gemfire-object-sizing-function
 
-This function allows determine the top region value sizes in
-region data. This function has been tested with the following
+This function allows you determine the top entries bytes sizes in
+region data. This is importance to determine why data may be unbalanced
+in GemFire due large entries such as objects with nested collections , maps, 
+etc.
+
+Note this function uses the GemFire ReflectionObjectSizer of the 
+[ObjectSizer](https://developer.broadcom.com/xapis/vmware-gemfire-java-api-reference/latest/org/apache/geode/cache/util/ObjectSizer.html).
+
+This  implementation is the most accurate ObjectSizer calculator.
+
+This function has been tested with the following
 
 - GemFire version 10.1.0 
 - Java 17
