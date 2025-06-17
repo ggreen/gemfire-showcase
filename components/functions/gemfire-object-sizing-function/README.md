@@ -28,7 +28,7 @@ Example:
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/gemfire-object-sizing-function/build/libs/gemfire-object-sizing-function-0.0.1.jar"
 ```
 
-The function can executed on a GemFire region
+The function can be executed on a GemFire region
 The following is an example of how to execute the function on the given a region in Gfsh.
 
 Inputs
