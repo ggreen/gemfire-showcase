@@ -21,14 +21,19 @@ This function has been tested with the following
 
 You must deploy the function using the gfsh deploy command.
 
-
-Example:
+Download Function
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/gemfire-object-sizing-function/build/libs/gemfire-object-sizing-function-0.0.1.jar"
+wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-object-sizing-function.0.0.1/gemfire-object-sizing-function-0.0.1.jar
 ```
 
-The function can be executed on a GemFire region
+Deploy the function
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/gemfire-object-sizing-function-0.0.1.jar"
+```
+
+The function can be executed on a GemFire region.
 The following is an example of how to execute the function on the given a region in Gfsh.
 
 Inputs
@@ -104,10 +109,15 @@ configure pdx --read-serialized=true --disk-store
 ```
 
 Start Cache Server in gfsh
+
 ```shell
 start server --name=server1 --locators=localhost[10334]
 ```
+Deploy Function
 
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/gemfire-object-sizing-function/build/libs/gemfire-object-sizing-function-0.0.1.jar"
+```
 
 
 Create a region in gfsh
