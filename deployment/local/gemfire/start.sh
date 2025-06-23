@@ -1,11 +1,11 @@
 cd $GEMFIRE_HOME/bin
 
-$GEMFIRE_HOME/bin/gfsh -e "start locator --name=locator1-2members --port=10334 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7777 --J=-Dgemfire.prometheus.metrics.host=localhost --J=-Dgemfire.prometheus.metrics.interval=15s --bind-address=127.0.0.1 --J=-Dgemfire.enable-management-rest-service=true --J=-Dgemfire.enable-cluster-configuration=true  --J=-Dgemfire.start-rest-api=true --J=-XX:+AlwaysPreTouch"
+$GEMFIRE_HOME/bin/gfsh -e "start locator --name=locator1-2members --port=10334 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7977 --J=-Dgemfire.prometheus.metrics.host=127.0.0.1 --J=-Dgemfire.prometheus.metrics.interval=15s --bind-address=127.0.0.1 --J=-Dgemfire.enable-management-rest-service=true --J=-Dgemfire.enable-cluster-configuration=true  --initial-heap=512m --max-heap=512m  --J=-Dgemfire.start-rest-api=true --J=-Dgemfire.statistic-archive-file=locator1-2members.gfs   --J=-D-gemfire.statistic-sampling-enabled=true "
 
-curl http://localhost:7777/metrics
+curl http://127.0.0.1:7777/metrics
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "configure pdx --read-serialized=true --disk-store"
-$GEMFIRE_HOME/bin/gfsh -e "start server --name=server1-2members --locators=localhost[10334] --server-port=2882 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7778 --J=-Dgemfire.prometheus.metrics.host=localhost --J=-Dgemfire.prometheus.metrics.interval=15s --bind-address=127.0.0.1  --http-service-port=8590 --J=-Dgemfire.enable-management-rest-service=true --J=-Dgemfire.enable-cluster-configuration=true --J=-XX:+AlwaysPreTouch --start-rest-api=true"
-curl http://localhost:7778/metrics
+$GEMFIRE_HOME/bin/gfsh -e "start server --name=server1-2members --locators=127.0.0.1[10334] --server-port=2882 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7978 --J=-Dgemfire.prometheus.metrics.host=127.0.0.1 --J=-Dgemfire.prometheus.metrics.interval=15s --bind-address=127.0.0.1  --http-service-port=8590 --J=-Dgemfire.enable-management-rest-service=true --J=-Dgemfire.enable-cluster-configuration=true --J=-XX:+AlwaysPreTouch --start-rest-api=true --J=-Dgemfire.statistic-archive-file=server1-2members.gfs   --J=-D-gemfire.statistic-sampling-enabled=true "
+curl http://127.0.0.1:7778/metrics
 
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --skip-if-exists=true --name=Account --type=PARTITION --enable-statistics=true"
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "connect"  -e "create region --skip-if-exists=true --name=UserAccount --type=PARTITION --enable-statistics=true"
