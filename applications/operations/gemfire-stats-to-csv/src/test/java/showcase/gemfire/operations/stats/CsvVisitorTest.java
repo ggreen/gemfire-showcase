@@ -14,6 +14,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+
+/**
+ * Test for the CSV visitor
+ * @author gregory green
+ */
 @ExtendWith(MockitoExtension.class)
 class CsvVisitorTest {
 
@@ -32,8 +39,10 @@ class CsvVisitorTest {
     }
 
     @Test
-    void visit() {
+    void visit() throws IOException {
 
         reader.acceptVisitors(subject);
+
+        verify(csvWriter).writeHeader(any(String[].class));
     }
 }

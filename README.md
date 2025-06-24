@@ -20,20 +20,35 @@ This project contains example APIs, applications, design patterns implementation
 | [WAN REPLICATION ACTIVE_ACTIVE](docs/demo/local/WAN_REPLICATION_ACTIVE_ACTIVE.md) | Showcases the GemFire WAN replications                                                                                                                 |
 | [GemFire Management Console](docs/demo/local/monitoring)                          | This demo will setup 2 WAN replication connected GemFire clusters. The GemFire Manage Console will be used to showcase the fleet management abilities. |
 
-# Sub Projects
+
+# GemFire API
+
+
+
+| Project                                                                                                                                               | Notes                                                                                                                                                      |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)                       | GemFire client API wrapper                                                                                                                                 |
+| [components/gemfire-extensions-spring-security](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-spring-security) | Spring Security implementation backed by GemFire                                                                                                           | 
+| [components/gemfire-http-dotnet-api](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-http-dotnet-api)                       | Wrapper Dotnet Core client that uses the GemFire HTTP API                                                                                                  |
+
+
+
+
+
+# Management Operations 
 
 
 | Project                                                                                                                                               | Notes                                                                                                                                                      |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [components/gemfire-extensions-core](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-core)                       | GemFire client API wrapper                                                                                                                                 |
 | [gemfire-perf-test](applications/gemfire-perf-test)                                                                                                   | GemFire Performance test Tool                                                                                                                              |
-| [gemfire-health-check](applications/gemfire-health-check)                                                                                             | GemFire Health Check Tool                                                                                                                                  |
+| [applications/gemfire-gc-log-analyzer](applications/gemfire-gc-log-analyzer)                                                                          | JVM Java Garbage Collection logs file Analyzing                                                                                                            |                                                                                                                                                           | GemFire Health Check Tool                                                                                                                                  |
+| [gemfire-health-log-analyzer](applications/gemfire-health-log-analyzer)                                                                               | Analyze and summary information in GemFire log files                                                                                                       |                                                                                                                                                           | GemFire Health Check Tool                                                                                                                                  |
+ | [applications/operations/gemfire-stats-to-csv](applications/operations/gemfire-stats-to-csv)                                                          | Saves useful GemFire statistics to a CSV file                                                                                                              | 
 | [components/gemfire-extensions-spring-security](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-extensions-spring-security) | Spring Security implements backed by GemFire                                                                                                               | 
 | [applications/gemfire-health-shell-app](https://github.com/ggreen/gemfire-extensions/tree/main/applications/gemfire-health-shell-app)                 | [Spring Shell](https://spring.io/projects/spring-shell) application to analyzer GemFire statistics                                                         |
 | [components/gemfire-health-office](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-health-office)                           | Tools for analyzing GemFire statistics                                                                                                                     |
-| [components/gemfire-http-dotnet-api](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-http-dotnet-api)                       | Wrapper Dotnet Core client that uses the GemFire HTTP API                                                                                                  |
 | [components/gemfire-security-managers](https://github.com/ggreen/gemfire-extensions/tree/main/components/gemfire-security-managers)                   | [GemFire security manager](https://tanzu.vmware.com/developer/data/gemfire/blog/security-manager-basics-authentication-and-authorization/) implementations |
-| [components/functions/gemfire-clear-region-function](components/functions/gemfire-clear-region-function)                                              | GemFire function to clear region data in a GemFire partitioned region                                                                                      |
 | [deployments/scripts/gemfire-devOps-bash](deployment/scripts/gemfire-devOps-bash)                                                                     | GemFire cluster operations DevOps management scripts                                                                                                       |
 
 

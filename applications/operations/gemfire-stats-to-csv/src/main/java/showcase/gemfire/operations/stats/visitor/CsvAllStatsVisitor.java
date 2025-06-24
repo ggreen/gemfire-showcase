@@ -1,5 +1,4 @@
 package showcase.gemfire.operations.stats.visitor;
-
 import com.vmware.data.services.gemfire.operations.stats.statInfo.ArchiveInfo;
 import com.vmware.data.services.gemfire.operations.stats.statInfo.ResourceInst;
 import com.vmware.data.services.gemfire.operations.stats.visitors.StatsVisitor;
@@ -15,14 +14,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.valueOf;
 import static nyla.solutions.core.util.Organizer.toMap;
 
 /**
- * Print usage GemFire statistics to file
+ * Print usage GemFire statistics to file with detailed time series data
  * @author Gregory Green
  */
-public class CsvVisitor implements StatsVisitor
+public class CsvAllStatsVisitor implements StatsVisitor
 {
     private final CsvWriter csvWriter;
     private final Day dayFilter;
@@ -30,7 +28,7 @@ public class CsvVisitor implements StatsVisitor
     private final String skipResourceInstNameRegExp = "RegionStats-managementRegionStats|org.apache.geode.*internal.*";
 
     private final Map<String, List<String>> statNamesMap;
-    public CsvVisitor(CsvWriter csvWriter, Day dayFilter)
+    public CsvAllStatsVisitor(CsvWriter csvWriter, Day dayFilter)
             throws IOException{
         this(csvWriter,dayFilter,
                 toMap(
@@ -66,15 +64,16 @@ public class CsvVisitor implements StatsVisitor
                 ));
     }
 
-    public CsvVisitor(CsvWriter csvWriter, Day dayFilter, Map<String, List<String>> statNamesMap)
+    public CsvAllStatsVisitor(CsvWriter csvWriter, Day dayFilter, Map<String, List<String>> statNamesMap)
             throws IOException
     {
         this.csvWriter = csvWriter;
         this.dayFilter = dayFilter;
         this.statNamesMap = statNamesMap;
 
-        csvWriter.writeHeader("machine","typeName","resourceInstName","descriptionName","min",
-                "avg","max","description","units");
+        csvWriter.writeHeader("machine",  "type", "resource", "name",
+                "time",
+                "value");
     }
 
 
@@ -140,24 +139,29 @@ public class CsvVisitor implements StatsVisitor
                 return;
             }
 
-            try {
+            for (int j = 0; j < values.length; j++)
+            {
+                if(values[j] == 0)
+                    continue;
 
-                csvWriter.appendRow(machine,
-                        typeName,
-                        resourceInstName,
-                        statValue
-                                .getDescriptor().getName(),
-                        valueOf(statValue.getSnapshotsMinimum()),
-                        valueOf(statValue.getSnapshotsAverage()),
-                                valueOf(statValue.getSnapshotsMaximum()),
-                        statValue
-                                .getDescriptor().getDescription(),
-                        statValue
-                                .getDescriptor().getUnits()
+                try
+                {
+                    if(!dayFilter.isSameDay(new Day(times[j])))
+                        continue; //skip
 
-                        );
-            } catch (IOException e) {
-                e.printStackTrace();
+
+                    csvWriter.appendRow(machine,
+                            typeName,
+                            resourceInstName,
+                            statValue
+                                    .getDescriptor().getName(),
+                            formatTime(times[j]),
+                            String.valueOf(values[j]));
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException("ERROR"+e.getMessage()+" stat:"+statValue,e);
+                }
             }
         }
     }
