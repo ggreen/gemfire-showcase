@@ -6,6 +6,12 @@ This application only prints the [Most useful statistics](https://community.broa
 
 ## Getting Started
 
+This application has been tested with the following
+
+- Java 17
+- Gradle 8.4
+
+
 
 | Property          | Notes                                                                                                                      |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------|

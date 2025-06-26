@@ -4,6 +4,9 @@ This function allows you to determine the top region data entries based on the e
 This function should help to identify unbalanced data in GemFire due 
 to large entry objects with nested collections , maps, etc.
 
+
+![sizing-architecture.png](docs/images/sizing-architecture.png)
+
 Note this function uses the GemFire ReflectionObjectSizer of the 
 [ObjectSizer](https://developer.broadcom.com/xapis/vmware-gemfire-java-api-reference/latest/org/apache/geode/cache/util/ObjectSizer.html).
 
