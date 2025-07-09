@@ -1,9 +1,11 @@
 package showcase.gemfire.health.analyzer.gc;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import nyla.solutions.core.io.IO;
 import nyla.solutions.core.io.csv.CsvWriter;
 import nyla.solutions.core.util.Text;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -15,6 +17,7 @@ import java.util.regex.Pattern;
 import static nyla.solutions.core.util.Debugger.println;
 
 @Component
+@Slf4j
 public class G1GCReview {
 
     private static final Pattern gcPausePattern = Pattern.compile(
@@ -25,10 +28,15 @@ public class G1GCReview {
             "Total heap: (\\d+)([KMG])->(\\d+)([KMG])\\((\\d+)([KMG])\\)"
     );
     private final CsvWriter csvWriter;
+    //"*gc*.log"
+    private final String filePattern;
 
     @SneakyThrows
-    public G1GCReview(CsvWriter csvWriter) {
+    public G1GCReview(CsvWriter csvWriter,
+                      @Value("${gc.file.pattern}") String filePattern) {
+
         this.csvWriter = csvWriter;
+        this.filePattern = filePattern;
 
         this.csvWriter.writeHeader("GC","Pause (ms)","parent Folder","line");
     }
@@ -45,7 +53,9 @@ public class G1GCReview {
 
 
     public void reportLogs(File directory) {
-        var files = IO.listFileRecursive(directory.getAbsolutePath(),"*gc*.log");
+        var files = IO.listFileRecursive(directory.getAbsolutePath(),filePattern);
+
+        log.info("review files: {}",files);
 
         if(files == null)
             return;

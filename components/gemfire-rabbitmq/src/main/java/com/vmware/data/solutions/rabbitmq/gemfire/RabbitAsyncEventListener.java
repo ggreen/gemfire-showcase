@@ -47,6 +47,7 @@ public class RabbitAsyncEventListener implements AsyncEventListener {
         for (AsyncEvent<String, PdxInstance> event: list) {
             try {
                 String key = event.getKey();
+                //testing
                 publisher.publish(converter.apply(event.getDeserializedValue()),
                         key
                         );

@@ -1,5 +1,6 @@
 package showcase.gemfire.health.analyzer;
 
+import lombok.extern.slf4j.Slf4j;
 import nyla.solutions.core.io.csv.CsvWriter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -12,6 +13,7 @@ import java.net.URI;
 import java.nio.file.Paths;
 
 @Configuration
+@Slf4j
 public class G1GCConfig {
 
     @Value("${reporting.directory}")
@@ -25,6 +27,8 @@ public class G1GCConfig {
     {
         File file = Paths.get(reportDirectory+"/gc.csv").toFile();
         file.delete();
+
+        log.info("Writing to {}",file);
         return new CsvWriter(file);
     }
 
