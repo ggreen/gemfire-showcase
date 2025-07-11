@@ -1,0 +1,54 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.3'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'gemfire.showcase'
+version = '0.0.1-SNAPSHOT'
+
+ext {
+	springBootForGemFireVersion = '2.0.0'
+	vmwareGemFireVersion = '10.1.0'
+}
+
+dependencies {
+	implementation "com.vmware.gemfire:spring-boot-3.5-gemfire-10.1:$springBootForGemFireVersion"
+	implementation "com.vmware.gemfire:gemfire-core:$vmwareGemFireVersion"
+	implementation("com.netflix.hystrix:hystrix-core:1.5.18")
+	implementation("com.github.nyla-solutions:nyla.solutions.core:2.3.2")
+	// if using continuous queries
+	implementation "com.vmware.gemfire:gemfire-cq:$vmwareGemFireVersion"
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+	maven {
+		url "https://packages.broadcom.com/artifactory/gemfire/"
+		metadataSources {
+			mavenPom()
+			artifact()
+			ignoreGradleMetadataRedirection()
+		}
+		credentials {
+			credentials {
+				username System.getenv('BROADCOM_MAVEN_USERNAME')
+				password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
+			}
+		}
+	}
+}
