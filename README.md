@@ -63,6 +63,15 @@ The following are GemFire utility functions
 | [gemfire-search-function](components/functions/gemfire-search-function)               | Function to perform a Full text search using GemFire Search               |
 
 
+This follow are example GemFire client applications
+
+
+| Application                                                                                | Notes                                                                                   |
+|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| [applications/examples/spring/spring-hystrix](applications/examples/spring/spring-hystrix) | using [Hystrix](https://github.com/Netflix/Hystrix) with a Spring based GemFire client. |
+ | [applications/examples/spring/pdx-migration](applications/examples/spring/pdx-migration)   | example reading from a GemFire snapshot. |
+| [applications/examples/spring/account-service](applications/examples/spring/account-service)                                           | Sample Spring REST API GemFire client application|
+
 ## Building Source Code
 
 Set up Maven Repository user credentials

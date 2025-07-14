@@ -1,6 +1,10 @@
 # spring-hystrix
 
-This project is an example reference application to showcase using [Hystrix](https://github.com/Netflix/Hystrix) GemFire client 
+This project is an example reference application to showcase using [Hystrix](https://github.com/Netflix/Hystrix) with a Spring based GemFire client.
+
+
+## Getting Started
+
 Running the application.
 
 ```bash
