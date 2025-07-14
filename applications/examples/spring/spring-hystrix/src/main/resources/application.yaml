@@ -1,6 +1,6 @@
 hystrix.region.name: test
-spring:
-  data:
-    gemfire:
-      pool:
-        locators: localhost[10334]
+#spring:
+#  data:
+#    gemfire:
+#      pool:
+#        locators: localhost[10334]

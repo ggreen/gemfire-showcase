@@ -7,16 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import showcase.spring.gemfire.hystrix.commands.SupplierHystrixCommand;
-
 import java.util.Calendar;
 
-import static nyla.solutions.core.util.Text.generateId;
-
 @Configuration
-public class AppConfig {
-
-    @Value("${app.timeout.ms:1}")
-    private int timeMillisecond;
+public class HystrixConfig {
 
     @Value("${app.batch.size:100}")
     private int batchSize;
@@ -26,6 +20,12 @@ public class AppConfig {
 
     @Value("${app.delay.ms}")
     private long delayMs;
+
+    @Value("${hystrix.timeout.ms}")
+    private int timeMillisecond;
+
+    @Value("${hystrix.core.size}")
+    private int coreSize;
 
     @Bean
     CommandLineRunner runner( Region<String,String> region)
@@ -42,8 +42,8 @@ public class AppConfig {
                                 region.put(key,key);
                                 return region.get(key);
                             }, //function
-                            () -> "FALLBACK", //fallback
-                            timeMillisecond);
+                            () -> "FALLBACK "+ Calendar.getInstance().getTime(), //fallback
+                            timeMillisecond, coreSize);
                     var results = command.execute();
 
                     System.out.println("results:" + results);

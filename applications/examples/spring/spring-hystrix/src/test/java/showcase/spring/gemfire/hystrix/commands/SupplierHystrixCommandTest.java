@@ -18,6 +18,7 @@ class SupplierHystrixCommandTest {
     @Mock
     private Region<String,String> region;
     private int timeout = 2;
+    private int coreCount = 2;
 
     @Test
     void getRegionData() throws Exception {
@@ -28,7 +29,8 @@ class SupplierHystrixCommandTest {
         subject = new SupplierHystrixCommand<String>(
                 ()-> region.get(key),
                 () -> "FAILBACK",
-                timeout);
+                timeout,
+                coreCount);
 
         var actual = subject.run();
         assertThat(actual).isEqualTo(expected);
