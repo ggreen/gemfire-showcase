@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+version = '0.0.1-SNAPSHOT'
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+
+group = 'gemfire.showcase'
+archivesBaseName = 'locator'
+
+ext {
+    gemFireVersion = '10.1.1'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url "https://packages.broadcom.com/artifactory/gemfire/"
+        metadataSources {
+            mavenPom()
+            artifact()
+            ignoreGradleMetadataRedirection()
+        }
+        credentials {
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
+        }
+    }
+}
+dependencies {
+    implementation "com.vmware.gemfire:gemfire-core:10.1.1"
+}
+
+
+

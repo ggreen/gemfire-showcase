@@ -1,0 +1,5 @@
+
+
+```shell
+java -classpath $GEMFIRE_HOME/lib/gemfire-bootstrap-10.1.1.jar --add-exports=java.management/com.sun.jmx.remote.security=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED -Dgemfire.enable-cluster-configuration=true -Dgemfire.load-cluster-configuration-from-dir=false -XX:+UseZGC -Dgemfire.launcher.registerSignalHandlers=true -Djava.awt.headless=true -Dsun.rmi.dgc.server.gcInterval=9223372036854775806 -Djava.rmi.server.hostname=127.0.0.1 com.vmware.gemfire.bootstrap.Main showcase.gemfire.server.dataNode.DataNodeApp --automatic-module-classpath applications/examples/server/data-node/build/libs/data-node-0.0.1-SNAPSHOT.jar 
+```
