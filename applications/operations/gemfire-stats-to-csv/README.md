@@ -1,6 +1,6 @@
 # GemFire Stats To CSV
 
-This application print useful [GemFire](https://gemfire.dev/) statistics to a CSV file.
+This application prints useful [GemFire](https://gemfire.dev/) statistics to a CSV file.
 
 This application only prints the [Most useful statistics](https://community.broadcom.com/education/blogs/migration-user/2021/07/01/the-most-useful-statistics-for-troubleshooting-vmware-gemfire-deployments) for troubleshooting  GemFire Deployments.
 
