@@ -20,10 +20,26 @@ This application has been tested with the following
 | -stats.day.filter | Allow print stats that match the provide day filter to the CSV file. Date Format is MM/dd/yyyy.                            |
 
 
-Example run
+
+Download application
 
 ```shell
-java -jar applications/operations/gemfire-stats-to-csv/build/libs/gemfire-stats-to-csv-0.0.1-SNAPSHOT.jar --csv.output.file=/tmp/gf.csv --stats.input.path --stats.input.path=applications/operations/gemfire-stats-to-csv/src/test/resources/ --stats.day.filter=6/23/2025
+mkdir -p runtime/
+curl -L "https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-stats-to-csv-1.0.0/gemfire-stats-to-csv-1.0.0.jar" -o runtime/$(basename hhttps://github.com/ggreen/gemfire-showcase/releases/download/gemfire-stats-to-csv-1.0.0/gemfire-stats-to-csv-1.0.0.jar)
+
+```
+
+Example run downloaded Jar
+
+
+```shell
+java -jar runtime/gemfire-stats-to-csv-1.0.0.jar --csv.output.file=/tmp/gf.csv --stats.input.path --stats.input.path=applications/operations/gemfire-stats-to-csv/src/test/resources/ --stats.day.filter=6/23/2025
+```
+
+Or run built version
+
+```shell
+java -jar applications/operations/gemfire-stats-to-csv/build/libs/gemfire-stats-to-csv-1.0.0.jar --csv.output.file=/tmp/gf.csv --stats.input.path --stats.input.path=applications/operations/gemfire-stats-to-csv/src/test/resources/ --stats.day.filter=6/23/2025
 ```
 
 
