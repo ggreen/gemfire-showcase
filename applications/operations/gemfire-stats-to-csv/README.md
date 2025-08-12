@@ -21,7 +21,11 @@ This application has been tested with the following
 
 
 
-Download application
+**Download application**
+
+Click to download [gemfire-stats-to-csv-1.0.0.jar](https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-stats-to-csv-1.0.0/gemfire-stats-to-csv-1.0.0.jar)
+
+Downloading using a script
 
 ```shell
 mkdir -p runtime/
