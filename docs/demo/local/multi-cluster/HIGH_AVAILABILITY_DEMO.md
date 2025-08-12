@@ -26,30 +26,33 @@ Start the 2 GemFire Clusters locally using the script.
 Note: Please change the location of the export GEMFIRE_HOME as needed
 
 ```shell
-export GEMFIRE_HOME=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-10.0.2
+export GEMFIRE_HOME=/Users/devtools/repositories/IMDG/gemfire/vmware-gemfire-10.1.1
 ./deployment/scripts/multi-cluster/start.sh
 ```
 
+Note GemFire ManageMent Console
+
+open http://localhost:7077
 
 ## Start Data Services 
 
 Start application that points to cluster 1
 
 ```shell
-java -jar ./examples/spring-data-gemfire/applications/userAccount-service/build/libs/userAccount-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health1  --server.port=8181 --spring.data.gemfire.pool.default.locators="localhost[10001]"
+java -jar applications/examples/spring/account-service/target/account-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health1  --server.port=8181 --spring.data.gemfire.pool.default.locators="localhost[10001]"
 ```
 
 
 Start application that points to cluster 2
 
 ```shell
-java -jar examples/spring-data-gemfire/applications/userAccount-service/build/libs/userAccount-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health2    --server.port=8282 --spring.data.gemfire.pool.default.locators="localhost[10002]"
+java -jar applications/examples/spring/account-service/target/account-service-0.0.1-SNAPSHOT.jar --gemfire.health.region.name=health2    --server.port=8282 --spring.data.gemfire.pool.default.locators="localhost[10002]"
 ```
 
 Start Spring Gateway
 
 ```shell
-java -jar examples/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.2-SNAPSHOT.jar --spring.config.location=file:/Users/Projects/VMware/Tanzu/TanzuData/TanzuGemFire/dev/gemfire-showcase/examples/spring-gateway-healthcheck/src/main/resources/application.yaml
+java -jar applications/examples/spring/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.2-SNAPSHOT.jar --spring.config.location=file:$PWD/applications/examples/spring/spring-gateway-healthcheck/src/main/resources/application.yaml
 ```
 
 
@@ -67,7 +70,7 @@ curl -X 'POST' \
   -H 'Content-Type: application/json' \
   -d '{
   "id": "1",
-  "name": "1"
+  "name": "account 1"
 }'
 ```
 
@@ -85,7 +88,7 @@ curl 'http://localhost:8080/accounts' \
   -H 'Content-Type: application/json' \
   -d '{
   "id": "2",
-  "name": "2"
+  "name": "account 2"
 }'
 ```
 
