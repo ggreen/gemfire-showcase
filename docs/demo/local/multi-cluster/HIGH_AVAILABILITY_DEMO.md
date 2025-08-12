@@ -181,3 +181,19 @@ Get Account 2
 ```shell
 curl http://localhost:8080/accounts/2
 ```
+
+
+*******************
+
+
+shutdown
+
+```gfsh
+connect --locator=localhost[10001]
+shutdown --include-locators
+```
+
+```gfsh
+connect --locator=localhost[10002]
+shutdown --include-locators
+```

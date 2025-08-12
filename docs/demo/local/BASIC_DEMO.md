@@ -14,7 +14,7 @@ done
 Get Account 1
 ```shell
 curl -X 'GET' \
-  'http://localhost:8080/accounts/1' \
+  'http://localhost:8080/accounts/20' \
   -H 'accept: */*'
 ```
 
