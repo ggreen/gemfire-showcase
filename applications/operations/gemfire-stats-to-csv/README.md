@@ -4,6 +4,8 @@ This application prints useful [GemFire](https://gemfire.dev/) statistics to a C
 
 This application only prints the [Most useful statistics](https://community.broadcom.com/education/blogs/migration-user/2021/07/01/the-most-useful-statistics-for-troubleshooting-vmware-gemfire-deployments) for troubleshooting  GemFire Deployments.
 
+![stats-to-csv.png](docs/img/stats-to-csv.png)
+
 ## Getting Started
 
 This application has been tested with the following
