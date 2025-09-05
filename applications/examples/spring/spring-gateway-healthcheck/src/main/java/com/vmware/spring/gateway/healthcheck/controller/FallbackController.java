@@ -1,5 +1,6 @@
 package com.vmware.spring.gateway.healthcheck.controller;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.Route;
@@ -70,13 +71,16 @@ public class FallbackController {
         if(body ==  null || body.isEmpty())
             body = valueOf(serverWebExchangeDecorator.getAttributes().get(ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR));
 
-        var contentType = valueOf(serverWebExchangeDecorator.getAttributes().get("original_response_content_type"));
+        var contentType = serverWebExchangeDecorator.getAttributes().get("original_response_content_type");
+        if(contentType == null)
+            contentType = String.valueOf(originalRequest.getHeaders().getContentType());
+
         var uri = buildFallbackURI(serverWebExchangeDecorator);
 
         log.error("***Processing fallback with originalRequestBody: uri: {} ,  body: {}", uri, body);
 
         var request = webClient.method(originalRequest.getMethod())
-                .uri(uri).contentType(MediaType.valueOf(contentType));
+                .uri(uri).contentType(MediaType.valueOf(String.valueOf(contentType)));
 
         if (body != null) {
             log.error("**Sending with body: {}", body);
@@ -87,6 +91,7 @@ public class FallbackController {
 
     }
 
+    @SneakyThrows
     private URI buildFallbackURI(ServerWebExchangeDecorator originalRequest) {
 
         log.warn("Falling back from original request {}", originalRequest);
@@ -95,22 +100,31 @@ public class FallbackController {
         var clientResponse = ((HttpClientResponse)originalRequest.getAttributes().get("org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayClientResponse"));
 
         String uri;
+        HttpHeaders fallBackHeaders =null;
         if(clientResponse == null)
+        {
             uri = originalRequest.getDelegate().getRequest().getURI().toString();
+            fallBackHeaders = new HttpHeaders();
+            fallBackHeaders.set("Content-Type",String.valueOf(originalRequest.getRequest()
+                            .getHeaders().getContentType()));
+        }
         else
+        {
             uri = clientResponse.uri();
+            fallBackHeaders = toHeaders(clientResponse.requestHeaders());
+        }
 
-        Route route = (Route)originalRequest.getAttributes().get("org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRoute");
+        var route = (Route)originalRequest.getAttributes().get("org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRoute");
 
         var newURI = UriComponentsBuilder.fromHttpUrl(
                         this.httpUrl)
                 .port(this.port)
-                .path(uri).build().toUri();
+                .path(new URI(uri).getPath()).build().toUri();
 
         log.info("Fallback URI {}", newURI);
 
         return ForwardedHeaderUtils.adaptFromForwardedHeaders(newURI,
-                toHeaders(clientResponse.requestHeaders())).build().toUri();
+                fallBackHeaders).build().toUri();
 
     }
 //    DefaultHttpHeaders[User-Agent: curl/8.4.0, accept: */*, Forwarded: proto=http;host="localhost:8080";for="[0:0:0:0:0:0:0:1]:63849", X-Forwarded-For: 0:0:0:0:0:0:0:1, X-Forwarded-Proto: http, X-Forwarded-Port: 8080, X-Forwarded-Host: localhost:8080, host: localhost:8181]
