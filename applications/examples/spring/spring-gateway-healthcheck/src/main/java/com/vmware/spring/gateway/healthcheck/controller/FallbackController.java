@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClientResponse;
 
 import java.net.URI;
-import java.util.Map;
 
 import static java.lang.String.valueOf;
 
@@ -28,14 +27,16 @@ public class FallbackController {
 
     private final String httpUrl;
     private final int port;
-
     private final WebClient webClient;
+    private final MediaTypeConverter mediaTypeConverter;
 
     public FallbackController(@Value("${gateway.fallback.httpUrl}") String httpUrl,
-                              @Value("${gateway.fallback.port:0}") int port) {
+                              @Value("${gateway.fallback.port:0}") int port,
+                              MediaTypeConverter mediaTypeConverter) {
         this.httpUrl = httpUrl;
         this.port = port;
         this.webClient = WebClient.create();
+        this.mediaTypeConverter = mediaTypeConverter;
     }
 
 
@@ -71,16 +72,14 @@ public class FallbackController {
         if(body ==  null || body.isEmpty())
             body = valueOf(serverWebExchangeDecorator.getAttributes().get(ServerWebExchangeUtils.CACHED_REQUEST_BODY_ATTR));
 
-        var contentType = serverWebExchangeDecorator.getAttributes().get("original_response_content_type");
-        if(contentType == null)
-            contentType = String.valueOf(originalRequest.getHeaders().getContentType());
+        var contentType = mediaTypeConverter.toMimeType(serverWebExchangeDecorator.getAttributes().get("original_response_content_type"));
 
         var uri = buildFallbackURI(serverWebExchangeDecorator);
 
         log.error("***Processing fallback with originalRequestBody: uri: {} ,  body: {}", uri, body);
 
         var request = webClient.method(originalRequest.getMethod())
-                .uri(uri).contentType(MediaType.valueOf(String.valueOf(contentType)));
+                .uri(uri).contentType(MediaType.valueOf(contentType));
 
         if (body != null) {
             log.error("**Sending with body: {}", body);
@@ -90,6 +89,7 @@ public class FallbackController {
             return request.exchangeToMono(response -> response.toEntity(String.class));
 
     }
+
 
     @SneakyThrows
     private URI buildFallbackURI(ServerWebExchangeDecorator originalRequest) {
@@ -105,8 +105,8 @@ public class FallbackController {
         {
             uri = originalRequest.getDelegate().getRequest().getURI().toString();
             fallBackHeaders = new HttpHeaders();
-            fallBackHeaders.set("Content-Type",String.valueOf(originalRequest.getRequest()
-                            .getHeaders().getContentType()));
+            fallBackHeaders.set("Content-Type", mediaTypeConverter.toMimeType(originalRequest.getRequest()
+                    .getHeaders().getContentType()));
         }
         else
         {
@@ -127,11 +127,10 @@ public class FallbackController {
                 fallBackHeaders).build().toUri();
 
     }
-//    DefaultHttpHeaders[User-Agent: curl/8.4.0, accept: */*, Forwarded: proto=http;host="localhost:8080";for="[0:0:0:0:0:0:0:1]:63849", X-Forwarded-For: 0:0:0:0:0:0:0:1, X-Forwarded-Proto: http, X-Forwarded-Port: 8080, X-Forwarded-Host: localhost:8080, host: localhost:8181]
 
     private HttpHeaders toHeaders(io.netty.handler.codec.http.HttpHeaders entries) {
         var headers = new HttpHeaders();
-       headers.add("Content-Type",entries.get("Content-Type"));
+       headers.add("Content-Type",mediaTypeConverter.toMimeType(entries.get("Content-Type")));
         return headers;
     }
 }
