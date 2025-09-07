@@ -11,6 +11,9 @@ This project contains example APIs, applications, design patterns implementation
 - Gradle  8.4 or higher
 - vmware-gemfire-10.1.0 or higher
 
+## Hands On Labs
+
+See [labs](docs/workshops/labs)
 
 ## Demos
 
