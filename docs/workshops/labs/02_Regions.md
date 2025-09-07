@@ -1,6 +1,6 @@
+# 02 Regions
 
-
-Start GemFire Locator and Cache Server
+GemFire regions examples.
 
 Pre-requisite
 
@@ -12,6 +12,8 @@ Pre-requisite
 - Wget (ex: brew install wget)
 
 Run the following script
+
+Start GemFire Locator and Cache Server
 
 ```shell
 ./deployment/scripts/podman/labs/start-gemfire-cluster.sh

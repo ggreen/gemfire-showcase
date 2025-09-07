@@ -1,4 +1,4 @@
-podman run -it -e 'ACCEPT_TERMS=y' --network=gemfire-cache  gemfire/gemfire:10.0.3 gfsh
+podman run -it -e 'ACCEPT_TERMS=y' --name=gfsh --network=gemfire-cache  gemfire/gemfire:10.0.3 gfsh
 
 
 #-e "connect --jmx-manager=gf-locator[1099]" -e "list members"

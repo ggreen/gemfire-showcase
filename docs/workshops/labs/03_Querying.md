@@ -62,7 +62,7 @@ GemFire's REST API provides an easy way to interact with data in regions.
 Assume the GemFire REST service is running at:
 
 ```shell
-open http://localhost:8080/gemfire-api
+open http://localhost:7080/gemfire-api
 ```
 
 
@@ -82,20 +82,20 @@ Each employee record includes:
 **Insert Employee 1**
 
 ```shell
-curl -X PUT  -H "Content-Type: application/json" -d '{"firstName":"John","lastName":"Doe","employeeId":"E001","department":"Engineering","salary":85000}' http://localhost:8080/gemfire-api/v1/Employee/E001
+curl -X PUT  -H "Content-Type: application/json" -d '{"firstName":"John","lastName":"Doe","employeeId":"E001","department":"Engineering","salary":85000}' http://localhost:7080/gemfire-api/v1/Employee/E001
 ```
 
 
 **Insert Employee 2**
 
 ```shell
-curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Jane","lastName":"Smith","employeeId":"E002","department":"Engineering","salary":90000}' http://localhost:8080/gemfire-api/v1/Employee/E002
+curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Jane","lastName":"Smith","employeeId":"E002","department":"Engineering","salary":90000}' http://localhost:7080/gemfire-api/v1/Employee/E002
 ```
 
 
 **Insert Employee 3**
 
-curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Alice","lastName":"Brown","employeeId":"E003","department":"HR","salary":75000}' http://localhost:8080/gemfire-api/v1/Employee/E003
+curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Alice","lastName":"Brown","employeeId":"E003","department":"HR","salary":75000}' http://localhost:7080/gemfire-api/v1/Employee/E003
 
 ---
 
@@ -109,7 +109,9 @@ Once data is inserted, you can run queries in `gfsh` or through the REST API.
 
 To list all employees in the **Engineering** department:
 
-```shell
+In gfsh 
+
+```gfsh
 query --query="SELECT * FROM /Employee WHERE department = 'Engineering'"
 ```
 
@@ -132,7 +134,7 @@ Finding employees with a salary above a certain amount:
 query --query="SELECT * FROM /Employee WHERE salary < 90000"
 ```
 
-Select specifics fields
+Select specific fields
 
 ```shell
 query --query="SELECT employeeId, lastName FROM /Employee WHERE salary < 90000"
@@ -158,6 +160,7 @@ Rows : 1
 Result : [83333.33]
 ```
 Select max and min salary
+
 ```gfsh
 query --query="SELECT MAX(salary) as emax, MIN(salary) as emin FROM /Employee"
 ```
@@ -213,6 +216,8 @@ query --query="select distinct firstName, firstName.length() as len from /Employ
 query --query="select count(*) from /Employee where firstName.length() < 5"
 ```
 
+Create index
+
 ```shell
 create index --name=Employee --expression=lastName --region=/Employee
 ```
@@ -236,7 +241,7 @@ WHERE department = ''Engineering''
 
 ```shell
 curl -X 'GET' \
-  'http://localhost:8080/gemfire-api/v1/queries/adhoc?q=SELECT%20%2A%20FROM%20%2FEmployee%20WHERE%20department%20%3D%20%27Engineering%27' \
+  'http://localhost:7080/gemfire-api/v1/queries/adhoc?q=SELECT%20%2A%20FROM%20%2FEmployee%20WHERE%20department%20%3D%20%27Engineering%27' \
   -H 'accept: application/json;charset=UTF-8'
   ```
 
@@ -245,7 +250,7 @@ curl -X 'GET' \
 
 ```shell
 curl -X 'GET' \
-  'http://localhost:8080/gemfire-api/v1/queries/adhoc?q=SELECT%20AVG%28salary%29%20FROM%20%2FEmployee' \
+  'http://localhost:7080/gemfire-api/v1/queries/adhoc?q=SELECT%20AVG%28salary%29%20FROM%20%2FEmployee' \
   -H 'accept: application/json;charset=UTF-8'
 ```
 

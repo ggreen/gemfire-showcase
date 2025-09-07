@@ -15,9 +15,33 @@ Start GMC
 Open GMC
 
 ```shell
-open http://localhost:8080
+open http://localhost:8080 
 ```
 
+
+Connect Connect
+
+```shell
+cluster=gf1
+host=gf1-locator
+port=7071
+```
+
+![GMC_connect_gf1.png](img/GMC_connect_gf1.png)
+
+
+Click -> Connect Another cluster
+
+
+```shell
+cluster=gf2
+host=gf2-locator
+port=7072
+```
+
+Connect
+
+![GMC_WAN_clusters.png](img/GMC_WAN_clusters.png)
 
 ## Start Data Services
 
@@ -90,6 +114,7 @@ curl -X 'GET' \
 ```
 
 Test Actuator for App Service to cluster 1 expected "UP"
+
 ```shell
 curl http://localhost:8181/actuator/health
 ```
@@ -133,13 +158,38 @@ Server 1
 podman run -d -e 'ACCEPT_TERMS=y' --rm --name gf1-server --network=gemfire-cache gemfire/gemfire:10.1-jdk21 gfsh start server --name=gf1-server --use-cluster-configuration=true --server-port=10101   --locators="gf1-locator[10001]" --max-heap=1g   --initial-heap=1g --J=-Dgemfire.distributed-system-id=1 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7777  --J=-Duser.timezone=America/New_York --J=-Dgemfire.prometheus.metrics.interval=15s
 ```
 
+Verify Server Running
+
+```shell
+open http://localhost:8080/dashboard/clusters
+```
+
+view Topology Explore
+
+```shell
+open http://localhost:8080/dashboard/multi-site/topology
+```
+
+Verify Cluster 1 Account is empty
+
+In GMC Click Data Explore- > Account 
+
+![GMC-Account-Region-Browse.png](img/GMC-Account-Region-Browse.png)
+
+
 Sync data in cluster 2 to 1
 
 ```shell
 podman exec -it gf1-locator gfsh -e "connect --locator=gf2-locator[10002]" -e "wan-copy region --region=/Account --sender-id=Account_Sender_to_1"
 ```
+Verify Cluster 1 Account is not empty (data was only in-memory)
+
+In GMC Click Data Explore- > Account
+
+![GMC-Account-Region-Browse.png](img/GMC-Account-Region-Browse.png)
 
 Get Account 1
+
 ```shell
 curl http://localhost:8011/accounts/1
 ```
@@ -149,12 +199,14 @@ Get Account 2
 curl http://localhost:8011/accounts/2
 ```
 
-Shutdown cluster 2
+Shutdown the entire cluster 2
 
 ```shell
 podman exec -it gf1-locator gfsh -e "connect --locator=gf2-locator[10002]" -e "shutdown --include-locators"
 ```
+
 Test Actuator for App Service to cluster 1 expected "UP"
+
 ```shell
 curl http://localhost:8181/actuator/health
 ```
@@ -173,4 +225,11 @@ curl http://localhost:8011/accounts/1
 Get Account 2
 ```shell
 curl http://localhost:8011/accounts/2
+```
+
+
+# Shutdown
+
+```shell
+podman rm -f gf-locator gf2-server gf2-locator gf1-server gf1-locator account-service-1 account-service-2 spring-gateway gmc-console
 ```
