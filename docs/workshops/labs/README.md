@@ -29,16 +29,11 @@ podman pull cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT
 ```
 
 
-| Lab                 | Notes                                     | 
-|---------------------|-------------------------------------------|
-| [01](01_GemFire_Setup.md) | Start/up gfsh examples                    |
-| [02](02_Regions.md) | GemFire regions examples.                 |
-| [03](03_Querying.md) | GemFire OQL examples                      |
-| [04](04_GMC_Console.md) | GemFire Management Console and monitoring |
+| Lab                            | Notes                                     | 
+|--------------------------------|-------------------------------------------|
+| [01](01_GemFire_Setup.md)      | Start/up gfsh examples                    |
+| [02](02_Regions.md)            | GemFire regions examples.                 |
+| [03](03_Querying.md)           | GemFire OQL examples                      |
+| [04](04_GMC_Console.md)        | GemFire Management Console and monitoring |
+| [Bonus](05_WAN_Replication.md) | GemFire WAN Replication |    
 
-
-Bonus Labs
-
-| Lab                         | Notes                   |
-|-----------------------------|-------------------------|
-| [05](05_WAN_Replication.md) | GemFire WAN Replication |    
