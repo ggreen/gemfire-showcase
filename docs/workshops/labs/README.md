@@ -35,4 +35,10 @@ podman pull cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT
 | [02](02_Regions.md) | GemFire regions examples.                 |
 | [03](03_Querying.md) | GemFire OQL examples                      |
 | [04](04_GMC_Console.md) | GemFire Management Console and monitoring |
-| [05](05_WAN_Replication.md) | GemFire WAN Replication                   |
+
+
+Bonus Labs
+
+| Lab                         | Notes                   |
+|-----------------------------|-------------------------|
+| [05](05_WAN_Replication.md) | GemFire WAN Replication |    
