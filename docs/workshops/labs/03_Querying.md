@@ -94,8 +94,9 @@ curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Jane","lastNam
 
 
 **Insert Employee 3**
-
+```shell
 curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Alice","lastName":"Brown","employeeId":"E003","department":"HR","salary":75000}' http://localhost:7080/gemfire-api/v1/Employee/E003
+```
 
 ---
 
