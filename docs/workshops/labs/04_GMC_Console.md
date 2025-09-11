@@ -93,17 +93,12 @@ Use the following bash script to write records into the Account region
 ```shell
 for i in {1..300} 
 do
-  accountJson='{ "id": "';
-  accountJson+=$i;
-  accountJson+='", "name": "Account ';
-  accountJson+=$i;
-  accountJson+='"}';
-
+  accountJson='{"id":"'$i'","name":"Account '$i'"}'
   curl -X 'POST' \
   'http://localhost:8050/accounts' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
-  -d $accountJson
+  -d "$accountJson"
   echo;  
 done
 ```
