@@ -15,7 +15,14 @@ Pre-requisite
 - Apache Maven 3.9.1 + (ex: brew install maven@3.9)
 - [Curl](https://formulae.brew.sh/formula/curl)  (Ex: brew install curl)
 - [Wget](https://formulae.brew.sh/formula/wget) (ex: brew install wget)
+- git - (ex: brew install git)
 
+**Get Started**
+
+```shell
+git clone https://github.com/ggreen/gemfire-showcase.git
+cd gemfire-showcase
+```
 
 Pull Docker images
 
