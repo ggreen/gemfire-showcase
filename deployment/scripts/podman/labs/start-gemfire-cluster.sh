@@ -13,8 +13,6 @@ done
 echo "Locator is up"
 
 
-sleep 10
-
 # Configure PDX
 podman exec -it gf-locator gfsh -e "connect --jmx-manager=gf-locator[1099]" -e "configure pdx --read-serialized=true --disk-store"
 # Run Cache Server
