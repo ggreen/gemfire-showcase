@@ -1,5 +1,7 @@
 # Bonus (Only)
 
+![WAN-replication-gemfire-spring.png](img/WAN-replication-gemfire-spring.png)
+
 Start 2 WAN replication Clusters
 
 ```shell
