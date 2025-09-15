@@ -37,14 +37,14 @@ open http://localhost:8080
 
 Click Enable Development Mode
 
-![enable-development-mode.png](docs/enable-development-mode.png)
+![GMC_enable_developer_mode.png](img/GMC_enable_developer_mode.png)
 
 
 #### Add GemFire Cluster 1
 
-Click Connect 
+Click Connect
 
-
+![GMC_Connect.png](img/GMC_Connect.png)
 The following
 
 ```properties
@@ -53,7 +53,7 @@ Host=gf-locator
 Port=7070
 ```
 
-![add-cluster.png](docs/add-cluster.png)
+Click View All Cluster -> gf1-cluster-1
 
 
 Create Region Using GMC
@@ -81,9 +81,8 @@ podman run -it --rm --name account-service-gemfire-showcase --network=gemfire-ca
 ```
 Open application Swagger UI
 
-
 ```shell
-open http://localhost:8050
+open http://localhost:8050/swagger-ui/index.html
 ```
 
 ### Load Data
@@ -115,7 +114,7 @@ curl -X 'GET' \
 Open GMC -> Data Explorer
 
 
-- Select Account region
+- Select Account Region
 - Click Browse
 
 ![GMC-Account-Region-Browse.png](img/GMC-Account-Region-Browse.png)
@@ -145,13 +144,16 @@ Click Functions -> Deploy Function
 
 Clear Region
 
-- Click Execution
+- Click Execute On Region -> Account
 
 ![GMC_Execute_function_img.png](img/GMC_Execute_function_img.png)
+
 
 Select Regions -> Account
 
 ![GMC_Executed_Function.png](img/GMC_Executed_Function.png)
+
+This will delete the loaded data in the Account region, use Data Explorer to verify)
 
 ## Gfsh Commands
 
@@ -182,6 +184,9 @@ Click Monitoring to get default views.
 
 ## Create test region
 
+
+Click Regions -> CREATE REGION
+
 ![GMC_Create_Region_Details.png](img/GMC_Create_Region_Details.png)
 
 
@@ -209,7 +214,7 @@ Select option "Use Embedded Prometheus Server (only available for OVA and OCI di
 Click Monitoring
 
 - Change scale ot 2 mins
-- 
+
 ![GMC_monitoring_2mins.png](img/GMC_monitoring_2mins.png)
 
 ## Performance Testing
