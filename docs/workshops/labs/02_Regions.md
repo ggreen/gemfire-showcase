@@ -15,6 +15,8 @@ Run the following script
 
 Start GemFire Locator and Cache Server
 
+**Optional** - If not running from lab 01
+
 ```shell
 ./deployment/scripts/podman/labs/start-gemfire-cluster.sh
 ```
