@@ -6,11 +6,6 @@ The GemFire Manage Console will be used to showcase the fleet
 management abilities.
 
 
-*Required Components*
-
-- Podman
-- 
-
 ## Getting Started
 
 Use the following script to start GemFire
