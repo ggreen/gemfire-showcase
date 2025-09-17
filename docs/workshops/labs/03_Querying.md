@@ -258,6 +258,14 @@ curl -X 'GET' \
 
 ---
 
+Tear Down for next lab
+
+
+```shell
+ podman rm -f gfsh gf-server1 gf-locator
+```
+
+
 ## **6. Summary of Key Steps**
 
 | Step | Command / Endpoint                                                  | Description |
