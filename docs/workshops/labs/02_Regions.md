@@ -41,6 +41,8 @@ To start the shell, navigate to the GemFire `bin` directory and run:
 
 Start Gfsh in a container
 
+
+**Optional** - If not running from lab 01
 ```shell
 deployment/scripts/podman/gfsh.sh
 ```
