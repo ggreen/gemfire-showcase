@@ -214,22 +214,29 @@ Click Monitoring
 
 ## Performance Testing
 
-putString
+Run perftest to put data into test region
 
 ```shell
 
 podman run -it --rm  --name=gemfire-perf-test --network=gemfire-cache cloudnativedata/gemfire-perf-test:0.0.2-SNAPSHOT --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="gf-locator[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
 ```
+Review statistics in the GemFire Console Monitoring screens
+
+Wait for application to complete
+Example output
+
+![perftest-complete.png](img/perftest-complete.png)
 
 
 
-putAndGetAndQuery
+Run perftest to put data and perform region Gets and Queries
 
 ```shell
 podman run -it --rm  --name=gemfire-perf-test --network=gemfire-cache -e JAVA_OPTS=" -Xmx1g -Xms1g" cloudnativedata/gemfire-perf-test:0.0.3-SNAPSHOT --action=putAndGetAndQuery --regionName=test  --batchSize=10 --keyPadLength=10 --seedText=TEST --queryByKey="select key from /test.entries where key = \$1" --valueLength=500 --startKeyValue=1 --spring.data.gemfire.pool.locators="gf-locator[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
 ```
 
 
+Review statistics in the GemFire Console Monitoring screens
 
 ---
 
