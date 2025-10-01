@@ -8,7 +8,7 @@ management abilities.
 
 *Required Components*
 
-- Docker
+- Podman
 - 
 
 ## Getting Started
@@ -86,8 +86,38 @@ Open application Swagger UI
 
 
 ```shell
-open http://localhost:8050
+open http://localhost:8050/swagger-ui/index.html
 ```
+
+## Gfsh Commands
+
+```shell
+list members
+```
+
+```json
+show metrics
+```
+
+
+```json
+list clients
+```
+
+WAN replication
+
+
+Topology
+
+```shell
+open http://localhost:8080/dashboard/multi-site/topology
+```
+
+World Map
+```shell
+open http://localhost:8080/dashboard/multi-site/world-map
+```
+
 
 ### Load Data
 
@@ -125,26 +155,19 @@ Note: data is sync in both clusters
 
 ![data-explorer.png](docs/data-explorer.png)
 
+
+Example query 
+
+```sql
+select * from /Account where name like 'Account 1%'
+```
+
 ## Deploy Jars
 
 Deploy Function
 
 ![deploy-functions.png](docs/deploy-functions.png)
 
-## Gfsh Commands
-
-Click GFSH
-
-Executed the following command
-
-```shell
-list clients
-```
-
-Show metrics
-```shell
-show metrics
-```
 
 ----------------------------------
 # Monitoring
