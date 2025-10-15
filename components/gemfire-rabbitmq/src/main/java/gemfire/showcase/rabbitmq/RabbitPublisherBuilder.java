@@ -10,7 +10,7 @@ public class RabbitPublisherBuilder extends RabbitBuilder implements ConfirmList
     private RabbitConnectionCreator connectionCreator;
     private boolean persistent;
     private boolean confirmPublish;
-    private String contentType;
+    private String contentType = "text/plain";
     private boolean isConfirmPublish;
     private Short qosPreFetchLimit;
 

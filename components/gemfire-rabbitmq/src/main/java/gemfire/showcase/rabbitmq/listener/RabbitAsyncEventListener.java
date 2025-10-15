@@ -5,6 +5,7 @@ import gemfire.showcase.rabbitmq.Rabbit;
 import gemfire.showcase.rabbitmq.RabbitPublisher;
 import nyla.solutions.core.patterns.conversion.Converter;
 import nyla.solutions.core.util.Config;
+import nyla.solutions.core.util.Debugger;
 import nyla.solutions.core.util.settings.Settings;
 import org.apache.geode.cache.Cache;
 import org.apache.geode.cache.Declarable;
@@ -51,7 +52,7 @@ public class RabbitAsyncEventListener implements AsyncEventListener, Declarable 
                     }
                 },
                         settings.getProperty("RABBIT_EXCHANGE","amq.topic"),
-                        new AMQP.BasicProperties(), true),
+                        new AMQP.BasicProperties(), false),
                 new GemFireValueToByteConverter());
     }
     public RabbitAsyncEventListener(Settings settings, RabbitPublisher publisher,
@@ -72,9 +73,9 @@ public class RabbitAsyncEventListener implements AsyncEventListener, Declarable 
                         key
                         );
 
-                log.info("Published with routingKey: {} : ",key);
+                log.info("Publishing with routingKey: {} : ",key);
             } catch (IOException | InterruptedException | TimeoutException | RuntimeException e) {
-                log.error(e);
+                log.error(Debugger.stackTrace(e));
                 return false;
             }
         }

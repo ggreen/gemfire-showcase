@@ -45,18 +45,7 @@ Deploy Jar
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e connect  -e "deploy --jar=$PWD/components/gemfire-rabbitmq/build/libs/gemfire-rabbitmq-2.0.1-all.jar"
-```
-
-Create Employee region
-
-
-
-```shell
 $GEMFIRE_HOME/bin/gfsh -e connect -e "create async-event-queue --id=employees --parallel=true --listener=gemfire.showcase.rabbitmq.listener.RabbitAsyncEventListener --listener-param=RABBIT_URIS=amqp://localhost:5672/"
-```
-
-
-```shell
 $GEMFIRE_HOME/bin/gfsh -e connect  -e "create region --name=employees --type=PARTITION --async-event-queue-id=employees"
 ```
 
@@ -64,5 +53,11 @@ $GEMFIRE_HOME/bin/gfsh -e connect  -e "create region --name=employees --type=PAR
 Put Data
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP1 --value='{\"id\": \"Jill Smith\"}' --region=employees"
+$GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP1-emple --value='{\"id\": \"Jill Smith\"}' --region=employees"
+```
+
+```shell
+for i in {1..20}; do
+  $GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP1-empl$i --value='{\"id\": \"Customer $i\"}' --region=employees"
+done
 ```

@@ -1,6 +1,8 @@
 package gemfire.showcase.rabbitmq;
 
 import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.impl.AMQBasicProperties;
 import nyla.solutions.core.util.Config;
 
 import java.io.IOException;
@@ -16,17 +18,22 @@ public class RabbitPublisher implements AutoCloseable{
     private final Supplier<RabbitConnectionCreator> creator;
     private final String exchange;
     private final boolean requireReliableDelivery;
-
     private long waitFromConfirmationTimeSpan;
-
     private final int WAIT_FOR_CONFIRMATION_SECONDS;
+    private Channel channel;
 
 
     public RabbitPublisher(Supplier<RabbitConnectionCreator> creator, String exchange, AMQP.BasicProperties basicProperties, boolean confirmPublish)
     {
         this.creator = creator;
         this.exchange = exchange;
-        this.basicProperties = basicProperties;
+        this.basicProperties = new AMQP.BasicProperties.Builder()
+            .contentType("text/plain")   // 👈 set MIME type
+            .contentEncoding("utf-8")
+            .deliveryMode(2)                   // persistent message
+            .build();
+
+
         this.requireReliableDelivery = confirmPublish;
 
         WAIT_FOR_CONFIRMATION_SECONDS = Config.settings().getPropertyInteger("RABBIT_WAIT_FOR_CONFIRMATION_SECS",30);
@@ -35,7 +42,7 @@ public class RabbitPublisher implements AutoCloseable{
     }
 
     public void close() throws Exception {
-        this.creator.get().close();
+        getChannel().close();
     }
 
     public void publish(byte[] body, String routingKey) throws IOException, InterruptedException, TimeoutException {
@@ -45,7 +52,7 @@ public class RabbitPublisher implements AutoCloseable{
         if (routingKey == null)
             throw new IllegalArgumentException("routingKey cannot be null");
 
-        creator.get().getChannel().basicPublish( exchange,
+       getChannel().basicPublish( exchange,
             routingKey,
             true,
              basicProperties,
@@ -53,8 +60,14 @@ public class RabbitPublisher implements AutoCloseable{
 
         if (this.requireReliableDelivery)
         {
-            creator.get().getChannel().waitForConfirmsOrDie(waitFromConfirmationTimeSpan);
+            getChannel().waitForConfirmsOrDie(waitFromConfirmationTimeSpan);
         }
 
+    }
+
+    private Channel getChannel() {
+        if(this.channel == null)
+            this.channel = creator.get().getChannel();
+        return channel;
     }
 }
