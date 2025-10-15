@@ -2,7 +2,7 @@
 
 
 This repository contains a reference implementation of an asynchronous listener for RabbitMQ. 
-The listener is designed to public messages to a RabbitMQ exchange asynchronously, 
+The GemFire is designed to public messages to a RabbitMQ exchange asynchronously, 
 allowing for efficient processing of incoming messages.
 
 
@@ -11,7 +11,7 @@ allowing for efficient processing of incoming messages.
 Start GemFire 
 
 ```shell
-./deployment/local/listener/start.sh 
+./deployment/local/gemfire/start.sh 
 ```
 
 Start RabbitMQ
@@ -50,9 +50,19 @@ $GEMFIRE_HOME/bin/gfsh -e connect  -e "deploy --jar=$PWD/components/gemfire-rabb
 Create Employee region
 
 
-```shell
-$GEMFIRE_HOME/bin/gfsh -e connect  -e "create region --name=employees --type=PARTITION"
-```
 
 ```shell
-create async-event-queue --id="employees" --group=s --parallel=true --listener=
+$GEMFIRE_HOME/bin/gfsh -e connect -e "create async-event-queue --id=employees --parallel=true --listener=gemfire.showcase.rabbitmq.listener.RabbitAsyncEventListener --listener-param=RABBIT_URIS=amqp://localhost:5672/"
+```
+
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e connect  -e "create region --name=employees --type=PARTITION --async-event-queue-id=employees"
+```
+
+
+Put Data
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP1 --value='{\"id\": \"Jill Smith\"}' --region=employees"
+```

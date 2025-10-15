@@ -118,10 +118,10 @@ public class Rabbit implements RabbitConnectionCreator, BlockedListener, Shutdow
     public static Rabbit connect() throws MalformedURLException, URISyntaxException {
 
         int networkRecoveryIntervalSecs = Config.settings().getPropertyInteger("RABBIT_CONNECTION_RETRY_SECS", DEFAULT_CONNECTION_RETRY_SECS);
-        String clientName = Config.settings().getProperty("RABBIT_CLIENT_NAME");
+        String clientName = Config.settings().getProperty("RABBIT_CLIENT_NAME","gemfire-rabbitmq-connector");
         Short qosPreFetchLimit = Short.parseShort(Config.settings().getProperty("RABBIT_PREFETCH_LIMIT", "1000"));
 
-        String urisText = Config.settings().getProperty("RABBIT_URIS");
+        String urisText = Config.settings().getProperty("RABBIT_URIS","amqp://localhost:5672/");
             boolean sslEnabled = urisText.toLowerCase().contains("amqps:");
             return new Rabbit(parseUrisToEndPoints(urisText), sslEnabled, clientName, networkRecoveryIntervalSecs, qosPreFetchLimit);
     }

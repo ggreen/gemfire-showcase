@@ -41,7 +41,7 @@ class RabbitAsyncEventListenerTest {
     private AsyncEvent asyncEvent;
 
     @Mock
-    private Function<PdxInstance,byte[]> converter;
+    private Function<Object,byte[]> converter;
     @Mock
     private Cache cache;
     @Mock

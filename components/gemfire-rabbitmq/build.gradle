@@ -35,14 +35,30 @@ tasks.shadowJar {
     dependencies {
         exclude(dependency("org.apache.logging.log4j:.*"))
         exclude(dependency("com.vmware.gemfire:.*"))
+        exclude(dependency("org.slf4j:.*"))
         exclude(dependency("org.apache.geode:.*"))
         exclude(dependency("com.fasterxml.jackson:.*"))
         exclude(dependency("com.fasterxml.jackson.core:.*"))
         exclude(dependency("jackson-datatype-joda:.*"))
         exclude(dependency("antlr:.*"))
         exclude(dependency("io.micrometer:.*"))
-        exclude(dependency("javax.resource:.*"))
+
+        exclude(dependency("io.github.classgraph:.*"))
+        exclude(dependency("nonapi.io.github.classgraph:.*"))
+        exclude(dependency("javax.*:.*"))
+        exclude(dependency("org.apache.commons.beanutils:.*"))
+        exclude(dependency("org.apache.commons.codec:.*"))
+        exclude(dependency("org.apache.commons.collections:.*"))
+        exclude(dependency("org.apache.commons.digester:.*"))
+        exclude(dependency("org.apache.commons.io:.*"))
+        exclude(dependency("org.apache.commons.logging:.*"))
+        exclude(dependency("org.apache.commons.validator:.*"))
         exclude(dependency("org.apache.shiro:.*"))
+        exclude(dependency("org.bson.assertions:.*"))
+        exclude(dependency("org.bson.codecs:.*"))
+        exclude(dependency("org.bson.conversions:.*"))
+        exclude(dependency("org.bson.internal:.*"))
+        exclude(dependency("org.bson.internal:.*"))
         exclude(dependency("org.jgroups:.*"))
         exclude(dependency("org.projectlombok:.*"))
     }
@@ -89,13 +105,15 @@ repositories {
     }
 }
 dependencies {
-    implementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
     implementation("com.rabbitmq:amqp-client:5.16.0")
-    implementation 'org.apache.logging.log4j:log4j-core:2.18.0'
-    implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
-
-    implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.18.0'
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.18.0'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '2.3.3'
+
+    testImplementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.18.0'
+    testImplementation 'org.apache.logging.log4j:log4j-api:2.18.0'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.6.1'
