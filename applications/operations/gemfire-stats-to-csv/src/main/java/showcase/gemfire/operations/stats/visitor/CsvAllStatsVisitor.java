@@ -32,7 +32,7 @@ public class CsvAllStatsVisitor implements StatsVisitor
             throws IOException{
         this(csvWriter,dayFilter,
                 toMap(
-                        "VMStats", List.of("fdsOpen","fdLimit","processCpuTime","threads"),
+                        "VMStats", List.of("fdsOpen","cpus","fdLimit","processCpuTime","threads","totalMemory","freeMemory"),
                         "DistributionStats", List.of(
                                 "nodes",
                                 "functionExecutionThreads",

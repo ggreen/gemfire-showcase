@@ -11,7 +11,7 @@ java {
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
 
-version = '2.0.1-SNAPSHOT'
+version = '2.0.1'
 
 
 group = 'io.pivotal.services.dataTx'
@@ -60,7 +60,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
 
     implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
-    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
+    implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '2.3.3'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.6.1'

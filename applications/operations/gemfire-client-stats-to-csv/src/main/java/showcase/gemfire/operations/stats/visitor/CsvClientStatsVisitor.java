@@ -22,7 +22,7 @@ import static nyla.solutions.core.util.Organizer.toMap;
  * Print usage GemFire statistics to file
  * @author Gregory Green
  */
-public class CsvVisitor implements StatsVisitor
+public class CsvClientStatsVisitor implements StatsVisitor
 {
     private final CsvWriter csvWriter;
     private final Day dayFilter;
@@ -30,67 +30,30 @@ public class CsvVisitor implements StatsVisitor
     private final String skipResourceInstNameRegExp = "RegionStats-managementRegionStats|org.apache.geode.*internal.*";
 
     private final Map<String, List<String>> statNamesMap;
-    public CsvVisitor(CsvWriter csvWriter, Day dayFilter)
+    public CsvClientStatsVisitor(CsvWriter csvWriter, Day dayFilter)
             throws IOException{
         this(csvWriter,dayFilter,
                 toMap(
-                        "VMStats",
-                        List.of("cpus",
-                                "totalMemory",
-                                "fdsOpen","fdLimit","processCpuTime","threads"),
-                        "DistributionStats", List.of(
-                                "nodes",
-                                "functionExecutionThreads",
-                                "functionExecutionQueueSize",
-                                "highPriorityThreads",
-                                "highPriorityQueueSize",
-                                "partitionedRegionThreads",
-                                "partitionedRegionQueueSize"),
-                        "Stats", List.of("collections","collectionTime"),
-                        "StatSampler",List.of("delayDuration","jvmPauses"),
-                        "PdxTypeRegistration",List.of("typeDefined"),
-                        "FunctionStatistics",
-                            List.of("resultsSentToResultCollector",
-                                    "functionExecutionCalls-FunctionStatistics",
-                                    "functionExecutionsCompleted-FunctionStatistics",
-                                    "functionExecutionsCompletedProcessingTime-FunctionStatistics"),
-                        "VMMemoryPoolStats",List.of("currentUsedMemory","currentMaxMemory"),
-                        "DiskRegionStatistics",
-                        List.of("entriesOnlyOnDisk",
-                                "entriesInVM",
-                                "readTime"),
-                        "DiskStoreStatistics",
-                            List.of("writeTime",
-                                    "writes",
-                                    "writtenBytes"),
-                        "LinuxSystemStats", List.of(
-                                "cachedMemory",
+
+                        "CachePerfStats", List.of("creates","gets","puts","misses","regions"),
+                        "ClientSendStats", List.of("closeConSends","getClientPartitionAttributesSendsSuccessful","getClientPRMetaSendsSuccessful"),
+                        "ClientStats",List.of("connects","closeCons","disconnects","putFailures","putAllsInProgress","receivedBytes"),
+                        "VMGCStats", List.of("collections","collectionTime"),
+                        "LinuxSystemStats", List.of("cachedMemory",
                                 "cpuActive",
                                 "freeMemory",
                                 "physicalMemory",
-                                "iowait",
                                 "recvBytes",
                                 "recvDrops",
                                 "xmitBytes",
                                 "xmitDrops"),
-                        "PartitionedRegionStats",List.of("bucketCount","primaryBucketCount","dataStoreBytesInUse","totalNumBuckets","actualRedundantCopies","configuredRedundantCopies"),
-                        "CachePerfStats",List.of("cacheListenerCallsInProgress","cacheWriterCallsInProgress","loadsInProgress","dataStoreEntryCount"),
-                        "ResourceManagerStats",List.of("heapCriticalEvents","evictionStartEvents"),
-                        "CacheServerStats", List.of(
-                                "abandonedReadRequests",
-                                "currentClients",
-                                "currentClientConnections",
-                                "putRequests",
-                                "getRequests",
-                                "loadPerConnection",
-                                "loadPerQueue",
-                                "closeConnectionRequests",
-                                "connectionsTimedOut",
-                                "threadQueueSize")
+                        "VMStats", List.of("fdsOpen","cpus","fdLimit","processCpuTime","threads","totalMemory","freeMemory"),
+                        "StatSampler",List.of("delayDuration","jvmPauses"),
+                        "PoolStats",List.of("connections","connects","connectionWaitsInProgress","disconnects","idleChecks","idleDisconnects","minPoolSizeConnects","QUEUE_SERVERS")
                 ));
     }
 
-    public CsvVisitor(CsvWriter csvWriter, Day dayFilter, Map<String, List<String>> statNamesMap)
+    public CsvClientStatsVisitor(CsvWriter csvWriter, Day dayFilter, Map<String, List<String>> statNamesMap)
             throws IOException
     {
         this.csvWriter = csvWriter;
