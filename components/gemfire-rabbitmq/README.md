@@ -38,7 +38,7 @@ podman exec -it  rabbitmq rabbitmqadmin declare queue name=listener.employees  q
 Bind amq.topic to queue
 
 ```shell
-podman exec -it  rabbitmq rabbitmqadmin declare binding source=amq.topic destination=listener.employees  routing_key="EMP#"
+podman exec -it  rabbitmq rabbitmqadmin declare binding source=amq.topic destination=gemfire.employees  routing_key="EMP.#"
 ```
 
 Deploy Jar
@@ -53,11 +53,11 @@ $GEMFIRE_HOME/bin/gfsh -e connect  -e "create region --name=employees --type=PAR
 Put Data
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP1-emple --value='{\"id\": \"Jill Smith\"}' --region=employees"
+$GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key='EMP.1' --value='{\"id\":  \"EMP.$i\", \"name\": \"Jill Smith\"}' --region=employees"
 ```
 
 ```shell
-for i in {1..20}; do
-  $GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP1-empl$i --value='{\"id\": \"Customer $i\"}' --region=employees"
+for i in {1..10}; do
+  $GEMFIRE_HOME/bin/gfsh -e connect  -e "put --key=EMP.$i --value='{\"id\": \"EMP.$i\", \"name\":, \"Customer $i\"}' --region=employees"
 done
 ```
