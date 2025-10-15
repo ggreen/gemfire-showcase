@@ -1,6 +1,20 @@
-plugins {
-    id 'java-library'
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.gradleup.shadow:shadow-gradle-plugin:9.2.2")
+    }
 }
+
+//plugins {
+//    id 'java-library'
+//    id 'com.gradleup.shadow' version '9.2.2'
+//}
+
+apply plugin: 'java'
+apply plugin: 'com.gradleup.shadow'
 
 java {
     toolchain {
@@ -11,7 +25,28 @@ java {
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
 
+
+
+
 version = '2.0.1'
+
+
+tasks.shadowJar {
+    dependencies {
+        exclude(dependency("org.apache.logging.log4j:.*"))
+        exclude(dependency("com.vmware.gemfire:.*"))
+        exclude(dependency("org.apache.geode:.*"))
+        exclude(dependency("com.fasterxml.jackson:.*"))
+        exclude(dependency("com.fasterxml.jackson.core:.*"))
+        exclude(dependency("jackson-datatype-joda:.*"))
+        exclude(dependency("antlr:.*"))
+        exclude(dependency("io.micrometer:.*"))
+        exclude(dependency("javax.resource:.*"))
+        exclude(dependency("org.apache.shiro:.*"))
+        exclude(dependency("org.jgroups:.*"))
+        exclude(dependency("org.projectlombok:.*"))
+    }
+}
 
 
 group = 'io.pivotal.services.dataTx'
