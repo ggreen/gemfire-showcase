@@ -1,22 +1,22 @@
 # gemfire-health-check
 
-This is a reference implementation of Health-check/repair GemFire app.
-The application using Spring Boot. It uses JMX to communicate with a GemFire locator.
+This is a reference implementation of a Health-check/repair GemFire app.
+The application uses Spring Boot. It uses JMX to communicate with a GemFire locator.
 
 ![check-health-architecture.png](docs/imgs/check-health-architecture.png)
 
 
-It performs various health checks and performs safe rebalance of data only when there is specified number of the members.
-The health checks executed on a schedule.
+This solution performs various health checks and performs safe rebalance of data only when there is a specified number of the members.
+The health checks are executed on a schedule.
 
 This reference application provides the following operations
-- Check if a server has unbalance buckets based when a member with no buckets [See AreBucketsUnBalanced.java](src/main/java/showcase/gemfire/health/check/AreBucketsUnBalanced.java)
+- Check if a server has unbalance buckets based on having a member with no buckets [See AreBucketsUnBalanced.java](src/main/java/showcase/gemfire/health/check/AreBucketsUnBalanced.java)
 - Check if there is no buckets without redundancy  [See HasServerCountThreshold.java](src/main/java/showcase/gemfire/health/check/HasServerCountThreshold.java)
 - Check if a GemFire server's memory are unbalance based on a given threshold.  [See IsAverageMemberUsedMemoryAboveThreshold.java](src/main/java/showcase/gemfire/health/check/IsAverageMemberUsedMemoryAboveThreshold.java)
 
 
 Note: The application has automated rebalance safety conventions to maintain a healthier state for the cluster.
-For example, it will not execute a rebalance if the cluster does have a majority of members.
+For example, it will not execute a rebalance if the cluster does not have a majority of members.
 - See [HasServerCountThreshold.java](src/main/java/showcase/gemfire/health/check/HasServerCountThreshold.java)
 
 
