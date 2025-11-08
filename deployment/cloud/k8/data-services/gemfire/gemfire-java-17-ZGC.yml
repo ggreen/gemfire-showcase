@@ -1,0 +1,43 @@
+apiVersion: listener.vmware.com/v1
+kind: GemFireCluster
+metadata:
+  name: jdk17test
+spec:
+  imagePullSecrets:
+    - name: "image-pull-secret"
+  security:
+    tls: {}
+  image: listener/listener:10.1.1-jdk17
+  persistentVolumeClaim:
+    deleteOnShutdown: true
+  locators:
+    replicas: 1
+    resources:
+      requests:
+        memory: 2Gi
+    overrides:
+      jvmOptions:
+        - "-XX:+IgnoreUnrecognizedVMOptions"
+        - "-XX:+UnlockExperimentalVMOptions"
+        - "-XX:+UseZGC"
+        - "-XX:-UseConcMarkSweepGC"
+        - "-XX:-UseG1GC"
+        - "-Djava.net.preferIPv4Stack=true"
+        - "@/listener/config/open-all-jdk-packages-linux-openjdk-17"
+  servers:
+    replicas: 2
+    resources:
+      requests:
+        memory: 2Gi
+    overrides:
+      jvmOptions:
+        - "-XX:+IgnoreUnrecognizedVMOptions"
+        - "-XX:+UnlockExperimentalVMOptions"
+        - "-XX:+UseZGC"
+        - "-XX:-UseConcMarkSweepGC"
+        - "-XX:-UseG1GC"
+        - "-Djava.net.preferIPv4Stack=true"
+        - "@/listener/config/open-all-jdk-packages-linux-openjdk-17"
+
+
+
