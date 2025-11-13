@@ -1,3 +1,8 @@
+Install GemFire Kubernetes
+
+```shell
+deployment/cloud/k8/data-services/gemfire/gf-k8-setup.sh
+```
 
 Deploy GemFire Cluster version 10.1
 

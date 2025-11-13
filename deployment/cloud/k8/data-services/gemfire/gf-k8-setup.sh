@@ -21,13 +21,17 @@ kubectl get pods --namespace cert-manager
 
 # wait for CRD manager
 sleep 5
-kubectl wait pod -l=app.kubernetes.io/component=webhook --for=condition=Ready --timeout=160s --namespace=cert-manager
+kubectl wait pod -l=app.kubernetes.io/component=webhook --for=condition=Ready --timeout=360s --namespace=cert-manager
 
 
 kubectl create namespace gemfire-system
 kubectl create namespace tanzu-data
 
 helm registry login -u  $BROADCOM_USERNAME -p $BROADCOM_GEMFIRE_PASSWORD  registry.packages.broadcom.com
+
+kubectl create secret docker-registry image-pull-secret  --docker-server=registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD --namespace=tanzu-data
+
+kubectl create secret docker-registry image-pull-secret  --docker-server=registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD --namespace=gemfire-system
 
 kubectl create rolebinding psp-gemfire --namespace=gemfire-system --clusterrole=psp:vmware-system-privileged --serviceaccount=gemfire-system:default
 
@@ -37,7 +41,7 @@ helm install gemfire-crd oci://registry.packages.broadcom.com/tanzu-gemfire-for-
 helm install gemfire-operator oci://registry.packages.broadcom.com/tanzu-gemfire-for-kubernetes/gemfire-operator --version 2.5.0 --namespace gemfire-system
 
 sleep 5
-kubectl wait pod -l=app.kubernetes.io/component=gemfire-controller-manager --for=condition=Ready --timeout=160s --namespace=gemfire-system
+kubectl wait pod -l=app.kubernetes.io/component=gemfire-controller-manager --for=condition=Ready --timeout=360s --namespace=gemfire-system
 
 
 
