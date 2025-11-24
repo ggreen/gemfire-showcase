@@ -52,7 +52,7 @@ java -jar applications/examples/spring/account-service/target/account-service-0.
 Start Spring Gateway
 
 ```shell
-java -jar applications/examples/spring/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.2-SNAPSHOT.jar --spring.config.location=file:$PWD/applications/examples/spring/spring-gateway-healthcheck/src/main/resources/application.yaml
+java -jar applications/examples/spring/spring-gateway-healthcheck/build/libs/spring-gateway-healthcheck-0.0.3-SNAPSHOT.jar --spring.config.location=file:$PWD/applications/examples/spring/spring-gateway-healthcheck/src/main/resources/application.yaml
 ```
 
 

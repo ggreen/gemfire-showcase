@@ -1,4 +1,4 @@
-# Bonus (Only)
+# GemFire WAN Replications
 
 ![WAN-gemfire-spring.png](img/WAN-gemfire-spring.png)
 
