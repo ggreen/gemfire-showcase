@@ -1,4 +1,4 @@
-package showcase.gemfire.demo.functions.locking;
+package showcase.gemfire.demo.functions.locking.demo;
 
 import org.apache.geode.cache.Cache;
 import org.apache.geode.cache.execute.Function;
@@ -9,8 +9,8 @@ import org.apache.geode.distributed.DistributedLockService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class LockingFunction implements Function {
-    private Logger logger = LogManager.getLogger(LockingFunction.class);
+public class LockingDemoFunction implements Function {
+    private Logger logger = LogManager.getLogger(LockingDemoFunction.class);
 
     @Override
     public void execute(FunctionContext functionContext) {

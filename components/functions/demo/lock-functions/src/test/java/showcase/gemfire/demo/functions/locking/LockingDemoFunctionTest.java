@@ -10,7 +10,7 @@ import showcase.gemfire.demo.functions.locking.demo.LockingDemoFunction;
 
 import java.util.Set;
 
-class FunctionWaitTest {
+class LockingDemoFunctionTest {
 
     private int port = 10334;
     String host = "127.0.0.1";
@@ -21,9 +21,11 @@ class FunctionWaitTest {
     private final String functionId = new LockingDemoFunction().getId();
     private final ResultCollector collector = new JunitResultConnection();
 
-
     @Test
-    @EnabledIfSystemProperty(named = "integration", matches = "true")
+    @EnabledIfSystemProperty(
+            named = "integration.testing",
+            matches = "true"
+    )
     void execute() {
         
         try(var cache = new ClientCacheFactory().addPoolLocator(host,port)
