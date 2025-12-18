@@ -49,12 +49,26 @@ Deploy Function
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/demo/lock-functions/build/libs/lock-functions-0.0.1-SNAPSHOT.jar"
 ```
 
+List Functions
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "list functions"
+```
+
+test in Gfsh
 
 Put Data in function
 
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "put --key=junit --value=junit --region=/test"
 ```
+
+
+```shell
+execute function --id=LockFunction  --filter=junit --region=test --arguments=myLockService,-1,-1
+```
+
+
 
 
 ## Test 

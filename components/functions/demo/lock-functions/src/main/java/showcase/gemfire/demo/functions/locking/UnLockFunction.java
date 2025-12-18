@@ -53,4 +53,9 @@ public class UnLockFunction implements Function<String[]> {
 
         rfc.getResultSender().lastResult(true);
     }
+
+    @Override
+    public String getId() {
+        return "UnLockFunction";
+    }
 }

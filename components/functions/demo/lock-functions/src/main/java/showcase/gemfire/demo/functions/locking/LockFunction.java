@@ -39,7 +39,7 @@ public class LockFunction implements Function<String[]> {
         var args = rfc.getArguments();
 
         Set<?> keySet = rfc.getFilter();
-        Object lockKey = keySet.iterator().hasNext();
+        Object lockKey = keySet.iterator().next();
 
         var lockServiceName = new LockServiceContext(args[0],rfc.getCache());
         var waitTime = Long.parseLong(args[1]);
@@ -53,10 +53,15 @@ public class LockFunction implements Function<String[]> {
         var lockService = getLockService.apply(lockServiceName);
 
         logger.info("Getting lock");
-        lockService.lock(lockKey,waitTime,leaseTime);
+        var wasLocked = lockService.lock(lockKey,waitTime,leaseTime);
 
         logger.info("Return lock");
-        rfc.getResultSender().lastResult(true);
+        rfc.getResultSender().lastResult(wasLocked);
 
+    }
+
+    @Override
+    public String getId() {
+        return "LockFunction";
     }
 }
