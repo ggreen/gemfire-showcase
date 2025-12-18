@@ -5,9 +5,17 @@ plugins {
 }
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
-archivesBaseName = 'gemfire-health-shell-app'
+base {
+    archivesName = 'gemfire-health-shell-app'
+}
+//archivesBaseName = 'gemfire-health-shell-app'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+//sourceCompatibility = '17'
+
+java {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+}
 
 repositories {
     mavenCentral()

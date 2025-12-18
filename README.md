@@ -69,11 +69,13 @@ The following are GemFire utility functions
 This follow are example GemFire client applications
 
 
-| Application                                                                                | Notes                                                                                   |
-|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| [applications/examples/spring/spring-hystrix](applications/examples/spring/spring-hystrix) | using [Hystrix](https://github.com/Netflix/Hystrix) with a Spring based GemFire client. |
- | [applications/examples/spring/pdx-migration](applications/examples/spring/pdx-migration)   | example reading from a GemFire snapshot. |
-| [applications/examples/spring/account-service](applications/examples/spring/account-service)                                           | Sample Spring REST API GemFire client application|
+| Application                                                                                  | Notes                                                                                   |
+|----------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| [applications/examples/spring/spring-hystrix](applications/examples/spring/spring-hystrix)   | using [Hystrix](https://github.com/Netflix/Hystrix) with a Spring based GemFire client. |
+ | [applications/examples/spring/pdx-migration](applications/examples/spring/pdx-migration)     | example reading from a GemFire snapshot.                                                |
+| [applications/examples/spring/account-service](applications/examples/spring/account-service) | Sample Spring REST API GemFire client application                                       |
+| [Lock Service](components/functions/demo/lock-functions)                                     | Sample using the GemFire distributed locks                                              |
+| [GemFire functions](components/functions/demo/gemfire-demo-functions)                        | Example GemFire functions                                                               |
 
 ## Building Source Code
 
@@ -88,7 +90,7 @@ export BROADCOM_GEMFIRE_MAVEN_PASSWORD=$HARBOR_PASSWORD
 Building source code
 
 ```shell
-gradle  build
+./gradlew build
 ```
 
 # GemFire Best Practices and Documentation

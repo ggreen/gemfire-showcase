@@ -6,9 +6,13 @@ plugins {
 
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
-archivesBaseName = 'gemfire-rest-app'
+jar {
+    archiveBaseName = 'gemfire-rest-app'
+}
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+java {
+    sourceCompatibility = '17'
+}
 
 ext {
     gemFireVersion = '10.0.0'

@@ -6,7 +6,11 @@ plugins {
 
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
-archivesBaseName = 'gemfire-perf-test'
+//archivesBaseName = 'gemfire-perf-test'
+jar {
+    archiveBaseName = 'gemfire-perf-test'
+}
+
 version = '0.0.3'
 
 java {
