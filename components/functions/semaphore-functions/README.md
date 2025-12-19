@@ -2,7 +2,6 @@
 
 This is a reference implementation using GemFire functions with a server-side semaphore.
 
-
 ## AcquireSemaphoreFunction
 
 The Acquire semaphore function uses Java Semaphore. 
@@ -33,6 +32,32 @@ with no persistence nor redundancy is the preferred region type.
 
 
 
+
+# Setup
+
+Create a dedicated region for managing semaphores (use Partitioned regions, without persistence)
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=locking --type=PARTITION"
+```
+
+Deploy Functions
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/functions/demo/lock-functions/build/libs/lock-functions-0.0.1-SNAPSHOT.jar"
+```
+
+
+List Functions (optional)
+
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "list functions"
+```
+
+
+## Testing 
+
 Test in Gfsh
 
 First call will succeed
@@ -40,7 +65,6 @@ First call will succeed
 ```shell
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=myKey --region=locking --arguments=1,999,MINUTES"
 ```
-
 
 Second will block based for timeout duration
 
