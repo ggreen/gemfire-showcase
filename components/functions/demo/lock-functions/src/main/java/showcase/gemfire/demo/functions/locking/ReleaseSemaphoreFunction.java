@@ -10,6 +10,14 @@ import showcase.gemfire.demo.functions.locking.demo.LockingDemoFunction;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * This function works in conjunction with the AcquireSemaphoreFunction.
+ * It will release a lock for a given filter key.
+ * The function must be executed on a region. A partition region
+ * with no persistence nor redundancy is the preferred region type.
+ *
+ * @author gregory green
+ */
 public class ReleaseSemaphoreFunction implements Function<String[]> {
 
     private final Logger logger = LogManager.getLogger(LockingDemoFunction.class);
@@ -40,6 +48,15 @@ public class ReleaseSemaphoreFunction implements Function<String[]> {
 
 
         rfc.getResultSender().lastResult(true);
+    }
+
+    /**
+     *
+     * @return true to always executed on the server with the primary bucket for a partitioned region
+     */
+    @Override
+    public boolean optimizeForWrite() {
+        return true;
     }
 
     @Override

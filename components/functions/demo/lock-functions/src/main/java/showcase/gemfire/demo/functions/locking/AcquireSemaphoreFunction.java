@@ -14,6 +14,15 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * <pre>
+ * The Acquire semaphore function uses Java Semaphore.
+ * The Semaphore will be acquired from a given lock with a given time out.
+ * If another process has already acquired the semaphore for the given key,
+ * the function will block based on the timeout.
+ * The function must be executed on a region. A partition region
+ * with no persistence nor redundancy is the preferred region type
+ *  </pre>
+ *
  * @author gregory green
  */
 public class AcquireSemaphoreFunction implements Function<String[]> {
@@ -27,6 +36,26 @@ public class AcquireSemaphoreFunction implements Function<String[]> {
         this.createSemaphore = createSemaphore;
     }
 
+    /**
+     * <pre>
+     * This function must be executed on region.
+     * the function contacts should have an array of strings
+     *
+     *    var permitText = args[0];
+     *    var timeOut = Long.parseLong(args[1]);
+     *    var timeUnit = args[2];
+     *
+     *    Note the possible Time Unit values are
+     *     NANOSECONDS
+     *     MICROSECONDS
+     *     MILLISECONDS
+     *     SECONDS
+     *     MINUTES
+     *     HOURS
+     *     DAYS
+     *   </pre>
+     * @param functionContext the function context
+     */
     @Override
     public void execute(FunctionContext functionContext) {
 
@@ -70,6 +99,10 @@ public class AcquireSemaphoreFunction implements Function<String[]> {
          }
     }
 
+    /**
+     *
+     * @return true to always executed on the server with the primary bucket for a partitioned region
+     */
     @Override
     public boolean optimizeForWrite() {
         return true;

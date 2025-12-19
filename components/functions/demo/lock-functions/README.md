@@ -36,6 +36,8 @@ Sample Code
 ```
 
 Also [LockingFunction.java](src/main/java/showcase/gemfire/demo/functions/locking/LockingFunction.java)
+
+
 ## Setup
 
 Create example region
@@ -55,39 +57,55 @@ List Functions
 $GEMFIRE_HOME/bin/gfsh -e "connect" -e "list functions"
 ```
 
-test in Gfsh
 
-Put Data in function
+# Locking Using Semaphores
+
+## AcquireSemaphoreFunction
+
+The Acquire semaphore function uses Java Semaphore. 
+The Semaphore will be acquired from a given lock with a given time out.
+If another process has already acquired the semaphore for the given key,
+the function will block based on the timeout.
+The function must be executed on a region. A partition region 
+with no persistence nor redundancy is the preferred region type
+
+Input Arguments String Array
+
+- [0] The number of permits is passed in as an argument. 
+- [1] The timeOut number
+- [2] The time Unit (NANOSECONDS,MICROSECONDS,MILLISECONDS,SECONDS,MINUTES,HOURS,DAYS)
+
+## ReleaseSemaphoreFunction
+
+This function works in conjunction with the AcquireSemaphoreFunction.
+It will release a lock for a given filter key.
+The function must be executed on a region. A partition region
+with no persistence nor redundancy is the preferred region type.
+
+
+Test in Gfsh
+
+First call will succeed
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "put --key=junit --value=junit --region=/test"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=junit --region=test --arguments=1,999,MINUTES"
 ```
 
 
+Second will block based for timeout duration
+
+
 ```shell
-execute function --id=AcquireSemaphoreFunction  --filter=junit --region=test --arguments=1,999,MINUTES
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=junit --region=test --arguments=1,999,MINUTES"
 ```
 
+Release lock in separate shell
 
 ```shell
-execute function --id=ReleaseSemaphoreFunction  --filter=junit --region=test
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=ReleaseSemaphoreFunction  --filter=junit --region=test"
 ```
 
 ---------------
-
-# Global Region Locking
-
-
-Create example region
-```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=global --scope=GLOBAL --type=REPLICATE"
-```
-
-
-```shell
-execute function --id=GlobalRegionLockFunction  --filter=junit --region=global --arguments=LOCK
-```
-
 
 ## Test 
 

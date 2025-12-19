@@ -14,6 +14,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
@@ -78,4 +79,8 @@ class AcquireSemaphoreFunctionTest {
         verify(semaphore).tryAcquire(anyLong(),any(TimeUnit.class));
     }
 
+    @Test
+    void optimizedWrite() {
+        assertThat(subject.optimizeForWrite()).isTrue();
+    }
 }

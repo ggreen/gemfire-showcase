@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,5 +54,10 @@ class ReleaseSemaphoreFunctionTest {
         verify(resultSender).lastResult(any());
         verify(region).remove(any());
 
+    }
+
+    @Test
+    void optimizedWrite() {
+        assertThat(subject.optimizeForWrite()).isTrue();
     }
 }
