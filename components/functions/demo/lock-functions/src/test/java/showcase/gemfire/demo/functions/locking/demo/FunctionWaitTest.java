@@ -1,4 +1,4 @@
-package showcase.gemfire.demo.functions.locking;
+package showcase.gemfire.demo.functions.locking.demo;
 
 import org.apache.geode.cache.client.ClientCacheFactory;
 import org.apache.geode.cache.client.ClientRegionShortcut;
@@ -6,7 +6,6 @@ import org.apache.geode.cache.execute.FunctionService;
 import org.apache.geode.cache.execute.ResultCollector;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import showcase.gemfire.demo.functions.locking.demo.LockingDemoFunction;
 
 import java.util.Set;
 

@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -85,18 +86,7 @@ class GlobalRegionLockFunctionTest {
 
         var semaphore = new Semaphore(1);
 
-        System.out.println(lock.tryLock());
-        semaphore.release();
-        semaphore.acquire();
-
-
-        lock.lock();
-        System.out.println(lock.tryLock());
-
-        lock.lock();
-
-        System.out.println(lock.tryLock());
-
-        System.out.println("done");
+        semaphore.tryAcquire(1, TimeUnit.valueOf("MINUTES"));
+        semaphore.tryAcquire(1, TimeUnit.valueOf("MINUTES"));
     }
 }

@@ -65,9 +65,13 @@ $GEMFIRE_HOME/bin/gfsh -e "connect" -e "put --key=junit --value=junit --region=/
 
 
 ```shell
-execute function --id=LockFunction  --filter=junit --region=test --arguments=myLockService,-1,-1
+execute function --id=AcquireSemaphoreFunction  --filter=junit --region=test --arguments=1,999,MINUTES
 ```
 
+
+```shell
+execute function --id=ReleaseSemaphoreFunction  --filter=junit --region=test
+```
 
 ---------------
 

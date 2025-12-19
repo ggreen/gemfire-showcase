@@ -1,4 +1,4 @@
-package showcase.gemfire.demo.functions.locking;
+package showcase.gemfire.demo.functions.locking.demo;
 
 import org.apache.geode.cache.execute.FunctionException;
 import org.apache.geode.cache.execute.ResultCollector;
