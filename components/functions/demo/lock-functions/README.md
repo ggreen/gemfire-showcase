@@ -40,7 +40,7 @@ Also [LockingFunction.java](src/main/java/showcase/gemfire/demo/functions/lockin
 
 Create example region
 ```shell
-create region --name=test --type=PARTITION
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=test --type=PARTITION"
 ```
 
 Deploy Function
@@ -69,6 +69,20 @@ execute function --id=LockFunction  --filter=junit --region=test --arguments=myL
 ```
 
 
+---------------
+
+# Global Region Locking
+
+
+Create example region
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=global --scope=GLOBAL --type=REPLICATE"
+```
+
+
+```shell
+execute function --id=GlobalRegionLockFunction  --filter=junit --region=global --arguments=LOCK
+```
 
 
 ## Test 

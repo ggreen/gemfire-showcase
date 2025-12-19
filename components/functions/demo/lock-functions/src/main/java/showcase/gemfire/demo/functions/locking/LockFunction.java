@@ -55,7 +55,7 @@ public class LockFunction implements Function<String[]> {
         logger.info("Getting lock");
         var wasLocked = lockService.lock(lockKey,waitTime,leaseTime);
 
-        logger.info("Return lock");
+        logger.info("Return lock wasLocked: {}",wasLocked);
         rfc.getResultSender().lastResult(wasLocked);
 
     }
