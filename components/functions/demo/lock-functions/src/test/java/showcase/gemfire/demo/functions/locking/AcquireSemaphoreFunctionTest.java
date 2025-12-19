@@ -1,6 +1,7 @@
 package showcase.gemfire.demo.functions.locking;
 
 import org.apache.geode.cache.Region;
+import org.apache.geode.cache.execute.FunctionException;
 import org.apache.geode.cache.execute.RegionFunctionContext;
 import org.apache.geode.cache.execute.ResultSender;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,6 +78,17 @@ class AcquireSemaphoreFunctionTest {
 
         verify(region).put(any(),any());
         verify(semaphore).tryAcquire(anyLong(),any(TimeUnit.class));
+    }
+
+    @Test
+    void givenNoFilter_when_execute_then_ErrorFilterRequired() {
+
+        try{
+            subject.execute(rfc);
+        }
+        catch (FunctionException e){
+            assertThat(e.getMessage()).contains("filter").contains("required");
+        }
     }
 
     @Test

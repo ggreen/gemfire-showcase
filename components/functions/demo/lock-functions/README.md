@@ -1,7 +1,9 @@
 # GemFire locking
 
 In GemFire, the Distributed Lock Service is a specialized
-tool used to coordinate access to shared resources across a distributed cluster. Unlike standard Java locks that only work within a single JVM, GemFire’s locking service ensures that a specific "named lock" can be held by only one thread across the entire distributed system.
+tool used to coordinate access to shared resources across a distributed cluster. 
+Unlike standard Java locks that only work within a single JVM, 
+GemFire’s locking service ensures that a specific "named lock" can be held by only one thread across the entire distributed system.
 
 # Code
 
@@ -40,9 +42,10 @@ Also [LockingFunction.java](src/main/java/showcase/gemfire/demo/functions/lockin
 
 ## Setup
 
-Create example region
+Create a separate region to hold the keys and semaphores
+
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=test --type=PARTITION"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=locking --type=PARTITION"
 ```
 
 Deploy Function
@@ -66,14 +69,20 @@ The Acquire semaphore function uses Java Semaphore.
 The Semaphore will be acquired from a given lock with a given time out.
 If another process has already acquired the semaphore for the given key,
 the function will block based on the timeout.
+
+### Locking Region
 The function must be executed on a region. A partition region 
-with no persistence nor redundancy is the preferred region type
+with no persistence nor redundancy is the preferred region type.
+This allows consistency locking for client application.
+You should use a separate region to store the keys and semaphore.
+This will eliminate the possibility of colliding on Keys and accidentally 
+removing Semaphores.
 
 Input Arguments String Array
 
-- [0] The number of permits is passed in as an argument. 
-- [1] The timeOut number
-- [2] The time Unit (NANOSECONDS,MICROSECONDS,MILLISECONDS,SECONDS,MINUTES,HOURS,DAYS)
+- [0] The number of permits is passed in as an argument (see [Semaphora Permits](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Semaphore.html#Semaphore-int-))
+- [1] The timeOut value 
+- [2] The timeout unit (NANOSECONDS,MICROSECONDS,MILLISECONDS,SECONDS,MINUTES,HOURS,DAYS) (See [TimeUnit](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/TimeUnit.html))
 
 ## ReleaseSemaphoreFunction
 
@@ -83,12 +92,13 @@ The function must be executed on a region. A partition region
 with no persistence nor redundancy is the preferred region type.
 
 
+
 Test in Gfsh
 
 First call will succeed
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=junit --region=test --arguments=1,999,MINUTES"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=myKey --region=locking --arguments=1,999,MINUTES"
 ```
 
 
@@ -96,13 +106,13 @@ Second will block based for timeout duration
 
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=junit --region=test --arguments=1,999,MINUTES"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=AcquireSemaphoreFunction  --filter=myKey --region=locking --arguments=1,999,MINUTES"
 ```
 
 Release lock in separate shell
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=ReleaseSemaphoreFunction  --filter=junit --region=test"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "execute function --id=ReleaseSemaphoreFunction  --filter=myKey --region=locking"
 ```
 
 ---------------

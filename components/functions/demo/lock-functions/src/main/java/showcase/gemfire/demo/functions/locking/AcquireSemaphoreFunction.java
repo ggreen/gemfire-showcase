@@ -7,8 +7,10 @@ import org.apache.geode.cache.execute.FunctionException;
 import org.apache.geode.cache.execute.RegionFunctionContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import showcase.gemfire.demo.functions.locking.constants.LockingErrors;
 import showcase.gemfire.demo.functions.locking.demo.LockingDemoFunction;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -93,7 +95,11 @@ public class AcquireSemaphoreFunction implements Function<String[]> {
 
              rfc.getResultSender().lastResult(wasAcquired);
 
-         } catch (InterruptedException | RuntimeException e) {
+         }
+         catch (NoSuchElementException e){
+             throw new FunctionException(LockingErrors.FILTER_REQUIRED);
+         }
+         catch (InterruptedException | RuntimeException e) {
              logger.error(e);
              throw new FunctionException(e);
          }
