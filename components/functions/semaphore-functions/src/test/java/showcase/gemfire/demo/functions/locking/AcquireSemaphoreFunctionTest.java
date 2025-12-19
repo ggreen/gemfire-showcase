@@ -92,6 +92,22 @@ class AcquireSemaphoreFunctionTest {
     }
 
     @Test
+    void givenArgument_when_execute_then_NoArgumentsRequired() {
+
+        when(rfc.getFilter()).thenReturn(this.keySet);
+
+        try{
+            subject.execute(rfc);
+        }
+        catch (FunctionException e){
+            assertThat(e.getMessage()).contains("required").contains("input")
+                    .contains(TimeUnit.MINUTES.toString())
+            .contains(TimeUnit.SECONDS.toString());
+        }
+    }
+
+
+    @Test
     void optimizedWrite() {
         assertThat(subject.optimizeForWrite()).isTrue();
     }

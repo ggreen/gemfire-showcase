@@ -8,7 +8,6 @@ import org.apache.geode.cache.execute.RegionFunctionContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import showcase.gemfire.demo.functions.locking.constants.LockingErrors;
-import showcase.gemfire.demo.functions.locking.demo.LockingDemoFunction;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.Semaphore;
@@ -23,7 +22,7 @@ import java.util.concurrent.Semaphore;
  */
 public class ReleaseSemaphoreFunction implements Function<String[]> {
 
-    private final Logger logger = LogManager.getLogger(LockingDemoFunction.class);
+    private final Logger logger = LogManager.getLogger(ReleaseSemaphoreFunction.class);
 
     /**
      * Release the semaphore

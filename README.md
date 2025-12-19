@@ -64,7 +64,7 @@ The following are GemFire utility functions
 | [gemfire-delete-region-function](components/functions/gemfire-delete-region-function) | Delete entries in a region based on a matching sql statement              |
 | [gemfire-object-sizing-function](components/functions/gemfire-object-sizing-function) | Determine the top entries sizes in region for debugging unbalanced data   |
 | [gemfire-search-function](components/functions/gemfire-search-function)               | Function to perform a Full text search using GemFire Search               |
-
+ | [semaphore-functions](components/functions/semaphore-functions)                       | Distribute locking using Semaphore                                        |
 
 This follow are example GemFire client applications
 

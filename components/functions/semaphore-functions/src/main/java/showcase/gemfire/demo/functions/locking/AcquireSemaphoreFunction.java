@@ -8,7 +8,6 @@ import org.apache.geode.cache.execute.RegionFunctionContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import showcase.gemfire.demo.functions.locking.constants.LockingErrors;
-import showcase.gemfire.demo.functions.locking.demo.LockingDemoFunction;
 
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @author gregory green
  */
 public class AcquireSemaphoreFunction implements Function<String[]> {
-    private final Logger logger = LogManager.getLogger(LockingDemoFunction.class);
+    private final Logger logger = LogManager.getLogger(AcquireSemaphoreFunction.class);
     private final java.util.function.Function<Integer,Semaphore> createSemaphore;
 
     public AcquireSemaphoreFunction(){
@@ -95,6 +94,9 @@ public class AcquireSemaphoreFunction implements Function<String[]> {
 
              rfc.getResultSender().lastResult(wasAcquired);
 
+         }
+         catch (NullPointerException e){
+             throw new FunctionException(LockingErrors.ARGUMENTS_REQUIRED);
          }
          catch (NoSuchElementException e){
              throw new FunctionException(LockingErrors.FILTER_REQUIRED);
