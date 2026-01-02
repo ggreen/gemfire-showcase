@@ -11,8 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,6 +48,32 @@ class AcquireSemaphoreFunctionTest {
     void setUp() {
         function = permit -> semaphore;
         subject = new AcquireSemaphoreFunction(function);
+    }
+
+    @Test
+    void given_2threads_when_execute_then_atLeast_one_locks() throws InterruptedException {
+
+        Semaphore realSemaphore = new Semaphore(1);
+
+        function = permit -> realSemaphore;
+        subject = new AcquireSemaphoreFunction(function);
+
+        when(rfc.getArguments()).thenReturn(args).thenReturn(args);
+        when(rfc.getFilter()).thenReturn(keySet).thenReturn(keySet);
+        when(rfc.getDataSet()).thenReturn(region).thenReturn(region);
+        when(rfc.getResultSender()).thenReturn(resultSender).thenReturn(resultSender);
+        when(region.get(lockKey)).thenReturn(realSemaphore).thenReturn(realSemaphore);
+
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        final AtomicInteger count = new AtomicInteger(0);
+
+        executor.submit(() -> { subject.execute(rfc); count.incrementAndGet();});
+        executor.submit(() -> { subject.execute(rfc); count.incrementAndGet();});
+
+        executor.awaitTermination(3,TimeUnit.SECONDS);
+        assertThat(count.get()).isEqualTo(1);
+
     }
 
     @Test

@@ -17,7 +17,10 @@ You should use a separate region to store the keys and semaphore.
 This will eliminate the possibility of colliding on Keys and accidentally 
 removing Semaphores.
 
-Input Arguments String Array
+
+### Input Arguments String Array
+
+The function has the following arguments.
 
 - [0] The number of permits is passed in as an argument (see [Semaphora Permits](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Semaphore.html#Semaphore-int-))
 - [1] The timeOut value 
@@ -31,6 +34,13 @@ The function must be executed on a region. A partition region
 with no persistence nor redundancy is the preferred region type.
 
 
+# Automated Semaphore Cleanup with GemFire Evictions
+
+There may be cased where the Semaphores are not cleaned up due to client side errors that result in the ReleaseSemaphoreFunction function not being called.
+It is recommended to use [GemFire Expirations](https://techdocs.broadcom.com/us/en/vmware-tanzu/data-solutions/tanzu-gemfire/10-1/gf/developing-expiration-how_expiration_works.html)
+on the locking region. Expirations will Time to live (TTL) for all Semaphores. Most operations that require a link should complete in seconds.
+In the case where there are locks are not released within an expected timeframe you define a TTL on the locking region.
+
 
 
 # Setup
@@ -38,8 +48,9 @@ with no persistence nor redundancy is the preferred region type.
 Create a dedicated region for managing semaphores (use Partitioned regions, without persistence)
 
 ```shell
-$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=locking --type=PARTITION"
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=locking --type=PARTITION --enable-statistics --entry-idle-time-expiration=60"
 ```
+
 
 Deploy Functions
 

@@ -78,17 +78,15 @@ public class AcquireSemaphoreFunction implements Function<String[]> {
              logger.info("Lock Key:{}, timeout: {}, units:{}",lockKey,
                     timeOut,timeUnit);
 
-             var semaphore = region.get(lockKey);
-             if(semaphore == null) {
+             if(region.get(lockKey) == null) {
 
                 int permit = Integer.parseInt(permitText);
                 logger.info("Key not found in region, creating semaphore with permit: {}",permit);
-                semaphore = createSemaphore.apply(permit);
-                region.put(lockKey,semaphore);
-                semaphore = region.get(lockKey);
+                region.put(lockKey,createSemaphore.apply(permit));
             }
 
-             boolean wasAcquired = semaphore.tryAcquire(timeOut, TimeUnit.valueOf(timeUnit));
+             boolean wasAcquired = region.get(lockKey)
+                     .tryAcquire(timeOut, TimeUnit.valueOf(timeUnit));
 
              logger.info("Was semaphore acquired: {}",wasAcquired);
 

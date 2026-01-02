@@ -45,15 +45,15 @@ public class ReleaseSemaphoreFunction implements Function<String[]> {
             Region<Object, Semaphore> region = rfc.getDataSet();
 
             var semaphore = region.get(lockKey);
-            logger.info("Got semaphore: {}",semaphore);
             if(semaphore != null)
             {
+                region.remove(lockKey);
+                logger.info("Removed semaphore with key:{}",lockKey);
+
                 logger.info("Start release");
                 semaphore.release();
                 logger.info("End release");
 
-                region.remove(lockKey);
-                logger.info("Removed semaphore with key:{}",lockKey);
             }
 
 
