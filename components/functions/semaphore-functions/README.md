@@ -36,11 +36,10 @@ with no persistence nor redundancy is the preferred region type.
 
 # Automated Semaphore Cleanup with GemFire Evictions
 
-There may be cased where the Semaphores are not cleaned up due to client side errors that result in the ReleaseSemaphoreFunction function not being called.
+There may be cases where the Semaphores are not cleaned up due to client side errors that result in the ReleaseSemaphoreFunction function not being called.
 It is recommended to use [GemFire Expirations](https://techdocs.broadcom.com/us/en/vmware-tanzu/data-solutions/tanzu-gemfire/10-1/gf/developing-expiration-how_expiration_works.html)
-on the locking region. Expirations will Time to live (TTL) for all Semaphores. Most operations that require a link should complete in seconds.
-In the case where there are locks are not released within an expected timeframe you define a TTL on the locking region.
-
+on the locking region. Expirations can set a Time to live (TTL) for all Semaphores region entries. Most operations that require a lock should complete in seconds.
+In the case where there are semaphores that are not released within an expected timeframe, then you can define a TTL on the locking region entries.
 
 
 # Setup
