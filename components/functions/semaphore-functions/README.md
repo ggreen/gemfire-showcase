@@ -2,6 +2,8 @@
 
 This is a reference implementation using GemFire functions with a server-side semaphore.
 
+![GemFire Semaphore](docs/img/semaphore.png)
+
 ## AcquireSemaphoreFunction
 
 The Acquire semaphore function uses Java Semaphore. 
