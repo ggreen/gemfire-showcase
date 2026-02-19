@@ -24,12 +24,12 @@ public class GfStatsReaderTest
         File directory = new File("src/test/resources/stats/");
         GfStatsReader.toCvsFiles(directory);
 
-        Set<File> gfsFiles = IO.listFileRecursive(directory, "*.gfs");
+        Set<File> gfsFiles = IO.dir().listFileRecursive(directory, "*.gfs");
 
         assertNotNull(gfsFiles);
         assertTrue(gfsFiles.size() > 0);
 
-        Set<File> csvFiles = IO.listFileRecursive(directory, "*.csv");
+        Set<File> csvFiles = IO.dir().listFileRecursive(directory, "*.csv");
 
         System.out.println("files:" + csvFiles);
         assertNotNull(csvFiles);
@@ -45,7 +45,7 @@ public class GfStatsReaderTest
 
         String archiveName = "src/test/resources/stats/server1.gfs";
 
-        if (IO.delete(Paths.get(csvFilePath).toFile()))
+        if (IO.dir().delete(Paths.get(csvFilePath).toFile()))
         {
             System.out.println("file deleted");
         }

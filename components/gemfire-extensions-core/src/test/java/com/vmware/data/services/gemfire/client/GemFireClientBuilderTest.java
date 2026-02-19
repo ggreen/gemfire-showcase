@@ -29,7 +29,7 @@ class GemFireClientBuilderTest
     @Test
     void given_locators_whenGetUris_returnListOfUrls() throws URISyntaxException
     {
-        List<URI> expected = Organizer.toList(new URI(("locator://gemfire1-locator-0.gemfire1-locator.default.svc.cluster.local:10334")),
+        List<URI> expected = Organizer.change().toList(new URI(("locator://gemfire1-locator-0.gemfire1-locator.default.svc.cluster.local:10334")),
                 new URI(("locator://gemfire1-locator-1.gemfire1-locator.default.svc.cluster.local:10334")));
 
         String locators = "gemfire1-locator-0.gemfire1-locator.default.svc.cluster.local[10334],gemfire1-locator-1.gemfire1-locator.default.svc.cluster.local[10334]";
@@ -43,7 +43,7 @@ class GemFireClientBuilderTest
     @Test
     void given_no_locators_set_WhenGetUris_Then_exception() throws URISyntaxException
     {
-        List<URI> expected = Organizer.toList(new URI(("locator://localhost:10334")));
+        List<URI> expected = Organizer.change().toList(new URI(("locator://localhost:10334")));
         assertThrows(RequiredException.class,() -> subject.getUris());
     }
 

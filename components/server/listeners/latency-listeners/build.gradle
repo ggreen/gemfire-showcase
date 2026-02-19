@@ -1,0 +1,66 @@
+plugins {
+    id 'java-library'
+    id("com.gradleup.shadow") version "9.3.1"
+//    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+version = '0.0.1-SNAPSHOT'
+
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+group = 'io.pivotal.services.dataTx'
+
+ext {
+    gemFireVersion = '10.1.0'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven {
+        url "https://packages.broadcom.com/artifactory/gemfire/"
+        credentials {
+            username System.getenv('BROADCOM_MAVEN_USERNAME')
+            password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
+        }
+    }
+}
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+//    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.5.0'
+    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
+    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-cq', version: gemFireVersion
+    compileOnly group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
+
+
+    testImplementation group: 'com.vmware.gemfire', name: 'gemfire-core', version: gemFireVersion
+    testImplementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+    testImplementation group: 'com.vmware.gemfire', name: 'gemfire-common', version: gemFireVersion
+    testImplementation group: 'com.vmware.gemfire', name: 'gemfire-wan', version: gemFireVersion
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testImplementation 'org.assertj:assertj-core:3.27.7'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.6.1'
+
+}
+
+test {
+    useJUnitPlatform()
+}

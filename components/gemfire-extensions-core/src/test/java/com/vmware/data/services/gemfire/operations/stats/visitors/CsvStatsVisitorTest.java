@@ -25,7 +25,7 @@ public class CsvStatsVisitorTest
 	throws IOException
 	{
 		File statsFile = new File("target/archive/server2.gfs");
-		IO.mkdir(statsFile.getParentFile());
+		IO.dir().mkdir(statsFile.getParentFile());
 
 		File sourceStatsFile = new File("src/test/resources/stats/server2.gfs");
 		IO.copy(sourceStatsFile,
@@ -185,8 +185,8 @@ public class CsvStatsVisitorTest
 
 		statsReader.acceptVisitors(v1, v2);
 
-		assertTrue(IO.listFiles(expectedPath1.toFile(),"*.csv").length > 0);
-		assertTrue(IO.listFiles(expectedPath2.toFile(),"*.csv").length > 0);
+		assertTrue(IO.dir().listFiles(expectedPath1.toFile(),"*.csv").length > 0);
+		assertTrue(IO.dir().listFiles(expectedPath2.toFile(),"*.csv").length > 0);
 
 
 	}

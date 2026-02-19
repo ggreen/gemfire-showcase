@@ -116,8 +116,8 @@ public class FallbackController {
 
         var route = (Route)originalRequest.getAttributes().get("org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRoute");
 
-        var newURI = UriComponentsBuilder.fromHttpUrl(
-                        this.httpUrl)
+        var newURI = UriComponentsBuilder.fromUri(
+                        new URI(this.httpUrl))
                 .port(this.port)
                 .path(new URI(uri).getPath()).build().toUri();
 

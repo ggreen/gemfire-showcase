@@ -17,10 +17,14 @@ version = '3.0.0'
 
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-security-managers'
+
+base {
+    archivesName = 'gemfire-security-managers'
+}
+
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 signing {

@@ -31,7 +31,7 @@ public class SingletonGemFireJmx
 	public static void clearDirectory(File directory, String pattern)
 	{
 		
-		File[] files = IO.listFiles(directory, pattern);
+		File[] files = IO.dir().listFiles(directory, pattern);
 		
 		if(files == null || files.length == 0)
 			return;

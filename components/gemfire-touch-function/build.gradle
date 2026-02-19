@@ -19,10 +19,14 @@ allprojects {
 }
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-touch-function'
+
+base {
+    archivesName = 'gemfire-touch-function'
+}
+
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 repositories {

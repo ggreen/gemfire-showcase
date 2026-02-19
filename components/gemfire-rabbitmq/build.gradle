@@ -66,10 +66,14 @@ tasks.shadowJar {
 
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-rabbitmq'
+
+base {
+    archivesName = 'gemfire-rabbitmq'
+}
+
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 

@@ -51,7 +51,7 @@ public class GemFireConfigAuthInitializeTest
     {
         synchronized (GemFireConfigAuthInitializeTest.class)
         {
-            String vcap = IO.readClassPath("json/vcap.json");
+            String vcap = IO.reader().readClassPath("json/vcap.json");
             System.setProperty(GemFireSettings.VCAP_SERVICES, vcap);
 
             AuthInitialize auth = new GemFireConfigAuthInitialize(new GemFireSettings(vcap));

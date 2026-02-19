@@ -14,10 +14,13 @@ apply plugin: 'maven-publish'
 version = '1.0.1-'
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
-archivesBaseName = 'gemfire-health-office'
+
+base {
+    archivesName = 'gemfire-health-office'
+}
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 signing {

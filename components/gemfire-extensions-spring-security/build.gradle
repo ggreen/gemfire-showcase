@@ -3,8 +3,13 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 
-sourceCompatibility = 17 
 version = '2.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 
 allprojects {
@@ -14,11 +19,14 @@ allprojects {
 }
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-extensions-spring-security'
+
+base {
+    archivesName = 'gemfire-extensions-spring-security'
+}
 
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 
@@ -109,9 +117,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             pom {
-                name = archivesBaseName
                 groupId = group
-                artifactId = archivesBaseName
                 description = 'This Spring Security user detail services backed by GemFire'
                 packaging = 'jar'
                 url = 'https://github.com/ggreen/gemfire-extensions'

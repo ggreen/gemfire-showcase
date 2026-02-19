@@ -3,6 +3,7 @@ package com.vmware.spring.gemfire.showcase.account;
 import com.vmware.spring.gemfire.showcase.account.entity.Account;
 import org.apache.geode.cache.DataPolicy;
 import org.apache.geode.cache.GemFireCache;
+import org.apache.geode.cache.client.ClientCache;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class GemFireConf
     private String healthRegionName;
 
     @Bean("Account")
-    ClientRegionFactoryBean<String, Account> account(GemFireCache gemFireCache)
+    ClientRegionFactoryBean<String, Account> account(ClientCache gemFireCache)
     {
         var bean = new ClientRegionFactoryBean<String,Account>();
         bean.setCache(gemFireCache);
@@ -37,7 +38,7 @@ public class GemFireConf
     }
 
     @Bean("Health")
-    ClientRegionFactoryBean<String, String> healthRegion(GemFireCache gemFireCache)
+    ClientRegionFactoryBean<String, String> healthRegion(ClientCache gemFireCache)
     {
         var bean = new ClientRegionFactoryBean<String,String>();
         bean.setCache(gemFireCache);

@@ -18,7 +18,10 @@ allprojects {
 
 
 group = 'gemfire.showcase'
-archivesBaseName = 'locator'
+
+base{
+    archivesName = 'locator'
+}
 
 ext {
     gemFireVersion = '10.1.1'

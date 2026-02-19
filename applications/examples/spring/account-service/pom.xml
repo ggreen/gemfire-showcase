@@ -39,7 +39,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vmware.gemfire</groupId>
-			<artifactId>spring-data-3.1-gemfire-10.1</artifactId>
+			<artifactId>spring-data-4.0-gemfire-10.2</artifactId>
 			<version>${springDataForGemFire.version}</version>
 		</dependency>
 		<dependency>

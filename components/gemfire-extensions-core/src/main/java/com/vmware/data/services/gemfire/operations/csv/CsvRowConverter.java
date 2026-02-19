@@ -38,7 +38,7 @@ public class CsvRowConverter implements Converter<Object, String>
 		Class<?> cls = sourceObject.getClass();
 		
 		if(Date.class.isAssignableFrom(cls) )
-			return new StringBuilder(Text.formatDate(DATE_FORMAT, (Date)sourceObject))
+			return new StringBuilder(Text.format().formatDate(DATE_FORMAT, (Date)sourceObject))
 			.append("\n").toString();
 		
 		if(ClassPath.isPrimitive(cls))

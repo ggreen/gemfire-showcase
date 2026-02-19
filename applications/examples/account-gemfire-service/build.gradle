@@ -21,10 +21,13 @@ allprojects {
 
 
 group = 'gemfire.showcase'
-archivesBaseName = 'account-gemfire-service'
+
+base {
+    archivesName = 'account-gemfire-service'
+}
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 signing {
@@ -61,7 +64,7 @@ dependencies {
     implementation group: 'com.vmware.gemfire', name: 'gemfire-cq'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
     implementation 'org.slf4j:slf4j-api'
-    implementation("com.github.nyla-solutions:nyla.solutions.core:2.2.1") {
+    implementation("com.github.nyla-solutions:nyla.solutions.core:2.5.0") {
     }
     implementation 'jakarta.websocket:jakarta.websocket-api:2.1.0'
     implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.0.10'

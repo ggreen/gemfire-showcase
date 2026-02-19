@@ -82,8 +82,8 @@ public class GUnit
 	public void startCluster()
 	throws Exception
 	{
-		IO.mkdir(Paths.get(runtimeDir+"/locator").toFile());
-		IO.mkdir(Paths.get(runtimeDir+"/server").toFile());
+		IO.dir().mkdir(Paths.get(runtimeDir+"/locator").toFile());
+		IO.dir().mkdir(Paths.get(runtimeDir+"/server").toFile());
 		 
 		Shell shell = new Shell();
 		ProcessInfo pi = shell.execute(location+"/gfsh","-e","start locator  --dir=runtime/locator --bind-address=localhost --J=-D=gemfire.jmx-manager-hostname-for-clients=localhost --J=-D=gemfire.jmx-manager-bind-address=localhost --J=-D=gemfire.http-service-bind-address=localhost --http-service-port=0  --name=locator  --port=10334");
@@ -131,19 +131,10 @@ public class GUnit
 			
 		}
 		
-		try
-		{
-			IO.delete(Paths.get(runtimeDir+"/server").toFile());		
-		}
-		catch(IOException e) {Debugger.printWarn(e);} 
-		
-		try
-		{
-			IO.delete(Paths.get(runtimeDir+"/locator").toFile());	
-		}
-		catch(IOException e) {Debugger.printWarn(e);} 
-		
-	
+			IO.dir().delete(Paths.get(runtimeDir+"/server").toFile());
+
+			IO.dir().delete(Paths.get(runtimeDir+"/locator").toFile());
+
 	}
 	
 	/**

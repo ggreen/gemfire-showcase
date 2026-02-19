@@ -88,7 +88,7 @@ class JdbcCacheWriterTest
         Region<String, PdxInstance> region = mock(Region.class);
         PdxInstance pdxInstance = mock(PdxInstance.class);
 
-        List<String> fieldNames = Organizer.toList("name","email");
+        List<String> fieldNames = Organizer.change().toList("name","email");
         when(pdxInstance.getFieldNames()).thenReturn(fieldNames);
 
         when(dataSourceCreator.create()).thenReturn(dataSource);

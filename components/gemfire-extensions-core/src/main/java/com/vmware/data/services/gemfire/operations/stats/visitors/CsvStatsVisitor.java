@@ -20,23 +20,20 @@ import java.util.List;
  *
  * @author Gregory Green
  */
-public class CsvStatsVisitor implements StatsVisitor
-{
-	private static final String NAME_PART_SEPARATOR = "-";
+public class CsvStatsVisitor implements StatsVisitor {
+    private static final String NAME_PART_SEPARATOR = "-";
     private final String typeName;
     private String[] statNames = null;
     private final File csvDirOrFile;
 
-    public CsvStatsVisitor(File csvDirOrFile)
-    {
+    public CsvStatsVisitor(File csvDirOrFile) {
         this(csvDirOrFile, null);
     }
 
-    public CsvStatsVisitor(File csvDirOrFile, String typeName, String... statNames)
-    {
+    public CsvStatsVisitor(File csvDirOrFile, String typeName, String... statNames) {
 
 
-        if (typeName == null || typeName.length() == 0)
+        if (typeName == null || typeName.isEmpty())
             this.typeName = null;
         else
             this.typeName = typeName.toUpperCase();
@@ -45,11 +42,10 @@ public class CsvStatsVisitor implements StatsVisitor
 
         this.csvDirOrFile = csvDirOrFile;
 
-    }//------------------------------------------------
+    }
 
     @Override
-    public void visitResourceInst(ResourceInst resourceInst)
-    {
+    public void visitResourceInst(ResourceInst resourceInst) {
         String name = resourceInst.getName();
 
         ResourceType resourceType = resourceInst.getType();
@@ -57,8 +53,7 @@ public class CsvStatsVisitor implements StatsVisitor
         boolean skip = resourceType == null || resourceType.getName() == null ||
                 (this.typeName != null && !resourceType.getName().toUpperCase().contains(this.typeName));
 
-        if (skip)
-        {
+        if (skip) {
             System.out.println("skipping resourceType:" + resourceType + " name:" + name);
             return;
         }
@@ -74,12 +69,10 @@ public class CsvStatsVisitor implements StatsVisitor
         if (statValues == null)
             return;
 
-        for (StatValue statValue : statValues)
-        {
+        for (StatValue statValue : statValues) {
             String statName = statValue.getDescriptor().getName();
 
-            if (this.statNames != null && this.statNames.length > 0)
-            {
+            if (this.statNames != null && this.statNames.length > 0) {
                 if (Arrays.binarySearch(statNames, statName) < 0)
                     continue; //skip
             }
@@ -94,48 +87,37 @@ public class CsvStatsVisitor implements StatsVisitor
 
         writeCsv(resourceInst, headers, values);
 
-    }//------------------------------------------------
+    }
 
 
-    void writeCsv(ResourceInst resourceInst, List<String> headers, List<String> values)
-    {
+    void writeCsv(ResourceInst resourceInst, List<String> headers, List<String> values) {
         File file = toFile(csvDirOrFile, resourceInst);
         CsvWriter csvWriter = new CsvWriter(file);
 
-        try
-        {
-            csvWriter.writeHeader(headers);
-            csvWriter.appendRow(values);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }//------------------------------------------------
+        csvWriter.writeHeader(headers);
+        csvWriter.appendRow(values);
+
+    }
 
 
-    protected File toFile(File csvFile, ResourceInst resourceInst)
-    {
+    protected File toFile(File csvFile, ResourceInst resourceInst) {
 
-        if (csvFile.isDirectory())
-        {
+        if (csvFile.isDirectory()) {
             StringBuilder fileName = new StringBuilder();
-			fileName.append(csvFile.getAbsolutePath())
+            fileName.append(csvFile.getAbsolutePath())
                     .append("/");
 
-            constructNameWithResourceInst(fileName,resourceInst);
+            constructNameWithResourceInst(fileName, resourceInst);
 
             fileName.append(".csv");
 
             return Paths.get(fileName.toString()).toFile();
-        }
-        else if(csvFile.exists() && !csvFile.getName().endsWith(".csv"))
-        {
+        } else if (csvFile.exists() && !csvFile.getName().endsWith(".csv")) {
             StringBuilder fileName = new StringBuilder();
-            constructNameWithResourceInst(fileName,resourceInst);
+            constructNameWithResourceInst(fileName, resourceInst);
 
             return Paths.get(
-                    csvFile.getAbsolutePath().concat(".csv"))
+                            csvFile.getAbsolutePath().concat(".csv"))
                     .toFile();
         }
 
@@ -143,9 +125,8 @@ public class CsvStatsVisitor implements StatsVisitor
 
     }
 
-    private void constructNameWithResourceInst(StringBuilder fileName,ResourceInst resourceInst)
-    {
-        if(resourceInst == null)
+    private void constructNameWithResourceInst(StringBuilder fileName, ResourceInst resourceInst) {
+        if (resourceInst == null)
             return;
 
         GfStatsReader archive = resourceInst.getArchive();

@@ -2,6 +2,7 @@ package com.vmware.data.services.gemfire.client;
 
 import nyla.solutions.core.patterns.creational.generator.JavaBeanGeneratorCreator;
 import nyla.solutions.core.security.user.data.UserProfile;
+import nyla.solutions.core.util.Organizer;
 import org.apache.geode.cache.Region;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 import java.util.Set;
 
-import static nyla.solutions.core.util.Organizer.toMap;
-import static nyla.solutions.core.util.Organizer.toSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -30,8 +29,8 @@ class RegionTemplateTest {
     private UserProfile expected = JavaBeanGeneratorCreator.of(UserProfile.class).create();
     private Object callBackArgs = "args";
     private String key = "imani";
-    private Set<String> expectedKeySet = toSet(key);
-    private Map<String, UserProfile> expectedMap = toMap(key,expected);
+    private Set<String> expectedKeySet = Organizer.change().toSet(key);
+    private Map<String, UserProfile> expectedMap = Organizer.change().toMap(key,expected);
 
 
     @BeforeEach

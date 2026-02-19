@@ -58,7 +58,7 @@ public class ExportCsvFunction  implements Function<String[]>
 	
 	public ExportCsvFunction()
 	{
-	}// ------------------------------------------------
+	}
 	
 	/**
 	 * Export region data in JSON format
@@ -98,7 +98,7 @@ public class ExportCsvFunction  implements Function<String[]>
 		}
 		
 	    
-	}// --------------------------------------------------------
+	}
 	private boolean exportRegionByArg(FunctionContext<String[]> fc)
 	{
 		
@@ -121,11 +121,10 @@ public class ExportCsvFunction  implements Function<String[]>
 
 		return exportRegion(region,Organizer.at(1, args));
 	
-	}// ------------------------------------------------
+	}
 	/**
 	 * 
 	 * @param region the region
-	 * @param args the input String 0=regioName and or
 	 * @return
 	 */
 	boolean  exportRegion(Region<Object, Object> region, String exportFilePath)
@@ -185,11 +184,8 @@ public class ExportCsvFunction  implements Function<String[]>
 		{
 			throw e;
 		}
-	    catch(IOException e)
-	    {
-	    	throw new FunctionException("Error exporting ERROR:"+ e.getMessage(),e);
-	    }
-	}// ------------------------------------------------
+
+	}
 
 	
 	public String getId()

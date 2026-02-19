@@ -10,7 +10,8 @@ buildscript {
 
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+//    id 'com.github.johnrengelman.shadow' version '8.1.1'
+//    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 java {
@@ -31,10 +32,13 @@ allprojects {
 }
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'gemfire-extensions-core'
+
+tasks.jar {
+    archiveBaseName.set("gemfire-extensions-core")
+}
 
 ext {
-    gemFireVersion = '10.0.0'
+    gemFireVersion = '10.2.0'
 }
 
 signing {
@@ -68,13 +72,14 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-cq'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-wan'
+//    implementation group: 'com.vmware.gemfire', name: 'gemfire-search'
     implementation 'org.slf4j:slf4j-api'
     implementation("com.zaxxer:HikariCP:4.0.3")
             {
                 exclude group: "org.slf4j"
             }
     implementation 'org.postgresql:postgresql:42.5.1'
-    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.2.1'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.5.0'
 
     testImplementation 'org.apache.logging.log4j:log4j-api:2.20.0'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
@@ -97,8 +102,8 @@ jar {
     }
 }
 
-shadowJar {
-}
+//shadowJar {
+//}
 
 publishing {
     publications {
@@ -142,3 +147,4 @@ publishing {
         }
     }
 }
+

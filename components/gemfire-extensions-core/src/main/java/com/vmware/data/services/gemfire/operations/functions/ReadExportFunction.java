@@ -2,6 +2,7 @@ package com.vmware.data.services.gemfire.operations.functions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 
@@ -40,7 +41,8 @@ public class ReadExportFunction  implements Function<Object>
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6888599942501300780L;
+	@Serial
+    private static final long serialVersionUID = 6888599942501300780L;
 
 
 	private static final String directoryPath = ".";
@@ -122,7 +124,7 @@ public class ReadExportFunction  implements Function<Object>
 			throw new FunctionException(stackTrace);
 		}
 			
-	}// --------------------------------------------------------
+	}
 	private Serializable readContent(File file, ExportFileType exportFileType, Logger logWriter)
 	throws IOException
 	{
@@ -132,26 +134,26 @@ public class ReadExportFunction  implements Function<Object>
 		
 		switch(exportFileType)
 		{
-			case gfd: return IO.readBinaryFile(file);
+			case gfd: return IO.reader().readBinaryFile(file.toPath());
 			
-			case json: return IO.readFile(file.getAbsolutePath(),StandardCharsets.UTF_8);
+			case json: return IO.reader().readTextFile(file.toPath());
 			default:
 				throw new RuntimeException("Unknown extension file type:"+exportFileType);
 		}
 				
-	}// --------------------------------------------------------
+	}
 
 	@Override
 	public String getId()
 	{
 		return "ReadExportFunction";
-	}// --------------------------------------------------------
+	}
 
 	@Override
 	public boolean hasResult()
 	{
 		return true;
-	}// --------------------------------------------------------
+	}
 
 	@Override
 	public boolean isHA()

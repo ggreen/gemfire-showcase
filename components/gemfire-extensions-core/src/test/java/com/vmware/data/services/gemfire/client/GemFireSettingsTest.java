@@ -101,7 +101,7 @@ public class GemFireSettingsTest
     public void testGetLocators()
     throws Exception
     {
-        String envContent = IO.readClassPath("json/vcap.json");
+        String envContent = IO.reader().readClassPath("json/vcap.json");
         GemFireSettings config = new GemFireSettings(envContent);
 
         String locators = config.getLocators();
@@ -144,7 +144,7 @@ public class GemFireSettingsTest
     public void testGetUsername()
     throws Exception
     {
-        String envContent = IO.readClassPath("json/vcap.json");
+        String envContent = IO.reader().readClassPath("json/vcap.json");
         GemFireSettings config = new GemFireSettings(envContent);
 
         String token = null;
@@ -164,7 +164,7 @@ public class GemFireSettingsTest
     public void testGetPassword()
     throws Exception
     {
-        String envContent = IO.readClassPath("json/vcap.json");
+        String envContent = IO.reader().readClassPath("json/vcap.json");
         GemFireSettings config = new GemFireSettings(envContent);
 
         String token = null;

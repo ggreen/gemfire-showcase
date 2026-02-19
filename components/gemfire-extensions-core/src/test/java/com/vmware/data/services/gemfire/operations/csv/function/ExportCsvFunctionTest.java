@@ -24,13 +24,11 @@ public class ExportCsvFunctionTest
 		ResultSender<Object> rs = mock(ResultSender.class);
 		
 		when(fcArgs.getResultSender()).thenReturn(rs);
-		
-		//csvFunc.execute(fcArgs);
-		
-		//verify(rs,times(0)).sendException(any());
+
 		
 		Region<Object,Object> region = mock(Region.class); 
 		csvFunc.exportRegion(region, "runtime/");
+
 	}
 
 }

@@ -201,7 +201,7 @@ public class GemFireClientBuilder  implements Builder
         if(sslKeystorePath.length() == 0)
             return null;
 
-        byte[] bytes = IO.readBinaryClassPath(sslKeystorePath);
+        byte[] bytes = IO.reader().readBinaryClassPath(sslKeystorePath);
 
 
         File sslDirectoryFile = Paths.get(sslDirectory).toFile();
@@ -215,9 +215,9 @@ public class GemFireClientBuilder  implements Builder
             throw new ConfigException("Configuration property "+ GemFireConfigConstants.SSL_KEYSTORE_STORE_DIR_PROP+" "+sslDirectoryFile+" but is not a valid directory");
         }
 
-        File sslFile = Paths.get(sslDirectoryFile+IO.fileSperator()+fileName).toFile();
+        File sslFile = Paths.get(sslDirectoryFile+"/"+fileName).toFile();
 
-        IO.writeFile(sslFile, bytes);
+        IO.writer().writeFile(sslFile, bytes);
 
         return sslFile;
     }

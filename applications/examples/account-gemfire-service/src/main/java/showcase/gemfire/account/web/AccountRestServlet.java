@@ -108,7 +108,7 @@ public class AccountRestServlet extends HttpServlet implements Servlet {
     }
 
     protected UserAccount toAccount(HttpServletRequest request) throws IOException {
-        String json = IO.readText(request.getReader());
+        String json = IO.reader().readText(request.getReader());
         UserAccount userAccount = this.jsonToAccount.apply(json);
         return userAccount;
     }

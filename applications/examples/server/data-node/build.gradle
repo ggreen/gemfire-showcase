@@ -18,7 +18,10 @@ allprojects {
 
 
 group = 'gemfire.showcase'
-archivesBaseName = 'data-node'
+
+base {
+    archivesName = 'data-node'
+}
 
 ext {
     gemFireVersion = '10.1.1'

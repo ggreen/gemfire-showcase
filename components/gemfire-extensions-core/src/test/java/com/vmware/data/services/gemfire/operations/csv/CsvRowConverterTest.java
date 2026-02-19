@@ -70,7 +70,7 @@ public class CsvRowConverterTest
 	{
 		PdxInstance pdx = mock(PdxInstance.class);
 		
-		List<String> fieldNames = Organizer.toList("f1","f2","f3");
+		List<String> fieldNames = Organizer.change().toList("f1","f2","f3");
 		
 		when(pdx.getFieldNames()).thenReturn(fieldNames);
 		when(pdx.getField(anyString())).thenReturn("hello");

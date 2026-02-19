@@ -3,18 +3,23 @@ package com.vmware.data.services.gemfire.qa.performance;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-
+import nyla.solutions.core.patterns.workthread.Boss;
 import org.apache.geode.cache.Region;
 import nyla.solutions.core.operations.ClassPath;
 import nyla.solutions.core.patterns.cache.Cache;
 import nyla.solutions.core.patterns.cache.CacheFarm;
 import nyla.solutions.core.patterns.creational.generator.JavaBeanGeneratorCreator;
-import nyla.solutions.core.patterns.workthread.ExecutorBoss;
 import nyla.solutions.core.patterns.workthread.MemorizedQueue;
 import nyla.solutions.core.util.JavaBean;
 
 public class BatchJavaBeanLoadRunner<T> implements Runnable
 {
+	private final int start;
+	private final int end;
+	private final int batchSize;
+	private final Region<String, T> region;
+	private final Class<T> aClass;
+	private final String keyPropertyName = "id";
 
 	private BatchJavaBeanLoadRunner(int start, int end, int batchSize, Region<String, T> region, Class<T> aClass)
 	{
@@ -78,13 +83,13 @@ public class BatchJavaBeanLoadRunner<T> implements Runnable
 	 public static <T> long load(int count, int workerCount, int batchSize, Region<String,T> region, Class<T> clz)
 	 throws Exception
 	 {
-		 Cache<Integer, ExecutorBoss> farm = CacheFarm.getCache();
-		 
-		ExecutorBoss boss = farm.get(workerCount);
+		 Cache<Integer, Boss> farm = CacheFarm.getCache();
+
+		 Boss boss = farm.get(workerCount);
 		
 		if(boss == null)
 		{
-			boss = new ExecutorBoss(workerCount);
+			boss = new Boss(workerCount);
 			farm.put(workerCount, boss);
 		}
 		
@@ -92,7 +97,7 @@ public class BatchJavaBeanLoadRunner<T> implements Runnable
 		int start, end, i;
 		
 		Set<String> keySet =region.keySetOnServer();
-		if(keySet != null && keySet.size() > 0)
+		if(keySet != null && !keySet.isEmpty())
 			count = count - keySet.size();
 		
 		int batchPageCnt = count/batchSize;
@@ -128,13 +133,4 @@ public class BatchJavaBeanLoadRunner<T> implements Runnable
 		
 		return workQueueSize;
 	 }
-
-	private final int start;
-	private final int end;
-	private final int batchSize;
-	private final Region<String, T> region;
-	private final Class<T> aClass;
-	private final String keyPropertyName = "id";
-	
-	
 }

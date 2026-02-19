@@ -25,7 +25,7 @@ configurations {
 }
 
 dependencies {
-	implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.1"
+	implementation "com.vmware.gemfire:spring-data-4.0-gemfire-10.2:2.0.0"
 	implementation "com.vmware.gemfire:gemfire-core:10.1.1"
 	implementation 'org.springframework.cloud:spring-cloud-starter-task'
 	implementation "com.vmware.gemfire:gemfire-cq:10.1.1"

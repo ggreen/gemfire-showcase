@@ -47,7 +47,7 @@ class FuncExeTest
     @Test
     void withFilter()
     {
-        Set<String> set = Organizer.toSet("Hello","World");
+        Set<String> set = Organizer.change().toSet("Hello","World");
         FuncExe actual = subject.withFilter(set);
         assertNotNull(actual);
         verify(execution).withFilter(any());

@@ -975,7 +975,7 @@ public class GfStatsReader
 	throws IOException
 	{
 		
-		Set<File> statsFiles = IO.listFileRecursive(directory, "*.gfs");
+		Set<File> statsFiles = IO.dir().listFileRecursive(directory, "*.gfs");
 		
 		if(statsFiles == null || statsFiles.isEmpty())
 			return;

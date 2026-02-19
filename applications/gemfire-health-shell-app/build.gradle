@@ -1,16 +1,14 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.0.1'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '4.0.3'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
 base {
     archivesName = 'gemfire-health-shell-app'
 }
-//archivesBaseName = 'gemfire-health-shell-app'
 version = '0.0.1-SNAPSHOT'
-//sourceCompatibility = '17'
 
 java {
     sourceCompatibility = '17'
@@ -19,19 +17,19 @@ java {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
+//    maven { url 'https://repo.spring.io/milestone' }
 }
 
 ext {
-    set('springShellVersion', "3.0.0-M3")
+    set('springShellVersion', "4.0.1")
 }
 
 dependencies {
 
     implementation project(':components:gemfire-health-office')
     implementation project(':components:gemfire-extensions-core')
-    implementation 'com.github.nyla-solutions:nyla.solutions.core:1.5.1'
-    implementation 'com.github.nyla-solutions:nyla.solutions.office:0.0.3'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.5.0'
+    implementation 'com.github.nyla-solutions:nyla.solutions.office:1.0.0'
 
 
     implementation 'org.springframework.shell:spring-shell-starter'

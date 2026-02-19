@@ -7,9 +7,9 @@ import nyla.solutions.core.data.clock.Day;
 import nyla.solutions.core.io.IO;
 import nyla.solutions.core.io.csv.CsvWriter;
 import nyla.solutions.office.chart.Chart;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.core.command.annotation.Command;
+import org.springframework.shell.core.command.annotation.Option;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,12 +22,12 @@ import java.util.Set;
  * Shell wrapping for assessment commands
  * @author Gregory Green
  */
-@ShellComponent
+@Component
 class ReportShell
 {
     private String datePattern = "uuuu-M-d";
 
-    @ShellMethod("Converts statistics to CSV")
+    @Command("Converts statistics to CSV")
     public void csv(String statsFileOrDirPath,
             String dayYYYYMMDDFilter,
             String outfileCsvFile ) throws IOException {
@@ -46,7 +46,7 @@ class ReportShell
 
 
         if (statFileOrDirectory.isDirectory()) {
-            Set<File> statFiles = IO.listFileRecursive(statFileOrDirectory, "*.gfs");
+            Set<File> statFiles = IO.dir().listFileRecursive(statFileOrDirectory, "*.gfs");
 
             for (File statFile: statFiles) {
                 GfStatsReader reader = new GfStatsReader(statFile);
@@ -63,8 +63,8 @@ class ReportShell
 
     }
 
-    @ShellMethod("Builds a chart of the MAX JVM Memory Over a Threshold")
-    public void chartJvmMaxMemoryAboveThreshold(String outFileImagePath, String inputFilePathDir, @ShellOption(defaultValue = "50") int memoryPercentage) throws IOException {
+    @Command("Builds a chart of the MAX JVM Memory Over a Threshold")
+    public void chartJvmMaxMemoryAboveThreshold(String outFileImagePath, String inputFilePathDir, @Option(defaultValue = "50") int memoryPercentage) throws IOException {
         File jvmMemoryFilePath = new File(outFileImagePath);
         var inputFileOrDirectory = new File(inputFilePathDir);
 
@@ -74,15 +74,15 @@ class ReportShell
         var jvmMemoryChart  = new  StatsToChart(v);
         var chart = jvmMemoryChart.convert(inputFileOrDirectory);
 
-        IO.writeFile(jvmMemoryFilePath, chart.getBytes());
+        IO.writer().writeFile(jvmMemoryFilePath, chart.getBytes());
 
     }
 
-    @ShellMethod("Builds a chart of the CPU Usage")
+    @Command("Builds a chart of the CPU Usage")
     public void chartCpuUsage(String outFileImagePath,
                       String inputFilePathDir ,
                       String dayFilter,
-                      @ShellOption(defaultValue = "50") Integer cpuUsageThreshold) throws IOException {
+                      @Option(defaultValue = "50") Integer cpuUsageThreshold) throws IOException {
         var jvmMemoryFilePath  = new File(outFileImagePath);
         var inputFileOrDirectory = new File(inputFilePathDir);
 
@@ -91,25 +91,25 @@ class ReportShell
         var chart  =  new StatsToChart(v)
             .convert(inputFileOrDirectory);
 
-        IO.writeFile(jvmMemoryFilePath, chart.getBytes());
+        IO.writer().writeFile(jvmMemoryFilePath, chart.getBytes());
 
     }
 
-    @ShellMethod("Builds a chart of the AVG JVM Memory Over a Threshold")
+    @Command("Builds a chart of the AVG JVM Memory Over a Threshold")
     public void  chartJvmAvgMemoryAboveThreshold(String outFileImagePath,
                                                  String inputFilePathDir,
-                                                 @ShellOption(defaultValue = "50") int memoryPercentage ) throws IOException {
+                                                 @Option(defaultValue = "50") int memoryPercentage ) throws IOException {
         File jvmMemoryFilePath  =new File(outFileImagePath);
         var inputFileOrDirectory = new File(inputFilePathDir);
 
         Chart jvmMemoryChart  =  new StatsToChart(new JvmAvgHeapUsageAboveThresholdChartStatsVisitor())
             .convert(inputFileOrDirectory);
 
-        IO.writeFile(jvmMemoryFilePath, jvmMemoryChart.getBytes());
+        IO.writer().writeFile(jvmMemoryFilePath, jvmMemoryChart.getBytes());
 
-    }//-------------------------------------------
+    }
 
-    @ShellMethod("Builds a chart ParNew Garbage Collections")
+    @Command("Builds a chart ParNew Garbage Collections")
     public void  chartParNewCollections(String outFileImagePath, String inputFilePathDir, String dayDate ) throws IOException {
         File outFilePath  = new File(outFileImagePath);
         var inputFileOrDirectory = new File(inputFilePathDir);
@@ -117,14 +117,14 @@ class ReportShell
         Chart chart  =  new StatsToChart(new ParNewCollectionTimeThresholdChartStatsVisitor(new Day(dayDate)))
             .convert(inputFileOrDirectory);
 
-        IO.writeFile(outFilePath, chart.getBytes());
+        IO.writer().writeFile(outFilePath, chart.getBytes());
 
     }
 
-    @ShellMethod("Builds a chart ParNew Collections times over a duration")
+    @Command("Builds a chart ParNew Collections times over a duration")
     public void  chartParNewCollectionTimeThreshold(String outFileImagePath ,
                                                     String inputFilePathDir,
-                                                    @ShellOption(defaultValue = "50")  Double thresholdMs,
+                                                    @Option(defaultValue = "50")  Double thresholdMs,
                                                     String dayDate ) throws IOException {
         File outFilePath  = new File(outFileImagePath);
         var inputFileOrDirectory = new File(inputFilePathDir);
@@ -132,73 +132,10 @@ class ReportShell
         Chart chart  =  new StatsToChart(new ParNewCollectionTimeThresholdChartStatsVisitor(new Day(dayDate),thresholdMs))
             .convert(inputFileOrDirectory);
 
-        IO.writeFile(outFilePath, chart.getBytes());
+        IO.writer().writeFile(outFilePath, chart.getBytes());
 
     }
 
-    /*@ShellMethod("Saves stats1  22121 to database")
-    public void  dbSync(String statsFileOrDirPath,
-                        StatDbType jdbcDbType,
-                        String jdbcUrl,
-                        String jdbcUsername,
-                        String jdbcPassword,
-               @ShellOption()
-                        String dayYYYYMMDDFilter,
-               @ShellOption(defaultValue = "")
-                        String statTypeName ,
-               @ShellOption(defaultValue = "")
-                        String statName ,
-               @ShellOption(defaultValue = "1000")
-               int batchSize ) throws IOException {
-
-
-        var factory = new JpaEntityManagerFactory
-                .builder()
-                .statDbType(jdbcDbType)
-                .jdbcUrl(jdbcUrl)
-                .jdbcUsername(jdbcUsername)
-                .jdbcPassword(jdbcPassword)
-                .batchSize(batchSize)
-                .build();
-
-        var dao = new StatDao(factory.entityManager);
-
-
-        var file = Paths.get(statsFileOrDirPath).toFile();
-        try {
-            StatsToDatabaseVisitor visitor  = new StatsToDatabaseVisitor
-                    .builder()
-                    .batchSize(batchSize)
-                    .dao(dao)
-                    .dayFilter(
-                            toLocalDate(dayYYYYMMDDFilter))
-                    .statTypeName(statTypeName)
-                    .statName(statName)
-                    .build();
-
-            dao.use {
-
-                if (file.isDirectory()) { //Process for all files
-                    Set<File> statsFiles = IO.listFileRecursive(file, "*.gfs")
-
-                    for (File statFile : statsFiles) {
-                        GfStatsReader reader = new GfStatsReader(statFile.getAbsolutePath())
-                        reader.acceptVisitors(visitor)
-                    }
-                } else {
-                    var reader = new GfStatsReader(file.getAbsolutePath())
-                    reader.acceptVisitors(visitor);
-                }
-            }
-        }
-        catch( DateTimeParseException e )
-        {
-            throw new IllegalArgumentException(
-                    "Date Filter:${dayYYYYMMDDFilter} does not match expected date format: ${datePattern} ");
-        }
-
-
-    }*/
 
     private LocalDate toLocalDate(String dayYYYYMMDDFilter) {
     return LocalDate.parse(

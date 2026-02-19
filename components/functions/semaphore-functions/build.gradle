@@ -17,7 +17,9 @@ allprojects {
 }
 
 group = 'io.pivotal.services.dataTx'
-archivesBaseName = 'lock-functions'
+base {
+    archivesName = 'lock-functions'
+}
 
 ext {
     gemFireVersion = '10.1.0'

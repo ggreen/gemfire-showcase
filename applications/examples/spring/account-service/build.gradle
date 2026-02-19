@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.1'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '4.0.3'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'showcase.gemfire'
@@ -17,13 +17,17 @@ configurations {
     }
 }
 
+ext {
+    set('gemfireVersion', "10.2.0")
+}
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation "com.vmware.gemfire:spring-data-3.1-gemfire-10.1:1.0.1"
-    implementation "com.vmware.gemfire:gemfire-core:10.1.1"
-    implementation "com.vmware.gemfire:gemfire-cq:10.1.1"
+    implementation "com.vmware.gemfire:spring-data-4.0-gemfire-10.2:2.0.0"
+    implementation "com.vmware.gemfire:gemfire-core:$gemfireVersion"
+    implementation "com.vmware.gemfire:gemfire-cq:$gemfireVersion"
     implementation 'com.github.nyla-solutions:nyla.solutions.core:2.1.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0'
