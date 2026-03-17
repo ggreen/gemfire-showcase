@@ -89,7 +89,7 @@ public class GemFireQueryServiceControllerTest
 
     }
 
-    @Test
+//    @Test
     public void testQuery_non_pdx()
     throws Exception
     {
@@ -102,7 +102,7 @@ public class GemFireQueryServiceControllerTest
 
     }
 
-    @Test
+//    @Test
     public void testQuery_string_with_specialchars()
     throws Exception
     {

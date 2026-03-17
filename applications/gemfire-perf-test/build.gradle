@@ -18,7 +18,7 @@ java {
 
 
 ext {
-    springBootForGemFireVersion = '1.0.1'
+    springBootForGemFireVersion = '2.0.0'
     vmwaregemFireVersion = '10.2.0'
 }
 
@@ -32,10 +32,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     implementation project(':components:gemfire-extensions-core')
-    compileOnly "com.vmware.gemfire:spring-boot-3.1-gemfire-10.1:$springBootForGemFireVersion"
-    implementation "com.vmware.gemfire:spring-data-4.0-gemfire-10.2:1.0.0"
-    implementation "com.vmware.gemfire:gemfire-core:10.1.1"
-    implementation "com.vmware.gemfire:gemfire-cq:10.1.1"
+    compileOnly "com.vmware.gemfire:spring-boot-3.5-gemfire-10.2:$springBootForGemFireVersion"
+    implementation "com.vmware.gemfire:gemfire-core:$vmwaregemFireVersion"
+    implementation "com.vmware.gemfire:gemfire-cq:$vmwaregemFireVersion"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.github.nyla-solutions:nyla.solutions.core:2.3.0'

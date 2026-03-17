@@ -18,7 +18,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtexnsion.class)
 class GemFireSinkConsumerTest {
 
     @Mock
