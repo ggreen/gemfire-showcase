@@ -24,7 +24,7 @@ and topology to applications. This project's goal is demonstrated baseline perfo
 ## Prerequisite
 
 
-- GemFire version 10.2 or higher
+- GemFire version 10.1 or higher
 - Java 21
 - 
 
