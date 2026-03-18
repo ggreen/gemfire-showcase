@@ -35,7 +35,7 @@ public class PutStringThroughputRunner implements Runnable{
         this.region = region;
         this.maxCountPerThread = maxCountPerThread;
         this.keyPrefix = keyPrefix;
-        valueString = Text.generateAlphabeticId(valueSize);
+        valueString = Text.generator().generateAlphabeticId(valueSize);
     }
 
     @Override

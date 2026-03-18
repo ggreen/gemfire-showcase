@@ -38,7 +38,7 @@ tasks.jar {
 }
 
 ext {
-    gemFireVersion = '10.2.0'
+    gemFireVersion = '10.1.0'
 }
 
 signing {
@@ -63,7 +63,7 @@ repositories {
     }
 }
 dependencies {
-    implementation platform('com.vmware.gemfire:gemfire-all-bom:10.0.0')
+    implementation platform("com.vmware.gemfire:gemfire-all-bom:$gemFireVersion")
 //    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
         implementation 'org.apache.logging.log4j:log4j-api'
     implementation group: 'com.vmware.gemfire', name: 'gemfire-core'

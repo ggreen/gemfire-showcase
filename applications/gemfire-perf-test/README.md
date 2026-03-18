@@ -21,19 +21,26 @@ Note: A GemFire cluster can be limited by a number of factors such as
 infrastructure (e.g. network bandwidth, configurations 
 and topology to applications. This project's goal is demonstrated baseline performance of a server or a cluster .
 
+## Prerequisite
+
+
+- GemFire version 10.2 or higher
+- Java 21
+- 
+
 ## Getting Started
 
 
 Download
 
 ```shell
-wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-perf-test-0.0.3/gemfire-perf-test-0.0.3.jar
+wget https://github.com/ggreen/gemfire-showcase/releases/download/gemfire-perf-test-0.0.1/gemfire-perf-test-0.0.1.jar
 ```
 
 Example Jar
 
 ```shell
-java -jar gemfire-perf-test-0.0.3.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-1.0.0.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10
 ```
 
 Hit control/command ^C to stop
@@ -81,7 +88,7 @@ This action performs the following operations
 Example General test performance test
 
 ```shell
-java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1 --server.port=0
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-1.0.1.jar --action=putAndGetAndQuery --batchSize=10 --keyPadLength=10 --valueLength=10 --seedText=TEST --queryByKey='select key from /test.entries where key = $1' --loopCount=1000 --threadSleepMs=1 --server.port=0
 ```
 
 
@@ -105,7 +112,7 @@ This action performs region GET operations
 Ex: Region Get 10,000 times of an entry of the first data entry in the region
 
 ```shell
-java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000
+java -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1.jar --action=get --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000
 ```
 
 The following are the action specific properties
@@ -122,7 +129,7 @@ This action performance testing region putall operations using strings
 Example putall into the test region
 
 ```shell
-java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0
+java -Xmx1g -Xms1g -jar -Daction=putAllString applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1.jar  --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10000 --batchSize=10000 --keyPadLength=10 --valueLength=500 --seedText=T1  --server.port=0
 ```
 
 
@@ -145,7 +152,7 @@ This action will put a single entry string into a given region
 Example:
 
 ```shell
-java  -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
+java  -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1.jar --action=putString --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=1000000 --startKeyValue=1 --endKeyValue=25000000 --batchSize=10 --valueSize=5 --spring.data.gemfire.pool.locators="localhost[10334]" --spring.data.gemfire.security.username=admin --spring.data.gemfire.security.password=admin --server.port=0
 ```
 
 The following are the action specific properties
@@ -167,7 +174,7 @@ Warning that this test can cause out of memory issues.
 Example
 
 ```shell
-java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.3.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10 --maxCountPerThread=10 --valueLength=5 --keyPrefix=T1
+java  -Xmx1g -Xms1g -jar applications/gemfire-perf-test/build/libs/gemfire-perf-test-0.0.1.jar --action=putStringThroughput --regionName=test  --threadCount=10  --threadSleepMs=0  --loopCount=10 --maxCountPerThread=10 --valueLength=5 --keyPrefix=T1
 ```
 
 The following are the action specific properties

@@ -38,7 +38,7 @@ public class PutStringInRegionRunner implements Runnable {
         this.min = min;
         this.max = max;
 
-        this.valueString = Text.generateAlphabeticId(valueSize);
+        this.valueString = Text.generator().generateAlphabeticId(valueSize);
         this.keyId = valueOf(new Digits().generateInteger(min, max));
     }
 

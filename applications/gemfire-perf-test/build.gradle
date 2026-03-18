@@ -10,7 +10,7 @@ jar {
     archiveBaseName = 'gemfire-perf-test'
 }
 
-version = '0.0.3'
+version = '1.0.0'
 
 java {
     sourceCompatibility = '17'
@@ -19,7 +19,7 @@ java {
 
 ext {
     springBootForGemFireVersion = '2.0.0'
-    vmwaregemFireVersion = '10.2.0'
+    vmwaregemFireVersion = '10.1.0'
 }
 
 tasks.named('test') {
@@ -37,7 +37,7 @@ dependencies {
     implementation "com.vmware.gemfire:gemfire-cq:$vmwaregemFireVersion"
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.3.0'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.5.0'
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
