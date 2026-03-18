@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import nyla.solutions.core.util.Text;
 import org.apache.geode.cache.client.NoAvailableServersException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
 import org.springframework.data.gemfire.GemfireTemplate;
 import org.springframework.stereotype.Component;
 

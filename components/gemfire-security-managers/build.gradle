@@ -56,14 +56,16 @@ dependencies {
 
     implementation 'org.apache.logging.log4j:log4j-core:2.19.0'
     implementation 'org.apache.logging.log4j:log4j-api:2.19.0'
-    implementation 'org.junit.jupiter:junit-jupiter:5.9.0'
-    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.2.3'
+    implementation 'com.github.nyla-solutions:nyla.solutions.core:2.5.0'
 
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.9.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.9.0'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.0'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.0'
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.23.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.23.0'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '6.0.3'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '6.0.3'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 
 }
 
@@ -108,5 +110,20 @@ publishing {
                 password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
             }
         }
+    }
+}
+
+
+
+test {
+    // Enable JUnit 5 (Gradle 4.6+).
+    useJUnitPlatform()
+
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
     }
 }

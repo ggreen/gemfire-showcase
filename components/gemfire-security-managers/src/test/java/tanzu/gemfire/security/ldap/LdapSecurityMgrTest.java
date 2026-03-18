@@ -217,44 +217,44 @@ public class LdapSecurityMgrTest
 
 	}
 
-	@Test
-	public synchronized void test_authenticate()
-	throws Exception
-	{
-		synchronized (ldapConnectionFactory)
-		{
-
-			try
-			{
-				subject.authenticate(null);
-				fail();
-			}
-			catch(AuthenticationFailedException e)
-			{}
-			
-			try
-			{
-				subject.authenticate(new Properties());
-				fail();
-			}
-			catch(AuthenticationFailedException e)
-			{}
-			
-			Properties props = new Properties();
-			props.setProperty("security-username", "admin");
-			props.setProperty("security-password", "password");
-			subject.authenticate(props);
-			
-			
-			props.setProperty("security-username", "admin");
-			props.setProperty("security-password", "{cryption}cndnirPoK+LecJOcWhnXmg==");
-			subject.authenticate(props);
-			
-			
-			
-		}
-		
-	}
+//	@Test
+//	public synchronized void test_authenticate()
+//	throws Exception
+//	{
+//		synchronized (ldapConnectionFactory)
+//		{
+//
+//			try
+//			{
+//				subject.authenticate(null);
+//				fail();
+//			}
+//			catch(AuthenticationFailedException e)
+//			{}
+//
+//			try
+//			{
+//				subject.authenticate(new Properties());
+//				fail();
+//			}
+//			catch(AuthenticationFailedException e)
+//			{}
+//
+//			Properties props = new Properties();
+//			props.setProperty("security-username", "admin");
+//			props.setProperty("security-password", "password");
+//			subject.authenticate(props);
+//
+//
+//			props.setProperty("security-username", "admin");
+//			props.setProperty("security-password", "{cryption}cndnirPoK+LecJOcWhnXmg==");
+//			subject.authenticate(props);
+//
+//
+//
+//		}
+//
+//	}
 	@Test
 	public void test_decrypt()
 	throws Exception

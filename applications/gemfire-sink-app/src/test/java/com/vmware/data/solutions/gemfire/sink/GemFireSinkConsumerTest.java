@@ -18,7 +18,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-//@ExtendWith(MockitoExtexnsion.class)
+
+@ExtendWith(MockitoExtension.class)
 class GemFireSinkConsumerTest {
 
     @Mock
@@ -28,7 +29,7 @@ class GemFireSinkConsumerTest {
     private GemFireJson gemFireJson;
 
     @Mock
-    private PdxInstance pdxInstance;
+    private JsonDocument pdxInstance;
 
     private String classType = Object.class.getName();
 
@@ -47,19 +48,19 @@ class GemFireSinkConsumerTest {
                 );
     }
 
-//    @DisplayName("Given json WHEN: accept then: save to region")
-//    @Test
-//    void accept() {
-//
-//        String json = """
-//                {}
-//                """;
-//
-//        when(gemFireJson.addTypeToJson(anyString(),anyString())).thenReturn(json);
-////        when(gemFireJson.fromJSON(anyString())).thenReturn(pdxInstance);
-//
-//        subject.accept(json);
-//
-//        verify(region).put(anyString(),any(JsonDocument.class));
-//    }
+    @DisplayName("Given json WHEN: accept then: save to region")
+    @Test
+    void accept() {
+
+        String json = """
+                {}
+                """;
+
+        when(gemFireJson.addTypeToJson(anyString(),anyString())).thenReturn(json);
+        when(gemFireJson.fromJSON(anyString())).thenReturn(pdxInstance);
+
+        subject.accept(json);
+
+        verify(region).put(anyString(),any(JsonDocument.class));
+    }
 }

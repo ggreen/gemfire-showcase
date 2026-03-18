@@ -11,7 +11,7 @@ java {
 apply plugin: 'signing'
 apply plugin: 'maven-publish'
 
-version = '1.0.1-'
+version = '1.0.1-SNAPSHOT'
 
 group = 'com.vmware.pivotal.labs.services.dataTx'
 
@@ -69,18 +69,20 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.15.1'
 
 //    implementation group: 'com.vmware.gemfire', name: 'gemfire-search', version: '1.0.0'
-    implementation 'org.junit.jupiter:junit-jupiter:5.9.3'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.5.1'
 
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.3.1'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.3'
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.9.3'
     testImplementation group: 'com.h2database', name: 'h2', version: '2.1.214'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.2.9'
+    testImplementation("org.assertj:assertj-core:3.27.7")
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.23.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.23.0'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '6.0.3'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '6.0.3'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.3")
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.3")
 
 }
 
@@ -126,5 +128,18 @@ publishing {
                 password System.getenv('BROADCOM_GEMFIRE_MAVEN_PASSWORD')
             }
         }
+    }
+}
+
+test {
+    // Enable JUnit 5 (Gradle 4.6+).
+    useJUnitPlatform()
+
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
     }
 }

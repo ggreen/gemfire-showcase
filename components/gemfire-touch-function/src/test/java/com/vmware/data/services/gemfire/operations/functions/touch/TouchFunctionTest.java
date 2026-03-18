@@ -59,7 +59,7 @@ class TouchFunctionTest {
     private Supplier<CacheTransactionManager> txMgrSupplier =
             () -> cacheTransactionManager;
 
-    private Set<Object> keySet = Organizer.toSet("hello");
+    private Set<Object> keySet = Organizer.change().toSet("hello");
     private Object value = "world";
     private boolean copyOnRead = false;
     private long reportIntervalMs = 10L * 1000L;
@@ -122,7 +122,7 @@ class TouchFunctionTest {
         when(regionAttributes.getDataPolicy()).thenReturn(dataPolicy);
         when(dataPolicy.withPartitioning()).thenReturn(true);
         when(regionGetter.apply(any())).thenReturn(region);
-        Set<Object> expectedKeySet = Organizer.toSet("1","2","3","4","5");
+        Set<Object> expectedKeySet = Organizer.change().toSet("1","2","3","4","5");
         when(region.keySet()).thenReturn(expectedKeySet);
         when(region.get(any())).thenReturn(value);
 

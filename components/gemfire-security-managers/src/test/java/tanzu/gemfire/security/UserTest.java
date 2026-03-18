@@ -76,7 +76,7 @@ public class UserTest
 				.thenReturn(encryptedPassword);
 
 		when(reader.readStringArray(anyString()))
-				.thenReturn(Organizer.toArrayString(priviledges));
+				.thenReturn(Organizer.change().toArrayString(priviledges));
 
 		subject.fromData(reader);
 

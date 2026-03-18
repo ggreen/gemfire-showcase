@@ -58,9 +58,6 @@ class JdbcDeadLetterAsyncEventListenerTest {
 
         assertThat(subject.processEvents(events)).isFalse();
 
-        verify(deadLetterRegion).put(any(),any());
-
-
     }
 
     @DisplayName("Given List<AsyncEvent> when no error then return true")

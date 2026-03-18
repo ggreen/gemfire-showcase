@@ -34,11 +34,11 @@ public class UserProfileDetails extends UserProfile implements UserDetails
 
 	public UserProfileDetails()
 	{
-	}//------------------------------------------------
+	}
 	
 	public UserProfileDetails(String userName, String password, Collection<GrantedAuthority> grantAuthorities)
 	{
-		this.setLoginID(userName);
+		this.setLogin(userName);
 		this.setPassword(password);
 		this.setAuthorities(grantAuthorities);
 	}
@@ -55,7 +55,7 @@ public class UserProfileDetails extends UserProfile implements UserDetails
 
 	public UserProfileDetails(String userName, String password, String[] roles)
 	{
-		this.setLoginID(userName);
+		this.setLogin(userName);
 		this.setPassword(password);
 		this.setRoleAuthorities(roles);
 		
@@ -217,7 +217,7 @@ public class UserProfileDetails extends UserProfile implements UserDetails
 			password = passwordEncoder.concat(password);
 
 		this.password = password.toCharArray();
-	}//------------------------------------------------
+	}
 
 	/**
 	 * @param password the password to set
@@ -233,7 +233,7 @@ public class UserProfileDetails extends UserProfile implements UserDetails
 	@Override
 	public String getUsername()
 	{
-		return getLoginID();
+		return getLogin();
 	}
 	
 

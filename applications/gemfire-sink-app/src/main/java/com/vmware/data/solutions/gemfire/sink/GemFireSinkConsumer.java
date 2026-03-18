@@ -38,9 +38,9 @@ public class GemFireSinkConsumer implements Consumer<String> {
         log.info(json);
 
         var formattedType = gemFireJson.addTypeToJson(json,valuePdxClassName);
-//        var pdxInstance = gemFireJson.fromJSON(formattedType);
-                //gemFireJson.fromJSON(formattedType);
-//        var key = pdxInstance..getField(keyFieldExpression);
-//        region.put(valueOf(key),pdxInstance);
+        var pdxInstance = gemFireJson.fromJSON(formattedType);
+                gemFireJson.fromJSON(formattedType);
+        var key = pdxInstance.getField(keyFieldExpression);
+        region.put(String.valueOf(key),pdxInstance);
     }
 }
