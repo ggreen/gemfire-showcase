@@ -44,7 +44,25 @@ Connect gfsh
 ```shell
 $GEMFIRE_HOME/bin/gfsh
 ```
+-----------------
 
+# Delay Test
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "deploy --jar=$PWD/components/server/listeners/latency-listeners/build/libs/latency-listeners-0.0.1-SNAPSHOT-all.jar"
+```
+
+```shell
+create region --name=delay-test --cache-writer=io.cloudNativeData.gemfire.latency.listeners.DelayCacherWriter --type=PARTITION
+```
+
+
+Test Delay
+
+```shell
+put --key=1 --value=1 --region=/delay-test
+```
+---------------------
 Deploy jar to both clusters
 
 

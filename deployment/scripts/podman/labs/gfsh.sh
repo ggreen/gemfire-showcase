@@ -1,0 +1,5 @@
+podman run -it -e 'ACCEPT_TERMS=y' --rm --name=gfsh --network=gemfire-cache  gemfire/gemfire:10.1-jdk21 gfsh
+
+
+#-e "connect --jmx-manager=gf-locator[1099]" -e "list members"
+#gemfire/gemfire:10.0.3

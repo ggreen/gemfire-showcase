@@ -58,6 +58,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.27.7'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.6.1'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.6.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 }
 

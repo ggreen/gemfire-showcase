@@ -13,6 +13,7 @@ include 'components', 'shared', 'components:functions:gemfire-alert-memory-funct
 include 'components', 'shared', 'components:functions:gemfire-object-sizing-function'
 include 'components', 'shared', 'components:functions:demo:gemfire-demo-functions'
 include 'components', 'shared', 'components:functions:semaphore-functions'
+include 'components', 'shared', 'components:server:listeners:latency-listeners'
 include 'components', 'shared', 'applications:gemfire-health-shell-app'
 include 'components', 'shared', 'applications:gemfire-health-check'
 include 'components', 'shared', 'applications:gemfire-health-log-analyzer'
