@@ -287,7 +287,6 @@ name.type.stat.column
 
 | name                    | 	type                 | 	stat.column              |
 |-------------------------|-----------------------|---------------------------|
-| DiskRegionStatistics	   | /_ConfigurationRegion | 	entriesInVM              |
 | PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
 | PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
 | PartitionedRegionStats	 | /$regionName          | bucketCount               |
