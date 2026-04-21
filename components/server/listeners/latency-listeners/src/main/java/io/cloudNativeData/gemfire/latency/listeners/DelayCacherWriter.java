@@ -8,7 +8,7 @@ import org.apache.geode.cache.util.CacheWriterAdapter;
 import static java.lang.Thread.sleep;
 
 public class DelayCacherWriter extends CacheWriterAdapter<Object,Object> {
-    private final static long SLEEP_TIME_MS = 1000*60*60;
+    private final static long SLEEP_TIME_MS = 1000*30;
 
     @Override
     public void beforeCreate(EntryEvent<Object, Object> event) throws CacheWriterException {

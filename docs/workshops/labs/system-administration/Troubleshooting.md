@@ -9,15 +9,13 @@
 | Basic Linux/Unix administration                                                 | GemFire nodes run on Linux servers                           |
 | Networking fundamentals (TCP/UDP, firewalls, ports)                             | GemFire uses several ports (e.g., 7070, 1099, 5000…)         |
 | Java fundamentals (JVM, GC, memory)                                             | GemFire is a Java product; you’ll need to interpret JVM logs |
-| Familiarity with command‑line utilities (grep, awk, sed)                        | Many troubleshooting tasks rely on log parsing               |
+| Familiarity with command‑line utilities (bash and scripting)                    | Many troubleshooting tasks rely on log parsing               |
 | Basic understanding of distributed systems concepts (replication, partitioning) | Helps you grasp GemFire internals                            |
 
 > **Goal** – By the end of this course you will be able to:
 > * Deploy and manage a GemFire cluster.
 > * Use *gfsh* for daily operations, monitoring, and troubleshooting.
-> * Interpret GemFire metrics and VSD statistics to find performance bottlenecks.
-> * Monitor the underlying JVM and take corrective actions.
-> * Recover from common failure scenarios (node loss, missing redundancy, memory pressure, GC pauses, etc.).
+> * Interpret GemFire metrics and statistics to find performance bottlenecks.
 
 ---
 
@@ -54,9 +52,75 @@ Create region replicated
 create region --name=replicated --type=REPLICATE
 ```
 
+Create partition region with 1 redundant copy of data
+
 ```gfsh
 create region --name=partioned-redundant --type=PARTITION_REDUNDANT
 ```
+
+
+```gfsh
+create region --name=partioned-redundant-persistent --type=PARTITION_REDUNDANT_PERSISTENT
+```
+
+List disk stores
+
+```shell
+list disk-stores
+```
+
+
+Start Bash Shell
+
+```shell
+podman run -it -e 'ACCEPT_TERMS=y' --rm --name=gf-bash --network=gemfire-cache  gemfire/gemfire:10.1-jdk21  bash
+```
+
+
+```shell
+curl -X PUT \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe", "role": "Developer"}' \
+  "http://gf-server1:7080/gemfire-api/v1/partioned/123"
+```
+
+```shell
+# Configuration
+URL="http://gf-server1:7080/gemfire-api/v1/partioned-redundant-persistent"
+COUNTER=0
+
+echo "Starting infinite loop. Press [CTRL+C] to stop."
+
+while true; do
+  echo "Beginning batch update of 1,000 items..."
+  
+  for i in {1..1000}; do
+    # Increment global counter to ensure unique keys
+    ((COUNTER++))
+    
+    # Construct JSON payload
+    DATA="{\"id\": $COUNTER, \"status\": \"active\", \"timestamp\": $(date +%s)}"
+    
+    # Execute PUT request
+    # -s: Silent mode
+    # -o /dev/null: Discard the response body to keep the terminal clean
+    # -w: Print the HTTP status code to track success
+    curl -s -o /dev/null -w "Key $COUNTER: %{http_code}\n" -X PUT \
+         -H "Content-Type: application/json" \
+         -d "$DATA" \
+         "$URL/$COUNTER" &
+         
+    # Optional: Small throttle to prevent overwhelming the local thread pool
+    if (( i % 100 == 0 )); then
+        wait # Wait for background curl processes to finish every 100 requests
+    fi
+  done
+  
+  echo "Batch complete. Restarting..."
+  sleep 1 # Optional: Pause for 1 second between batches
+done
+```
+
 
 ---
 
@@ -76,7 +140,7 @@ show log --member=locator1
 Given number of lines to display (default 100 lines)
 
 ```gfsh
-show log --member=server1 --lines=1
+show log --member=server1 --lines=100
 ```
 
 ---
@@ -104,10 +168,10 @@ show metrics --member=server1
 ```
 
 
-Show metrics by category (ex: disk store)
+Show metrics by category (ex: serialization, disk store, communication)
 
 ```gfsh
-show metrics --member=server1 --categories=diskstore
+show metrics --member=server1 --categories=serialization
 ```
 
 Save metrics by category to file
@@ -163,6 +227,8 @@ Put data in region
 
 ```gfsh
 put --key=1 --value=1 --region=/partioned-redundant
+put --key=2 --value=2 --region=/partioned-redundant
+put --key=3 --value=3 --region=/partioned-redundant
 ```
 
 ```gfsh
@@ -204,53 +270,110 @@ Also see gfsh "restore redundancy"
 restore redundancy
 ```
 
+Redistribute data via `rebalance` or add more servers |
+
 See `rebalance` command "Rebalance partitioned regions. The default is for all partitioned regions to be rebalanced."
 
 ---
 
-### 4. `show vsd-statistics`
+### 4. `show statistics  [--statistics=value(,value)*] [--member=value(,value)*]`
 
-```bash
-$ gfsh> show vsd-statistics
+    statistics
+        The name of a statistic to show in the form name.type.stat.column
+
+
+name.type.stat.column
+
+
+| name                    | 	type                 | 	stat.column              |
+|-------------------------|-----------------------|---------------------------|
+| DiskRegionStatistics	   | /_ConfigurationRegion | 	entriesInVM              |
+| PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
+| PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
+| PartitionedRegionStats	 | /$regionName          | bucketCount               |
+| PartitionedRegionStats	 | /$regionName          | primaryBucketCount        |
+| PartitionedRegionStats	 | /$regionName          | dataStoreBytesInUse       |
+| PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
+| PartitionedRegionStats	 | /$regionName          | actualRedundantCopies     |
+| PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
+| PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
+| PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
+| DiskStoreStatistics     | 	$diskStoreName       | 	writeTime                |
+| DiskStoreStatistics     | 	$diskStoreName       | 	writes                   |
+| DistributionStats       | 	distributionStats    | 	nodes                    |
+| DistributionStats       | 	distributionStats    | 	functionExecutionThreads |
+| DistributionStats       | 	distributionStats    | 	highPriorityThreads      |
+| DistributionStats       | 	distributionStats    | 	partitionedRegionThreads |
+| StatSampler	            | statSampler	          | delayDuration             |
+| StatSampler             | 	statSampler          | 	jvmPauses                |
+| VMStats                 | 	vmStats	             | cpus                      |
+| VMStats                 | 	vmStats	             | totalMemory               |
+| VMStats                 | 	vmStats	             | fdsOpen                   |
+| VMStats                 | 	vmStats	             | fdLimit                   |
+| VMStats                 | 	vmStats	             | processCpuTime            |
+| VMStats                 | 	vmStats	             | threads                   |
+
+
+```gfsh
+show statistics --statistics=VMStats.vmStats.cpus,CachePerfStats.cachePerfStats.queryExecutions --members=server1,server2
 ```
 
-> **What is VSD?**
+
+```gfsh
+show statistics --statistics=StatSampler.statSampler.delayDuration --members=server1,server2
+```
+
+```gfsh
+show statistics --statistics=StatSampler.statSampler.jvmPauses --members=server1,server2
+```
+
+
+```gfsh
+show statistics --statistics=PartitionedRegionStats./partioned-redundant-persistent.totalNumBuckets --members=server1,server2
+```
+
+
+```gfsh
+show statistics --statistics=PartitionedRegionStats./partioned.bucketCount --members=server1,server2
+```
+
+ 
+> **Also see the VSD tool?**
 > *VSD* stands for **Virtual Server Device** – an abstraction of the underlying thread pool that processes cache
 operations. VSD stats expose CPU, memory, and thread contention metrics.
 
-**Typical VSD statistics**
-
-| Statistic | Meaning |
-|-----------|---------|
-| `total-operations` | Total ops processed |
-| `pending-operations` | Ops waiting in queue |
-| `average-queue-length` | Avg ops queued |
-| `max-queue-length` | Peak queue length |
-| `cpu-utilization` | CPU % used by VSD |
-| `blocked-threads` | Threads blocked on a monitor |
-
-**Common problem patterns**
-
-| Pattern                                              | Likely cause                                                    | Fix                                                   |
-|------------------------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------|
-| `pending-operations` > 10k & `cpu-utilization` > 90% | Too many concurrent ops – consider adding servers or increasing |                                                       |
-| `parallelism`                                        | Add servers, tune `max-threads`, or shard workloads             |                                                       |
-| `max-queue-length` high & `blocked-threads` > 0      | Thread contention                                               | Increase `max-threads`, tune eviction policies        |
-| `cpu-utilization` high on a single member            | Data hot‑spot                                                   | Redistribute data via `rebalance` or add more servers |
 
 ---
 
+
+# Shutdown
+
+```gfsh
+shutdown --include-locators
+```
+
+
+You can see stop command
+
+Examples 
+```shell
+stop locator --name
+````
+
+```shell
+stop server --name
+```
+
+Other utility pods
+
+```shell
+podman rm -f gfsh gf-bash
+```
+
+----------------
+
 ### 5. JVM Monitoring Commands
 
-| Tool | Command | What to look for |
-|------|---------|------------------|
-| `jstat` | `jstat -gc <pid> 1000` | GC pause times, survivor space usage |
-| `jcmd` | `jcmd <pid> GC.heap_info` | Heap usage and thresholds |
-| `jcmd` | `jcmd <pid> GC.heap_dump <file>` | Full heap dump for memory leak analysis |
-| `jcmd` | `jcmd <pid> VM.native_memory summary` | Native memory usage by module |
-| `jvisualvm` | Attach to the process | GUI view of memory, threads, CPU |
-| `jconsole` | Connect | JMX metrics (GC, memory, threads) |
-| `jcmd` | `jcmd <pid> GC.run` | Force a GC (use sparingly) |
 
 **Typical JVM metrics to monitor**
 
@@ -259,7 +382,6 @@ operations. VSD stats expose CPU, memory, and thread contention metrics.
 | `Used Heap` > 80% | High GC pressure, possible out‑of‑memory |
 | `GC pauses` > 5 s | Service degradation, time‑outs |
 | `Live Data Ratio` < 20% | Memory leaks or inefficient evictions |
-| `PermGen / Metaspace` full | Classloader leaks |
 
 > **Tip:** Use the `-Xmx` flag to set heap size according to your workload, but remember that GemFire has its own
 *Off‑Heap* memory region. Configure `-XX:MaxDirectMemorySize` accordingly.
@@ -273,8 +395,7 @@ operations. VSD stats expose CPU, memory, and thread contention metrics.
 > 2. `show status` and `show members`.
 > 3. `log tail` for recent errors.
 > 4. `show metrics`.
-> 5. `show vsd-statistics`.
-> 6. `jcmd <pid> VM.native_memory summary`.
+> 5. `show statistics`.
 
 > **Step 2 – Identify the Symptom**
 > *Performance lag?* → Check CPU, GC, queue lengths.
@@ -321,14 +442,17 @@ number-of-buckets-without-redundancy` |
 
 ## Best‑Practice Checklist
 
-| Domain | Recommendation                                                                                          |
-|--------|---------------------------------------------------------------------------------------------------------|
-| **Cluster Sizing** | `redundancy = 2` is the minimum for production. Add 20% more servers for hot‑spots.                     |
-| **Memory** | `-Xmx = 70%` of physical RAM, `-XX:MaxDirectMemorySize = 25%` of RAM.                                   |
-| **Disk** | Use separate disks for data (`--disk-store`), journal (`--journal`), and logs. Keep at least 10 % free. |
-| **Backups** | Daily incremental snapshots of the `disk-store` directory.                                              |
-| **Security** | Enable TLS (`--ssl-enabled=true`), use role‑based ACLs.                                                 |
-| **Monitoring** | Export metrics to Prometheus via the GemFire JMX Exporter.                                              |
-| **Alerting** | Alert thresholds: GC pause > 5 s, redundancy < 100 %, disk free < 10 %.                                 |
-| **Documentation** | Maintain a run‑book for each failure scenario.                                                          |
-| **Testing** | Run chaos‑testing (e.g., Simian Army) monthly.                                                          |
+| Domain | Recommendation                                                                    |
+|--------|-----------------------------------------------------------------------------------|
+| **Cluster Sizing** | `redundancy = 2` is the minimum for production. Add 20% more servers for hot‑spots. |
+| **Memory** | `-Xmx = 70%` of physical RAM, `-XX:MaxDirectMemorySize = 25%` of RAM.             |
+| **Disk** | Use separate disks for data (`--disk-store`) and logs. Keep at least 10 % free. |
+| **Backups** | Daily incremental snapshots of the `disk-store` directory.                        |
+| **Security** | Enable TLS (`--ssl-enabled=true`), use role‑based ACLs.                           |
+| **Monitoring** | Export metrics to Prometheus via the GemFire JMX Exporter.                        |
+| **Alerting** | Alert thresholds: GC pause > 5 s, redundancy < 100 %, disk free < 10 %.           |
+| **Documentation** | Maintain a run‑book for each failure scenario.                                    |
+| **Testing** | Run chaos‑testing monthly.                                                        |
+
+
+
