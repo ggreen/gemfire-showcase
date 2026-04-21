@@ -315,25 +315,23 @@ Statistic ListL format: name.type.stat.column
 | VMStats                 | 	vmStats	          | processCpuTime            | CPU timed used by the process in nanoseconds.                                                                                                                                                                                                                                                                                                            | 
 | VMStats                 | 	vmStats	          | threads                   | Current number of live threads (both daemon and non-daemon) in this VM.                                                                                                                                                                                                                                                                                  | 
 
+Example of viewing multiple stats such as cpus and query execution across multiple servers
 
 ```gfsh
 show statistics --statistics=VMStats.vmStats.cpus,CachePerfStats.cachePerfStats.queryExecutions --members=server1,server2
 ```
 
-
+Example to view StatSampler delayDuration (Note delayDuration > 1000 indicates latency issues)
 ```gfsh
 show statistics --statistics=StatSampler.statSampler.delayDuration --members=server1,server2
 ```
 
+Example show to show JVM Pauses (Note delayDuration > 0 indicates latency issues) 
 ```gfsh
 show statistics --statistics=StatSampler.statSampler.jvmPauses --members=server1,server2
 ```
 
-
-```gfsh
-show statistics --statistics=PartitionedRegionStats./partioned-redundant-persistent.totalNumBuckets --members=server1,server2
-```
-
+Example show to  Number of buckets per server members (check for uneven distribution or values of 0)
 
 ```gfsh
 show statistics --statistics=PartitionedRegionStats./partioned.bucketCount --members=server1,server2
