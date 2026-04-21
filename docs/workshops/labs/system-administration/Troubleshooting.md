@@ -276,41 +276,44 @@ See `rebalance` command "Rebalance partitioned regions. The default is for all p
 
 ---
 
-### 4. `show statistics  [--statistics=value(,value)*] [--member=value(,value)*]`
+### 4. show statistics  
 
-    statistics
-        The name of a statistic to show in the form name.type.stat.column
+Gfsh show statistics command is useful for debugging real time issues.
 
+Format
 
-name.type.stat.column
+```text
+show statistics [--statistics=value(,value)*] [--member=value(,value)*]`
+```
 
+Note: --statistics is the name of a statistic to show in the form name.type.stat.column
 
-| name                    | 	type                 | 	stat.column              |
-|-------------------------|-----------------------|---------------------------|
-| PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
-| PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
-| PartitionedRegionStats	 | /$regionName          | bucketCount               |
-| PartitionedRegionStats	 | /$regionName          | primaryBucketCount        |
-| PartitionedRegionStats	 | /$regionName          | dataStoreBytesInUse       |
-| PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
-| PartitionedRegionStats	 | /$regionName          | actualRedundantCopies     |
-| PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
-| PartitionedRegionStats	 | /$regionName          | totalNumBuckets           |
-| PartitionedRegionStats	 | /$regionName          | configuredRedundantCopies |
-| DiskStoreStatistics     | 	$diskStoreName       | 	writeTime                |
-| DiskStoreStatistics     | 	$diskStoreName       | 	writes                   |
-| DistributionStats       | 	distributionStats    | 	nodes                    |
-| DistributionStats       | 	distributionStats    | 	functionExecutionThreads |
-| DistributionStats       | 	distributionStats    | 	highPriorityThreads      |
-| DistributionStats       | 	distributionStats    | 	partitionedRegionThreads |
-| StatSampler	            | statSampler	          | delayDuration             |
-| StatSampler             | 	statSampler          | 	jvmPauses                |
-| VMStats                 | 	vmStats	             | cpus                      |
-| VMStats                 | 	vmStats	             | totalMemory               |
-| VMStats                 | 	vmStats	             | fdsOpen                   |
-| VMStats                 | 	vmStats	             | fdLimit                   |
-| VMStats                 | 	vmStats	             | processCpuTime            |
-| VMStats                 | 	vmStats	             | threads                   |
+Statistic ListL format: name.type.stat.column
+
+| name                    | 	type              | 	stat.column              | Description                                                                                                                                                                                                                                                                                                                                              | 
+|-------------------------|--------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
+| PartitionedRegionStats	 | /$regionName       | totalNumBuckets           | The total number of buckets.                                                                                                                                                                                                                                                                                                                             | 
+| PartitionedRegionStats	 | /$regionName       | configuredRedundantCopies | Configured number of redundant copies for this partitioned region.                                                                                                                                                                                                                                                                                       | 
+| PartitionedRegionStats	 | /$regionName       | bucketCount               | Number of buckets in this node..                                                                                                                                                                                                                                                                                                                         | 
+| PartitionedRegionStats	 | /$regionName       | primaryBucketCount        | Current number of primary buckets hosted locally.                                                                                                                                                                                                                                                                                                        | 
+| PartitionedRegionStats	 | /$regionName       | dataStoreBytesInUse       | The current number of bytes stored in this Cache for the named Partitioned Region                                                                                                                                                                                                                                                                        | 
+| PartitionedRegionStats	 | /$regionName       | totalNumBuckets           | The total number of buckets.                                                                                                                                                                                                                                                                                                                             | 
+| PartitionedRegionStats	 | /$regionName       | actualRedundantCopies     | Actual number of redundant copies for this partitioned region.                                                                                                                                                                                                                                                                                           | 
+| PartitionedRegionStats	 | /$regionName       | configuredRedundantCopies | Configured number of redundant copies for this partitioned region.                                                                                                                                                                                                                                                                                       | 
+| DiskStoreStatistics     | 	$diskStoreName    | 	writeTime                | The total amount of time spent writing to disk.                                                                                                                                                                                                                                                                                                          | 
+| DiskStoreStatistics     | 	$diskStoreName    | 	writes                   | The total number of region entries that have been written to disk. A write is done every time an entry is created on disk or every time its value is modified on disk.                                                                                                                                                                                   | 
+| DistributionStats       | 	distributionStats | 	nodes                    | The current number of nodes in this distributed system.                                                                                                                                                                                                                                                                                                  | 
+| DistributionStats       | 	distributionStats | 	functionExecutionThreads | The current number of threads dedicated to processing function execution messages. These threads may be idle.                                                                                                                                                                                                                                            | 
+| DistributionStats       | 	distributionStats | 	highPriorityThreads      | The current number of threads dedicated to processing high priority messages. These threads may be idle.                                                                                                                                                                                                                                                 | 
+| DistributionStats       | 	distributionStats | 	partitionedRegionThreads | The current number of threads dedicated to processing partitioned region messages. These threads may be idle.                                                                                                                                                                                                                                            | 
+| StatSampler	            | statSampler	       | delayDuration             | Actual duration of sampling delay taken before taking this sample.                                                                                                                                                                                                                                                                                       | 
+| StatSampler             | 	statSampler       | 	jvmPauses                | Total number of JVM pauses (which may or may not be full GC pauses) detected by this sampler. A JVM pause is defined as a system event which kept the statistics sampler thread from sampling for 3000 or more milliseconds. This threshold can be customized by setting the system property gemfire.statSamplerDelayThreshold (units are milliseconds). | 
+| VMStats                 | 	vmStats	          | cpus                      | Number of cpus available to the java VM on its machine.                                                                                                                                                                                                                                                                                                  | 
+| VMStats                 | 	vmStats	          | totalMemory               | The total amount of memory currently available for current and future objects, measured in bytes.                                                                                                                                                                                                                                                        | 
+| VMStats                 | 	vmStats	          | fdsOpen                   | Current number of open file descriptors                                                                                                                                                                                                                                                                                                                  | 
+| VMStats                 | 	vmStats	          | fdLimit                   | Maximum number of file descriptors                                                                                                                                                                                                                                                                                                                       | 
+| VMStats                 | 	vmStats	          | processCpuTime            | CPU timed used by the process in nanoseconds.                                                                                                                                                                                                                                                                                                            | 
+| VMStats                 | 	vmStats	          | threads                   | Current number of live threads (both daemon and non-daemon) in this VM.                                                                                                                                                                                                                                                                                  | 
 
 
 ```gfsh
