@@ -339,6 +339,16 @@ show statistics --statistics=StatSampler.statSampler.jvmPauses --members=server1
 show statistics --statistics=PartitionedRegionStats./partioned.bucketCount --members=server1,server2
 ```
 
+
+GemFire Prometheus end point
+
+```shell
+podman run -it -e 'ACCEPT_TERMS=y' --rm --name=gf-metrics --network=gemfire-cache  gemfire/gemfire:10.1-jdk21  curl http://gf-server1:7777/metrics | more
+```
+
+```shell
+
+```
  
 > **Also see the VSD tool?**
 > *VSD* stands for **Virtual Server Device** – an abstraction of the underlying thread pool that processes cache
@@ -348,14 +358,23 @@ operations. VSD stats expose CPU, memory, and thread contention metrics.
 ---
 
 
-# Shutdown
+# Cleanup
+
+
 
 ```gfsh
 shutdown --include-locators
 ```
 
+Remove other utility pods
 
-You can see stop command
+```shell
+podman rm -f gfsh gf-bash
+```
+
+
+
+You can also see stop command
 
 Examples 
 ```shell
@@ -366,11 +385,7 @@ stop locator --name
 stop server --name
 ```
 
-Other utility pods
 
-```shell
-podman rm -f gfsh gf-bash
-```
 
 ----------------
 
