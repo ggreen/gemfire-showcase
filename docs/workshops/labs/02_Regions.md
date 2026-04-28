@@ -44,7 +44,7 @@ Start Gfsh in a container
 
 **Optional** - If not running from lab 01
 ```shell
-deployment/scripts/podman/gfsh.sh
+deployment/scripts/podman/labs/gfsh.sh
 ```
 
 Once started, you’ll see a prompt like:

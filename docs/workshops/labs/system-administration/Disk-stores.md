@@ -77,7 +77,7 @@ Notes
 
 
 ```gfsh
-create disk-store --name=accounts  --max-oplog-size=1 --segments=2 --dir=.
+create disk-store --name=accounts  --max-oplog-size=1 --segments=2 --dir=. 
 ```
 
 
