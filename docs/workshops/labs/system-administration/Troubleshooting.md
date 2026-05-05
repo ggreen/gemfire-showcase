@@ -410,7 +410,7 @@ stop server --name
 > **Step 1 – Gather Data**
 > 1. Connect via `gfsh`.
 > 2. `show status` and `show members`.
-> 3. `log tail` for recent errors.
+> 3. `log` for recent errors.
 > 4. `show metrics`.
 > 5. `show statistics`.
 

@@ -155,7 +155,7 @@ Get Account 2
 curl http://localhost:8011/accounts/2
 ```
 
-Server 1
+Restart Server 1
 
 ```shell
 podman run -d -e 'ACCEPT_TERMS=y' --rm --name gf1-server --network=gemfire-cache gemfire/gemfire:10.1-jdk21 gfsh start server --name=gf1-server --use-cluster-configuration=true --server-port=10101   --locators="gf1-locator[10001]" --max-heap=1g   --initial-heap=1g --J=-Dgemfire.distributed-system-id=1 --J=-Dgemfire.prometheus.metrics.emission=Default --J=-Dgemfire.prometheus.metrics.port=7777  --J=-Duser.timezone=America/New_York --J=-Dgemfire.prometheus.metrics.interval=15s
