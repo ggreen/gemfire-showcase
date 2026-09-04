@@ -1,4 +1,29 @@
-﻿using System;
+
+# GemFire .NET Client Quickstart
+
+This guide demonstrates how to set up a .NET console application, start a local GemFire cluster, and execute basic CRUD and OQL query operations using the GemFire .NET Native Client.
+
+## Prerequisites & Installation
+
+Install the .NET SDK
+If you have Homebrew installed on macOS, run:
+
+```shell
+brew install --cask dotnet-sdk
+```
+See [GemFire DotNET client Quickstart](https://gemfire.dev/ja/quickstart/dotnet)
+
+
+
+
+
+# C# Example Application
+
+Example Program.cs with the following code. It defines a PDXSerializable model class and connects to the cluster to perform put, get, and query operations.
+
+
+```C#
+using System;
 using GemFire.Client;
 
 namespace GemFireExample
@@ -84,3 +109,59 @@ namespace GemFireExample
         }
     }
 }
+```
+
+
+# Cluster Setup & Execution
+
+1. Start the GemFire Cluster
+   Run the provided startup script to spin up local locator and server instances:
+
+```shell
+./deployment/local/gemfire/start.sh
+```
+
+2. Create the Region
+   Use gfsh to create a partitioned region named Employee:
+
+```shell
+$GEMFIRE_HOME/bin/gfsh -e "connect" -e "create region --name=Employee --type=PARTITION"
+```
+
+3. Run the Application
+
+```shell
+cd applications/examples/dot-net/GemFireShowCase
+dotnet run
+```
+
+Example Results
+
+![dotnet-run.png](docs/img/dotnet-run.png)
+
+
+Query Results
+
+![query.png](docs/img/query.png)
+
+
+-----------------------------
+
+# Creating a New Application (Reference)
+
+```shell
+cd applications/examples/dot-net
+dotnet new console -n GemFireShowCase
+cd GemFireShowCase
+```
+
+```shell
+dotnet add reference GemFire.Client.dll
+dotnet add package Serilog --version 4.3.0
+dotnet add package Serilog.Enrichers.Thread --version 4.0.0
+dotnet add package Serilog.Sinks.Console --version 6.1.1
+dotnet add package DotNetty.Transport --version 0.7.6
+dotnet add package Microsoft.Extensions.Configuration.Abstractions --version 9.0.0
+dotnet add package Microsoft.Extensions.Configuration --version 9.0.0
+dotnet add package DotNetty.Handlers --version 0.7.6
+```
