@@ -28,8 +28,8 @@ repositories {
 			ignoreGradleMetadataRedirection()
 		}
 		credentials {
-			username System.getenv("HARBOR_USER")
-			password System.getenv("HARBOR_PASSWORD")
+			username System.getenv("BROADCOM_USERNAME")
+			password System.getenv("BROADCOM_PASSWORD")
 		}
 	}
 }

@@ -199,7 +199,6 @@ They are grouped by **region**, **gateway**, **locator**, **client-cache**, etc.
 | show metrics              | diskWritesRate              | MB/s          | > 50                | Disk pressure                      |
 | show metrics --region=... | numBucketsWithoutRedundancy | integer       | > 1                 | Potential Data Loss                |
 | show metrics --region=... | totalEntriesOnlyOnDisk      | integer       | > 1                 | Increase latency Insuffient memory |
-
 ---
 
 ### 3. `show number-of-buckets-without-redundancy`

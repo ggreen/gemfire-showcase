@@ -138,7 +138,7 @@ query --query="SELECT * FROM /Employee WHERE salary < 90000"
 Select specific fields
 
 ```shell
-query --query="SELECT employeeId, lastName FROM /Employee WHERE salary < 90000"
+query --query="vi 
 ```
 
 ---
