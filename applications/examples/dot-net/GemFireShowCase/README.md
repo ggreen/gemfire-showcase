@@ -1,7 +1,13 @@
 
-# GemFire .NET Client Quickstart
+# GemFire .NET Client 
+
+GemFire now provides mission critical .NET applications with consistent FAST performant access to RESILIENT data at scale.
+
+## Quickstart
 
 This guide demonstrates how to set up a .NET console application, start a local GemFire cluster, and execute basic CRUD and OQL query operations using the GemFire .NET Native Client.
+
+![overview.png](docs/img/overview.png)
 
 ## Prerequisites & Installation
 
