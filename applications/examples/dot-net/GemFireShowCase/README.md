@@ -102,7 +102,7 @@ namespace GemFireExample
             
             // OQL string comparison check
             var query = queryService.NewQuery<Employee>(
-                "SELECT * FROM /Employee WHERE FirstName > 'Josiah'"
+                "SELECT * FROM /Employee WHERE FirstName = 'Josiah'"
             );
 
             var results = query.Execute();
