@@ -25,14 +25,11 @@ spec:
             - name: gemfire.health.region.name
               value: "health1"
             - name: spring.data.gemfire.pool.locators
-              valueFrom:
-                configMapKeyRef:
-                  name: gemfire-cluster-a-config
-                  key: locators
+              value: "gemfire-cluster-a-locator[10334]"
           image: cloudnativedata/account-service-gemfire-showcase:0.0.1-SNAPSHOT
           name: account-service-gemfire-showcase
-          imagePullPolicy: "Always"
-#          imagePullPolicy: "IfNotPresent"
+#          imagePullPolicy: "Always"
+          imagePullPolicy: "IfNotPresent"
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness

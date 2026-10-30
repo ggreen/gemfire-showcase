@@ -28,6 +28,11 @@ kubectl get services --namespace=tanzu-data
 
 Connect Clusters
 
+
+```shell
+kubectl port-forward $(kubectl get pods -l name=gemfire-management-console -o jsonpath='{.items[0].metadata.name}' -n tanzu-data) 8080:8080 -n tanzu-data
+```
+
 ```properties
 nick-name=gemfire-cluster-a
 host=gemfire-cluster-a-locator-0.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local
@@ -49,10 +54,6 @@ port=7070
 
 # Deployment Gateway
 
-```shell
-
-```
-
 
 ```shell
 k get pods -w 
@@ -60,8 +61,8 @@ k get pods -w
 
 ```shell
 export SPRING_GATEWAY_HOST=`kubectl get services spring-gateway-healthcheck --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-wan`
-export ACCT_CLUSTER_A_HOST=`kubectl get services userAccount-service-cluster-a --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-1`
-export ACCT_CLUSTER_B_HOST=`kubectl get services userAccount-service-cluster-b --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-2`
+export ACCT_CLUSTER_A_HOST=`kubectl get services account-service-cluster-a --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-1`
+export ACCT_CLUSTER_B_HOST=`kubectl get services account-service-cluster-b --output jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=tanzu-data-site-2`
 ```
 
 
@@ -72,11 +73,22 @@ echo ACCT_CLUSTER_B_HOST=$ACCT_CLUSTER_B_HOST
 ```
 
 
+Or Use Port forwarding
+
+```shell
+kubectl port-forward  service/spring-gateway-healthcheck 8090:8080 -n tanzu-data-wan
+```
+
+```shell
+export SPRING_GATEWAY_HOST=localhost
+export SPRING_GATEWAY_PORT=8090
+```
+
 Save userAccount 1
 
 ```shell
 curl -X 'POST' \
-  "http://$SPRING_GATEWAY_HOST:8080/accounts" \
+  "http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts" \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -89,7 +101,7 @@ curl -X 'POST' \
 Save userAccount 2
 
 ```shell
-curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
+curl "http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts" \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -101,25 +113,26 @@ curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
 Get Account 1
 ```shell
 curl -X 'GET' \
-  "http://$SPRING_GATEWAY_HOST:8080/accounts/1" \
+  "http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/1" \
   -H 'accept: */*'
 ```
 
 Get Account 2
 ```shell
 curl -X 'GET' \
-  "http://$SPRING_GATEWAY_HOST:8080/accounts/2" \
+  "http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/2" \
   -H 'accept: */*'
 ```
 
 Test Actuator for App Service to cluster 1 expected "UP"
+
 ```shell
-curl http://$ACCT_CLUSTER_A_HOST:8080/actuator/health
+kubectl exec -it $(kubectl get pods -l name=account-service-cluster-a -o jsonpath='{.items[0].metadata.name}' -n tanzu-data-site-1) -n tanzu-data-site-1 -- curl http://localhost:8080/actuator/health 
 ```
 
 Test Actuator for App Service to cluster 2 expected "UP"
 ```shell
-curl http://$ACCT_CLUSTER_B_HOST:8080/actuator/health
+kubectl exec -it $(kubectl get pods -l name=account-service-cluster-b -o jsonpath='{.items[0].metadata.name}' -n tanzu-data-site-2) -n tanzu-data-site-2 -- curl http://localhost:8080/actuator/health 
 ```
 
 Stop Cluster 1 Servers
@@ -132,13 +145,13 @@ kubectl delete pod  gemfire-cluster-a-locator-0 gemfire-cluster-a-server-0  gemf
 
 Get Account 1
 ```shell
-curl http://$SPRING_GATEWAY_HOST:8080/accounts/1
+curl http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/1
 ```
 
 
 Get Account 2
 ```shell
-curl http://$SPRING_GATEWAY_HOST:8080/accounts/2
+curl http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/2
 ```
 
 
@@ -157,7 +170,7 @@ Save userAccount another userAccount
 
 
 ```shell
-curl "http://$SPRING_GATEWAY_HOST:8080/accounts" \
+curl "http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts" \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -175,12 +188,12 @@ $GEMFIRE_HOME/bin/gfsh -e "connect --locator=localhost[10002]" -e "wan-copy regi
 
 Get Account 1
 ```shell
-curl http://$SPRING_GATEWAY_HOST:8080/accounts/1
+curl http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/1
 ```
 
 Get Account 2
 ```shell
-curl http://$SPRING_GATEWAY_HOST:8080/accounts/2
+curl http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/2
 ```
 
 Shutdown cluster 2
@@ -200,12 +213,12 @@ curl http://$ACCT_CLUSTER_B_HOST:8080/actuator/health
 
 Get Account 1
 ```shell
-curl http://$SPRING_GATEWAY_HOST:8080/accounts/1
+curl http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/1
 ```
 
 Get Account 2
 ```shell
-curl http://$SPRING_GATEWAY_HOST:8080/accounts/2
+curl http://$SPRING_GATEWAY_HOST:$SPRING_GATEWAY_PORT/accounts/2
 ```
 
 

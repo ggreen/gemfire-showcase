@@ -1,5 +1,8 @@
+curl -i -u "$BROADCOM_USERNAME:$BROADCOM_GEMFIRE_PASSWORD" \
+  https://gemfire-registry.packages.broadcom.com/v2/
+
 kubectl create namespace tanzu-data-site-1
-kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-1 --docker-server=registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
+kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-1 --docker-server=gemfire-registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
 kubectl config set-context --current --namespace=tanzu-data-site-1
 
 kubectl apply -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_a.yml
@@ -27,7 +30,8 @@ kubectl exec gemfire-cluster-a-locator-0 --  gfsh -e "connect --locator=gemfire-
 #------
 # Cluster 2
 kubectl create namespace tanzu-data-site-2
-kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-2 --docker-server=registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
+
+kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-2 --docker-server=gemfire-registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
 kubectl config set-context --current --namespace=tanzu-data-site-2
 
 kubectl apply -f deployment/cloud/k8/data-services/gemfire/WAN-replication/gemfire_cluster_b.yml
