@@ -1,6 +1,3 @@
-curl -i -u "$BROADCOM_USERNAME:$BROADCOM_GEMFIRE_PASSWORD" \
-  https://gemfire-registry.packages.broadcom.com/v2/
-
 kubectl create namespace tanzu-data-site-1
 kubectl create secret docker-registry image-pull-secret --namespace=tanzu-data-site-1 --docker-server=gemfire-registry.packages.broadcom.com --docker-username=$BROADCOM_USERNAME --docker-password=$BROADCOM_GEMFIRE_PASSWORD
 kubectl config set-context --current --namespace=tanzu-data-site-1

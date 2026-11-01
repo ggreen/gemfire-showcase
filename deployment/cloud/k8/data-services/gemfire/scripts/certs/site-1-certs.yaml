@@ -1,0 +1,106 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: custom-selfsigned-issuer
+  namespace: cert-manager
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gemfire-tls-cert
+  namespace: tanzu-data-site-1
+spec:
+  secretName: custom-override-secret
+  duration: 8760h
+  renewBefore: 720h
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  dnsNames:
+    - "localhost"
+    - "localhost"
+      # Bare short names
+    - "gemfire-cluster-a-locator"
+    - "gemfire-cluster-a-server"
+      # Full service FQDNs (Required by the startup hook probe)
+    - "gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local"
+    - "gemfire-cluster-a-server.tanzu-data-site-1.svc.cluster.local"
+      # Pod wildcards for headless service endpoints
+    - "*.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local"
+    - "*.tanzu-data-site-1.svc.cluster.local"
+    - "gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local"
+      # Remote cluster names (for WAN replication)
+    - "gemfire-cluster-b-locator"
+    - "gemfire-cluster-b-server"
+    - "gemfire-cluster-b-locator.cluster-b-namespace.svc.cluster.local"
+    - "gemfire-cluster-b-server.cluster-b-namespace.svc.cluster.local"
+    - "*.gemfire-cluster-b-locator.cluster-b-namespace.svc.cluster.local"
+    - "*.gemfire-cluster-b-server.cluster-b-namespace.svc.cluster.local"
+    - "*.gemfire-cluster-a-server.tanzu-data-site-1.svc.cluster.local"
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        name: custom-override-secret-password
+        key: password
+  issuerRef:
+    name: custom-ca-cluster-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: custom-ca-cluster-issuer
+spec:
+  ca:
+    secretName: custom-ca-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gemfire-tls-cert
+  namespace: tanzu-data-site-1
+spec:
+  secretName: custom-override-secret
+  duration: 8760h # 1 year
+  renewBefore: 720h # 30 days
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    size: 2048
+    rotationPolicy: Always
+  dnsNames:
+    - "localhost"
+    - "localhost"
+    # Bare short names
+    - "gemfire-cluster-a-locator"
+    - "gemfire-cluster-a-server"
+    # Full service FQDNs (Required by the startup hook probe)
+    - "gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local"
+    - "gemfire-cluster-a-server.tanzu-data-site-1.svc.cluster.local"
+    # Pod wildcards for headless service endpoints
+    - "*.gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local"
+    - "*.tanzu-data-site-1.svc.cluster.local"
+    - "gemfire-cluster-a-locator.tanzu-data-site-1.svc.cluster.local"
+    # Remote cluster names (for WAN replication)
+    - "gemfire-cluster-b-locator"
+    - "gemfire-cluster-b-server"
+    - "gemfire-cluster-b-locator.cluster-b-namespace.svc.cluster.local"
+    - "gemfire-cluster-b-server.cluster-b-namespace.svc.cluster.local"
+    - "*.gemfire-cluster-b-locator.cluster-b-namespace.svc.cluster.local"
+    - "*.gemfire-cluster-b-server.cluster-b-namespace.svc.cluster.local"
+    - "*.gemfire-cluster-a-server.tanzu-data-site-1.svc.cluster.local"
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        name: custom-override-secret-password
+        key: password
+  issuerRef:
+    name: custom-ca-cluster-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
